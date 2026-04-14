@@ -1,0 +1,23 @@
+// เปลี่ยน URL ตรงนี้เป็น Web App URL ที่ก๊อปปี้มาจากขั้นตอนที่ 1
+const API_URL = "https://script.google.com/macros/s/AKfycbwUVLhRbdk2noN4GeHC-j_zaz2mxD8bjUDWIjg2aljSodPvJJzbq-2GHwitiIpHo5a5dQ/exec";
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetchData();
+});
+
+function fetchData() {
+    fetch(API_URL)
+        .then(response => response.json())
+        .then(data => {
+            renderCards(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('ea-container').innerHTML = 'เกิดข้อผิดพลาดในการโหลดข้อมูล';
+        });
+}
+
+function renderCards(data) {
+    // ใช้โค้ด renderCards เดิมที่คุณมีได้เลยครับ (สุ่มสีเหมือนเดิม)
+    // ... โค้ดสร้าง Card เดิม ...
+}
