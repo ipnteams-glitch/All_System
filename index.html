@@ -14,7 +14,7 @@
         
         body { 
             font-family: 'Kanit', sans-serif; 
-            background-color: #121212; /* พื้นหลังเว็บสีเข้มเพื่อให้เข้ากับ Card */
+            background-color: #121212; /* ธีมมืด */
             margin: 0;
             padding: 10px;
             overflow-x: hidden;
@@ -29,10 +29,34 @@
 
         .mobile-header { 
             padding: 20px 0 25px 0; 
-            text-align: center; 
         }
         
-        .mobile-header h4 { color: #ffffff; }
+        /* จัดเรียง Header และ ลิงก์ให้อยู่บรรทัดเดียวกัน */
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5px;
+        }
+
+        .mobile-header h4 { 
+            color: #ffffff; 
+            margin: 0; 
+            font-size: 1.15rem; /* ปรับขนาดให้พอดีกับมือถือเมื่อมีลิงก์ */
+        }
+
+        .new-version-link {
+            color: #ffeb3b !important; /* ตัวหนังสือสีเหลือง */
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap; /* ป้องกันข้อความตัดตกบรรทัด */
+        }
+
+        .new-version-link:hover {
+            text-decoration: underline;
+            color: #fff176 !important;
+        }
 
         .ea-card { 
             border: none; 
@@ -51,6 +75,7 @@
             align-items: center; 
             justify-content: center; 
             font-weight: 500;
+            margin-top: 15px; /* เพิ่มระยะห่างจาก Header ด้านบน */
         }
 
         .dot { 
@@ -70,7 +95,7 @@
         }
 
         .balance-box { 
-            background-color: rgba(255,255,255,0.15); /* กล่องเงินแบบโปร่งแสงขาว */
+            background-color: rgba(255,255,255,0.15); /* กล่องยอดเงินโปร่งแสงขาว */
             border-radius: 20px; 
             padding: 18px; 
             margin-top: 15px; 
@@ -81,10 +106,9 @@
         .ea-card h5.fw-bold { color: #ffffff !important; font-size: 1.35rem; letter-spacing: 0.5px; }
         .ea-card .text-muted { color: rgba(255,255,255,0.7) !important; font-weight: 300; }
         .ea-card .text-secondary { color: #ffffff !important; font-weight: 500; font-size: 1rem; }
-        .ea-card .balance-box .text-primary { color: #ffffff !important; } /* เปลี่ยนยอดเงินเป็นสีขาว */
         
         .badge.bg-primary { 
-            background-color: rgba(255,255,255,0.2) !important; /* Badge แบบใส */
+            background-color: rgba(255,255,255,0.2) !important; /* Badge แบบใส (Glassmorphism) */
             color: #ffffff;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.3);
@@ -101,7 +125,10 @@
 
 <div class="container-fluid">
     <div class="mobile-header">
-        <h4 class="fw-bold mb-1">EA SYSTEMS MONITOR</h4>
+        <div class="header-flex">
+            <h4 class="fw-bold">EA SYSTEMS MONITOR</h4>
+            <a href="https://drive.google.com/drive/folders/19i9MHUJdY4X38LOunNVNMBTj9fh-P9h1" target="_blank" class="new-version-link">New Version + Preset</a>
+        </div>
         <div class="status-online">
             <span class="dot"></span>Live Update
         </div>
@@ -115,9 +142,10 @@
 </div>
 
 <script>
+    // URL ของ Web App จาก Google Apps Script
     const API_URL = "https://script.google.com/macros/s/AKfycbwUVLhRbdk2noN4GeHC-j_zaz2mxD8bjUDWIjg2aljSodPvJJzbq-2GHwitiIpHo5a5dQ/exec";
 
-    // 1. เปลี่ยน Palette เป็นสีเข้ม (Deep Dark Colors)
+    // ชุดสีเข้ม (Deep Dark Colors) สำหรับพื้นหลัง Card
     const darkColors = [
         '#1e3799', // Deep Blue
         '#009432', // Deep Green
@@ -131,6 +159,7 @@
 
     let lastColorIndex = -1;
 
+    // ฟังก์ชันสุ่มสีโดยป้องกันไม่ให้สีซ้ำกับ Card ก่อนหน้า
     function getUniqueRandomColor() {
         let newIndex;
         do {
@@ -141,6 +170,7 @@
         return darkColors[newIndex];
     }
 
+    // เมื่อโหลดหน้าเว็บเสร็จให้เรียกฟังก์ชันดึงข้อมูลทันที
     document.addEventListener('DOMContentLoaded', fetchData);
 
     function fetchData() {
@@ -168,8 +198,9 @@
         }
 
         let html = '';
-        lastColorIndex = -1;
+        lastColorIndex = -1; // Reset สีทุกครั้งที่มีการ Render ใหม่
 
+        // สร้าง Card ตามจำนวนข้อมูลที่ดึงมาได้
         data.forEach((item) => {
             const bgColor = getUniqueRandomColor();
             
