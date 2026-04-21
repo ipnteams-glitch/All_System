@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <base target="_top">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MONITOR</title>
+    <title>EA SYSTEMS MONITOR</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;600&display=swap" rel="stylesheet">
@@ -14,77 +14,63 @@
         
         body { 
             font-family: 'Kanit', sans-serif; 
-            background-color: #121212; /* ธีมมืด */
+            background-color: #121212; 
             margin: 0;
-            padding: 10px;
+            padding: 10px 5px; /* ลดขอบซ้ายขวาลงนิดนึงเพื่อให้มีพื้นที่มากขึ้น */
             overflow-x: hidden;
             width: 100%;
         }
 
-        .container-fluid {
-            padding: 0;
-            margin: 0;
-            width: 100%;
-        }
+        .container-fluid { padding: 0; margin: 0; width: 100%; }
 
-        .mobile-header { 
-            padding: 20px 0 25px 0; 
-        }
+        .mobile-header { padding: 15px 0 20px 0; }
         
-        /* จัดเรียง Header และ ลิงก์ให้อยู่บรรทัดเดียวกัน */
         .header-flex {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 5px;
+            padding: 0 10px;
         }
 
-        .mobile-header h4 { 
-            color: #ffffff; 
-            margin: 0; 
-            font-size: 1.15rem; /* ปรับขนาดให้พอดีกับมือถือเมื่อมีลิงก์ */
-        }
+        .mobile-header h4 { color: #ffffff; margin: 0; font-size: 1.1rem; }
 
         .new-version-link {
-            color: #ffeb3b !important; /* ตัวหนังสือสีเหลือง */
+            color: #ffeb3b !important; 
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
-            white-space: nowrap; /* ป้องกันข้อความตัดตกบรรทัด */
+            white-space: nowrap; 
         }
 
-        .new-version-link:hover {
-            text-decoration: underline;
-            color: #fff176 !important;
-        }
+        .new-version-link:hover { text-decoration: underline; color: #fff176 !important; }
 
+        /* ปรับแต่ง Card สำหรับ 2 คอลัมน์ */
         .ea-card { 
             border: none; 
-            border-radius: 25px; 
-            margin-bottom: 15px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
+            border-radius: 20px; /* ลดความมนลงเล็กน้อย */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3); 
             overflow: hidden; 
             width: 100%;
-            color: #ffffff !important; /* บังคับตัวอักษรสีขาวทั้ง Card */
+            height: 100%; /* ให้การ์ดสูงเท่ากันทุกใบ */
+            color: #ffffff !important; 
         }
 
         .status-online { 
             color: #4cd137; 
-            font-size: 0.9rem; 
+            font-size: 0.85rem; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             font-weight: 500;
-            margin-top: 15px; /* เพิ่มระยะห่างจาก Header ด้านบน */
+            margin-top: 10px; 
         }
 
         .dot { 
-            height: 10px; 
-            width: 10px; 
+            height: 8px; width: 8px; 
             background-color: #4cd137; 
             border-radius: 50%; 
             display: inline-block; 
-            margin-right: 8px; 
+            margin-right: 6px; 
             animation: pulse 1.8s infinite; 
         }
 
@@ -95,26 +81,26 @@
         }
 
         .balance-box { 
-            background-color: rgba(255,255,255,0.15); /* กล่องยอดเงินโปร่งแสงขาว */
-            border-radius: 20px; 
-            padding: 18px; 
-            margin-top: 15px; 
+            background-color: rgba(255,255,255,0.15); 
+            border-radius: 15px; 
+            padding: 10px; /* ลด Padding */
+            margin-top: 10px; 
             border: 1px solid rgba(255,255,255,0.1); 
         }
 
-        /* Typography - บังคับสีขาวทั้งหมด */
-        .ea-card h5.fw-bold { color: #ffffff !important; font-size: 1.35rem; letter-spacing: 0.5px; }
-        .ea-card .text-muted { color: rgba(255,255,255,0.7) !important; font-weight: 300; }
-        .ea-card .text-secondary { color: #ffffff !important; font-weight: 500; font-size: 1rem; }
+        /* ปรับขนาดอักษรให้เล็กลงพอดีกับ 2 คอลัมน์ */
+        .ea-card h5.fw-bold { color: #ffffff !important; font-size: 1.1rem; letter-spacing: 0.5px; margin-bottom: 10px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ea-card .text-muted { color: rgba(255,255,255,0.7) !important; font-weight: 300; font-size: 0.75rem; }
+        .ea-card .text-secondary { color: #ffffff !important; font-weight: 500; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
         .badge.bg-primary { 
-            background-color: rgba(255,255,255,0.2) !important; /* Badge แบบใส (Glassmorphism) */
+            background-color: rgba(255,255,255,0.2) !important; 
             color: #ffffff;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.3);
             font-weight: 400; 
-            font-size: 0.75rem;
-            padding: 6px 12px;
+            font-size: 0.65rem; /* ลดขนาด Badge */
+            padding: 4px 8px;
         }
 
         #loader { min-height: 200px; display: flex; align-items: center; justify-content: center; }
@@ -126,11 +112,10 @@
 <div class="container-fluid">
     <div class="mobile-header">
         <div class="header-flex">
-            <h4 class="fw-bold">[MONITOR]</h4>
-            <a href="https://drive.google.com/drive/folders/19i9MHUJdY4X38LOunNVNMBTj9fh-P9h1" target="_blank" class="new-version-link">New Version + Preset</a>
+            <h4 class="fw-bold">EA MONITOR</h4> <a href="https://drive.google.com/drive/folders/19i9MHUJdY4X38LOunNVNMBTj9fh-P9h1" target="_blank" class="new-version-link">New Version + Preset</a>
         </div>
         <div class="status-online">
-            <span class="dot"></span>System Detail
+            <span class="dot"></span>Live Update
         </div>
     </div>
 
@@ -138,28 +123,18 @@
         <div class="spinner-border" role="status"></div>
     </div>
 
-    <div id="ea-container"></div>
+    <div id="ea-container" class="row row-cols-2 g-2 px-2"></div>
 </div>
 
 <script>
-    // URL ของ Web App จาก Google Apps Script
     const API_URL = "https://script.google.com/macros/s/AKfycbwUVLhRbdk2noN4GeHC-j_zaz2mxD8bjUDWIjg2aljSodPvJJzbq-2GHwitiIpHo5a5dQ/exec";
 
-    // ชุดสีเข้ม (Deep Dark Colors) สำหรับพื้นหลัง Card
     const darkColors = [
-        '#1e3799', // Deep Blue
-        '#009432', // Deep Green
-        '#006266', // Deep Teal
-        '#833471', // Deep Purple
-        '#b71540', // Deep Red
-        '#130f40', // Midnight Blue
-        '#5758BB', // Deep Indigo
-        '#2f3640'  // Gunmetal
+        '#1e3799', '#009432', '#006266', '#833471', '#b71540', '#130f40', '#5758BB', '#2f3640'
     ];
 
     let lastColorIndex = -1;
 
-    // ฟังก์ชันสุ่มสีโดยป้องกันไม่ให้สีซ้ำกับ Card ก่อนหน้า
     function getUniqueRandomColor() {
         let newIndex;
         do {
@@ -170,7 +145,6 @@
         return darkColors[newIndex];
     }
 
-    // เมื่อโหลดหน้าเว็บเสร็จให้เรียกฟังก์ชันดึงข้อมูลทันที
     document.addEventListener('DOMContentLoaded', fetchData);
 
     function fetchData() {
@@ -182,7 +156,7 @@
             .catch(error => {
                 console.error('Error:', error);
                 document.getElementById('ea-container').innerHTML = 
-                    '<div class="alert alert-danger mx-3 text-center">เกิดข้อผิดพลาดในการดึงข้อมูล</div>';
+                    '<div class="alert alert-danger mx-3 text-center w-100">เกิดข้อผิดพลาดในการดึงข้อมูล</div>';
             });
     }
 
@@ -193,40 +167,39 @@
         if (loader) loader.style.display = 'none';
 
         if (!data || data.length === 0) {
-            container.innerHTML = '<div class="alert alert-warning mx-3 text-center">ไม่พบข้อมูลในระบบ</div>';
+            container.innerHTML = '<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>';
             return;
         }
 
         let html = '';
-        lastColorIndex = -1; // Reset สีทุกครั้งที่มีการ Render ใหม่
+        lastColorIndex = -1; 
 
-        // สร้าง Card ตามจำนวนข้อมูลที่ดึงมาได้
         data.forEach((item) => {
             const bgColor = getUniqueRandomColor();
             
+            // ใส่ .col ครอบเอาไว้เพื่อให้ทำงานร่วมกับ Grid 2 คอลัมน์
             html += `
-                <div class="ea-card" style="background-color: ${bgColor}">
-                    <div class="p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="text-muted small">Strategy</span>
-                            <span class="badge rounded-pill bg-primary">Running</span>
-                        </div>
-                        <h5 class="fw-bold mb-3">${item.name}</h5>
-                        
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <small class="text-muted d-block">Model</small>
-                                <span class="text-secondary">${item.comment || '-'}</span>
+                <div class="col">
+                    <div class="ea-card" style="background-color: ${bgColor}">
+                        <div class="p-3"> <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge rounded-pill bg-primary">Running</span>
                             </div>
-                            <div class="col-6 text-end">
-                                <small class="text-muted d-block">Style</small>
-                                <span class="text-secondary">${item.type || '-'}</span> 
+                            <h5 class="fw-bold" title="${item.name}">${item.name}</h5>
+                            
+                            <div class="mt-2">
+                                <div class="mb-1">
+                                    <small class="text-muted d-block">Model</small>
+                                    <div class="text-secondary" title="${item.comment || '-'}">${item.comment || '-'}</div>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Style</small>
+                                    <div class="text-secondary" title="${item.type || '-'}">${item.type || '-'}</div> 
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="balance-box text-center">
-                            <small class="text-muted d-block mb-1">Start Balance</small>
-                            <h2 class="fw-bold text-white mb-0">$${item.balance}</h2>
+                            <div class="balance-box text-center">
+                                <small class="text-muted d-block mb-1">Start Balance</small>
+                                <h3 class="fw-bold text-white mb-0">$${item.balance}</h3> </div>
                         </div>
                     </div>
                 </div>
