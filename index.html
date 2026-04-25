@@ -32,14 +32,28 @@
             padding: 0 5px;
         }
 
-        /* [UPDATE] ปรับแต่งหัวข้อ EA ATLANTIS ให้โดดเด่นสวยงาม */
+        /* จัดกลุ่มโลโก้และชื่อ EA ให้อยู่ด้วยกัน */
+        .header-title-group {
+            display: flex;
+            align-items: center;
+        }
+
+        /* ปรับขนาดโลโก้ให้พอดีกับความสูงของบรรทัด */
+        .header-logo {
+            height: 45px; 
+            width: auto;  
+            margin-right: 12px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+        }
+
         .mobile-header h4 { 
             color: #ffffff; 
             margin: 0; 
-            font-size: 1.5rem; /* ขยายขนาด */
+            font-size: 1.5rem; 
             font-weight: 600;
-            letter-spacing: 1px; /* เพิ่มช่องว่างระหว่างตัวอักษร */
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* ใส่เงาเรืองแสงบางๆ */
+            letter-spacing: 1px; 
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); 
         }
 
         .new-version-link {
@@ -95,9 +109,8 @@
             border: 1px solid rgba(255,255,255,0.1); 
         }
 
-        /* [UPDATE] ปรับข้อความชื่อ EA (Martingale Fast) ให้เป็นสีเหลือง */
         .ea-card h5.fw-bold { 
-            color: #ffeb3b !important; /* เปลี่ยนเป็นสีเหลือง */
+            color: #ffeb3b !important; 
             font-size: 1.35rem; 
             letter-spacing: 0.5px; 
             margin-bottom: 12px !important; 
@@ -130,10 +143,10 @@
 
         /* Style สำหรับปุ่ม LINE */
         .line-btn {
-            background-color: #06C755; /* สีเขียวของ LINE */
+            background-color: #06C755; 
             color: #ffffff !important;
             border: none;
-            border-radius: 50px; /* ทำให้ปุ่มมนกลม */
+            border-radius: 50px; 
             padding: 14px 20px;
             font-size: 1.1rem;
             font-weight: 500;
@@ -144,8 +157,8 @@
             text-decoration: none;
             box-shadow: 0 6px 15px rgba(6, 199, 85, 0.3);
             transition: transform 0.2s ease, background-color 0.2s ease;
-            margin-top: 30px; /* ระยะห่างจากบล็อกสุดท้าย */
-            margin-bottom: 20px; /* เว้นระยะด้านล่างสุดของจอ */
+            margin-top: 30px; 
+            margin-bottom: 20px; 
         }
 
         .line-btn:hover {
@@ -170,7 +183,11 @@
 <div class="container-fluid">
     <div class="mobile-header">
         <div class="header-flex">
-            <h4 class="fw-bold">[EA] ATLANTIS</h4>
+            <div class="header-title-group">
+                <img src="https://img1.pic.in.th/images/ealogo.png" alt="EA Atlantis Logo" class="header-logo">
+                <h4 class="fw-bold">[EA] ATLANTIS</h4>
+            </div>
+            
             <a href="https://drive.google.com/drive/folders/1V2LxJWNmFhOrvp0JRt5CyUy9UDaBB2Tb" target="_blank" class="new-version-link">New Version + Preset</a>
         </div>
         <div class="status-online">
@@ -273,7 +290,6 @@
         });
         
         container.innerHTML = html;
-        
         contactSection.style.display = 'block';
     }
 </script>
