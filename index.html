@@ -101,6 +101,22 @@
             padding: 4px 8px;
         }
 
+        /* เพิ่ม Style สำหรับกล่องความเสี่ยง (Style Badge) */
+        .style-badge {
+            display: inline-block;
+            color: #ffffff !important;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            max-width: 100%;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
         #loader { min-height: 200px; display: flex; align-items: center; justify-content: center; }
         .spinner-border { color: #ffffff !important; }
     </style>
@@ -128,8 +144,7 @@
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwUVLhRbdk2noN4GeHC-j_zaz2mxD8bjUDWIjg2aljSodPvJJzbq-2GHwitiIpHo5a5dQ/exec";
 
-    // กำหนด 2 สีที่ต้องการให้สลับกัน (ตอนนี้เลือกโทน Midnight Blue กับ Gunmetal ให้ครับ)
-    const color1 = '#130f40'; // สีที่ 1 (เข้มกว่า)
+    const color1 = '#130f40'; // สีที่ 1 (เข้ม)
     const color2 = '#2f3640'; // สีที่ 2 (สว่างกว่านิดนึง)
 
     document.addEventListener('DOMContentLoaded', fetchData);
@@ -160,12 +175,19 @@
 
         let html = '';
 
-        // ใช้ parameter 'index' ในการเช็คว่าเป็นกล่องที่เท่าไหร่
         data.forEach((item, index) => {
-            
-            // เช็คว่าลำดับเป็นเลขคู่หรือเลขคี่ แล้วกำหนดสี
             const bgColor = (index % 2 === 0) ? color1 : color2;
             
+            // ดึงข้อความ Style มาเช็คเงื่อนไขสี
+            let typeText = item.type || '-';
+            let styleBgColor = '#555555'; // ค่าเริ่มต้น: สีเทาเข้ม
+            
+            if (typeText.includes('เสี่ยงสูง')) {
+                styleBgColor = 'maroon'; // แดงเข้ม
+            } else if (typeText.includes('เสี่ยงต่ำ')) {
+                styleBgColor = 'darkgreen'; // เขียวเข้ม
+            }
+
             html += `
                 <div class="col">
                     <div class="ea-card" style="background-color: ${bgColor}">
@@ -176,13 +198,13 @@
                             <h5 class="fw-bold" title="${item.name}">${item.name}</h5>
                             
                             <div class="mt-2">
-                                <div class="mb-1">
-                                    <small class="text-muted d-block">Model</small>
+                                <div class="mb-2">
+                                    <small class="text-muted d-block mb-1">Model</small>
                                     <div class="text-secondary" title="${item.comment || '-'}">${item.comment || '-'}</div>
                                 </div>
                                 <div>
-                                    <small class="text-muted d-block">Style</small>
-                                    <div class="text-secondary" title="${item.type || '-'}">${item.type || '-'}</div> 
+                                    <small class="text-muted d-block mb-1">Style</small>
+                                    <div class="style-badge" style="background-color: ${styleBgColor};" title="${typeText}">${typeText}</div> 
                                 </div>
                             </div>
 
