@@ -23,7 +23,7 @@
 
         .container-fluid { padding: 0; margin: 0; width: 100%; }
 
-        .mobile-header { padding: 15px 0 20px 0; }
+        .mobile-header { padding: 20px 0 25px 0; }
         
         .header-flex {
             display: flex;
@@ -32,7 +32,15 @@
             padding: 0 5px;
         }
 
-        .mobile-header h4 { color: #ffffff; margin: 0; font-size: 1.15rem; }
+        /* [UPDATE] ปรับแต่งหัวข้อ EA ATLANTIS ให้โดดเด่นสวยงาม */
+        .mobile-header h4 { 
+            color: #ffffff; 
+            margin: 0; 
+            font-size: 1.5rem; /* ขยายขนาด */
+            font-weight: 600;
+            letter-spacing: 1px; /* เพิ่มช่องว่างระหว่างตัวอักษร */
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* ใส่เงาเรืองแสงบางๆ */
+        }
 
         .new-version-link {
             color: #ffeb3b !important; 
@@ -87,7 +95,13 @@
             border: 1px solid rgba(255,255,255,0.1); 
         }
 
-        .ea-card h5.fw-bold { color: #ffffff !important; font-size: 1.35rem; letter-spacing: 0.5px; margin-bottom: 12px !important; }
+        /* [UPDATE] ปรับข้อความชื่อ EA (Martingale Fast) ให้เป็นสีเหลือง */
+        .ea-card h5.fw-bold { 
+            color: #ffeb3b !important; /* เปลี่ยนเป็นสีเหลือง */
+            font-size: 1.35rem; 
+            letter-spacing: 0.5px; 
+            margin-bottom: 12px !important; 
+        }
         .ea-card .text-muted { color: rgba(255,255,255,0.7) !important; font-weight: 300; font-size: 0.85rem; }
         .ea-card .text-secondary { color: #ffffff !important; font-weight: 500; font-size: 1rem; line-height: 1.4; }
         
@@ -204,13 +218,13 @@
     function renderCards(data) {
         const container = document.getElementById('ea-container');
         const loader = document.getElementById('loader');
-        const contactSection = document.getElementById('contact-section'); // อ้างอิงส่วนปุ่ม LINE
+        const contactSection = document.getElementById('contact-section'); 
         
         if (loader) loader.style.display = 'none';
 
         if (!data || data.length === 0) {
             container.innerHTML = '<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>';
-            contactSection.style.display = 'block'; // ให้ปุ่ม LINE แสดงแม้ไม่พบข้อมูล
+            contactSection.style.display = 'block'; 
             return;
         }
 
@@ -260,7 +274,6 @@
         
         container.innerHTML = html;
         
-        // แสดงปุ่ม LINE หลังจากโหลดข้อมูล EA เสร็จ
         contactSection.style.display = 'block';
     }
 </script>
