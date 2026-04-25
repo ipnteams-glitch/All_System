@@ -16,7 +16,7 @@
             font-family: 'Kanit', sans-serif; 
             background-color: #121212; 
             margin: 0;
-            padding: 10px 5px; 
+            padding: 10px; 
             overflow-x: hidden;
             width: 100%;
         }
@@ -29,15 +29,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 10px;
+            padding: 0 5px;
         }
 
-        .mobile-header h4 { color: #ffffff; margin: 0; font-size: 1.1rem; }
+        .mobile-header h4 { color: #ffffff; margin: 0; font-size: 1.15rem; }
 
         .new-version-link {
             color: #ffeb3b !important; 
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 500;
             white-space: nowrap; 
         }
@@ -46,8 +46,8 @@
 
         .ea-card { 
             border: none; 
-            border-radius: 20px; 
-            box-shadow: 0 6px 15px rgba(0,0,0,0.3); 
+            border-radius: 25px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
             overflow: hidden; 
             width: 100%;
             height: 100%; 
@@ -56,20 +56,20 @@
 
         .status-online { 
             color: #4cd137; 
-            font-size: 0.85rem; 
+            font-size: 0.9rem; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             font-weight: 500;
-            margin-top: 10px; 
+            margin-top: 15px; 
         }
 
         .dot { 
-            height: 8px; width: 8px; 
+            height: 10px; width: 10px; 
             background-color: #4cd137; 
             border-radius: 50%; 
             display: inline-block; 
-            margin-right: 6px; 
+            margin-right: 8px; 
             animation: pulse 1.8s infinite; 
         }
 
@@ -81,15 +81,16 @@
 
         .balance-box { 
             background-color: rgba(255,255,255,0.15); 
-            border-radius: 15px; 
-            padding: 10px; 
-            margin-top: 10px; 
+            border-radius: 20px; 
+            padding: 18px; 
+            margin-top: 15px; 
             border: 1px solid rgba(255,255,255,0.1); 
         }
 
-        .ea-card h5.fw-bold { color: #ffffff !important; font-size: 1.1rem; letter-spacing: 0.5px; margin-bottom: 10px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .ea-card .text-muted { color: rgba(255,255,255,0.7) !important; font-weight: 300; font-size: 0.75rem; }
-        .ea-card .text-secondary { color: #ffffff !important; font-weight: 500; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* เอาการตัดคำ (nowrap) ออก เพื่อให้ข้อความยาวๆ แสดงได้ครบถ้วน */
+        .ea-card h5.fw-bold { color: #ffffff !important; font-size: 1.35rem; letter-spacing: 0.5px; margin-bottom: 12px !important; }
+        .ea-card .text-muted { color: rgba(255,255,255,0.7) !important; font-weight: 300; font-size: 0.85rem; }
+        .ea-card .text-secondary { color: #ffffff !important; font-weight: 500; font-size: 1rem; line-height: 1.4; }
         
         .badge.bg-primary { 
             background-color: rgba(255,255,255,0.2) !important; 
@@ -97,24 +98,22 @@
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.3);
             font-weight: 400; 
-            font-size: 0.65rem; 
-            padding: 4px 8px;
+            font-size: 0.75rem; 
+            padding: 6px 12px;
         }
 
-        /* เพิ่ม Style สำหรับกล่องความเสี่ยง (Style Badge) */
         .style-badge {
             display: inline-block;
             color: #ffffff !important;
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 12px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: 500;
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: ellipsis;
-            max-width: 100%;
             border: 1px solid rgba(255,255,255,0.2);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            /* ปล่อยให้ข้อความขึ้นบรรทัดใหม่ได้ถ้ายาวเกินจอ */
+            white-space: normal; 
+            max-width: 100%;
         }
 
         #loader { min-height: 200px; display: flex; align-items: center; justify-content: center; }
@@ -138,12 +137,13 @@
         <div class="spinner-border" role="status"></div>
     </div>
 
-    <div id="ea-container" class="row row-cols-2 g-2 px-2"></div>
+    <div id="ea-container" class="row row-cols-1 g-3 px-2"></div>
 </div>
 
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwUVLhRbdk2noN4GeHC-j_zaz2mxD8bjUDWIjg2aljSodPvJJzbq-2GHwitiIpHo5a5dQ/exec";
 
+    // กำหนด 2 สีที่ต้องการให้สลับกัน
     const color1 = '#130f40'; // สีที่ 1 (เข้ม)
     const color2 = '#2f3640'; // สีที่ 2 (สว่างกว่านิดนึง)
 
@@ -178,40 +178,37 @@
         data.forEach((item, index) => {
             const bgColor = (index % 2 === 0) ? color1 : color2;
             
-            // ดึงข้อความ Style มาเช็คเงื่อนไขสี
             let typeText = item.type || '-';
-            let styleBgColor = '#555555'; // ค่าเริ่มต้น: สีเทาเข้ม
+            let styleBgColor = '#555555'; 
             
             if (typeText.includes('เสี่ยงสูง')) {
-                styleBgColor = 'maroon'; // แดงเข้ม
+                styleBgColor = 'maroon'; 
             } else if (typeText.includes('เสี่ยงต่ำ')) {
-                styleBgColor = 'darkgreen'; // เขียวเข้ม
+                styleBgColor = 'darkgreen'; 
             }
 
             html += `
                 <div class="col">
                     <div class="ea-card" style="background-color: ${bgColor}">
-                        <div class="p-3">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="p-4"> <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="badge rounded-pill bg-primary">Running</span>
                             </div>
-                            <h5 class="fw-bold" title="${item.name}">${item.name}</h5>
+                            <h5 class="fw-bold">${item.name}</h5>
                             
-                            <div class="mt-2">
-                                <div class="mb-2">
+                            <div class="row g-2 mt-2">
+                                <div class="col-6">
                                     <small class="text-muted d-block mb-1">Model</small>
-                                    <div class="text-secondary" title="${item.comment || '-'}">${item.comment || '-'}</div>
+                                    <div class="text-secondary">${item.comment || '-'}</div>
                                 </div>
-                                <div>
+                                <div class="col-6 text-end">
                                     <small class="text-muted d-block mb-1">Style</small>
-                                    <div class="style-badge" style="background-color: ${styleBgColor};" title="${typeText}">${typeText}</div> 
+                                    <div class="style-badge" style="background-color: ${styleBgColor};">${typeText}</div> 
                                 </div>
                             </div>
 
-                            <div class="balance-box text-center">
+                            <div class="balance-box text-center mt-3">
                                 <small class="text-muted d-block mb-1">Start Balance</small>
-                                <h3 class="fw-bold text-white mb-0">$${item.balance}</h3>
-                            </div>
+                                <h2 class="fw-bold text-white mb-0">$${item.balance}</h2> </div>
                         </div>
                     </div>
                 </div>
