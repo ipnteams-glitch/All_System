@@ -87,7 +87,6 @@
             border: 1px solid rgba(255,255,255,0.1); 
         }
 
-        /* เอาการตัดคำ (nowrap) ออก เพื่อให้ข้อความยาวๆ แสดงได้ครบถ้วน */
         .ea-card h5.fw-bold { color: #ffffff !important; font-size: 1.35rem; letter-spacing: 0.5px; margin-bottom: 12px !important; }
         .ea-card .text-muted { color: rgba(255,255,255,0.7) !important; font-weight: 300; font-size: 0.85rem; }
         .ea-card .text-secondary { color: #ffffff !important; font-weight: 500; font-size: 1rem; line-height: 1.4; }
@@ -111,9 +110,41 @@
             font-weight: 500;
             border: 1px solid rgba(255,255,255,0.2);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            /* ปล่อยให้ข้อความขึ้นบรรทัดใหม่ได้ถ้ายาวเกินจอ */
             white-space: normal; 
             max-width: 100%;
+        }
+
+        /* Style สำหรับปุ่ม LINE */
+        .line-btn {
+            background-color: #06C755; /* สีเขียวของ LINE */
+            color: #ffffff !important;
+            border: none;
+            border-radius: 50px; /* ทำให้ปุ่มมนกลม */
+            padding: 14px 20px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 6px 15px rgba(6, 199, 85, 0.3);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            margin-top: 30px; /* ระยะห่างจากบล็อกสุดท้าย */
+            margin-bottom: 20px; /* เว้นระยะด้านล่างสุดของจอ */
+        }
+
+        .line-btn:hover {
+            background-color: #05b34c;
+            transform: translateY(-2px);
+            color: #ffffff;
+        }
+
+        .line-icon {
+            width: 28px;
+            height: 28px;
+            margin-right: 10px;
+            fill: #ffffff;
         }
 
         #loader { min-height: 200px; display: flex; align-items: center; justify-content: center; }
@@ -125,8 +156,8 @@
 <div class="container-fluid">
     <div class="mobile-header">
         <div class="header-flex">
-            <h4 class="fw-bold">[EA] ATLANTIS</h4>
-            <a href="https://drive.google.com/drive/folders/1V2LxJWNmFhOrvp0JRt5CyUy9UDaBB2Tb" target="_blank" class="new-version-link">New Version + Preset</a>
+            <h4 class="fw-bold">EA MONITOR</h4>
+            <a href="https://drive.google.com/drive/folders/19i9MHUJdY4X38LOunNVNMBTj9fh-P9h1" target="_blank" class="new-version-link">New Version + Preset</a>
         </div>
         <div class="status-online">
             <span class="dot"></span>Live Update
@@ -138,14 +169,22 @@
     </div>
 
     <div id="ea-container" class="row row-cols-1 g-3 px-2"></div>
+
+    <div id="contact-section" class="px-2" style="display: none;">
+        <a href="https://lin.ee/9B1pFmD" target="_blank" class="line-btn">
+            <svg class="line-icon" viewBox="0 0 24 24">
+                <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.084.922.258 1.057.592.122.303.079.778.039 1.085l-.171 1.027c-.053.303-.242 1.186 1.039.647 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.572-3.843 2.572-5.992zm-15.278 1.954h-3.327v-5.465h1.222v4.306h2.105v1.159zm2.41 0h-1.221v-5.465h1.221v5.465zm5.556-3.805l-2.348 3.805h-1.399v-5.465h1.221v3.251l2.251-3.251h1.496v5.465h-1.221v-3.805zm3.627-1.66h-2.104v1.159h2.104v1.159h-2.104v1.158h2.104v1.159h-3.326v-5.465h3.326v1.16z"/>
+            </svg>
+            Line Contact : @479ufnya
+        </a>
+    </div>
 </div>
 
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwUVLhRbdk2noN4GeHC-j_zaz2mxD8bjUDWIjg2aljSodPvJJzbq-2GHwitiIpHo5a5dQ/exec";
 
-    // กำหนด 2 สีที่ต้องการให้สลับกัน
-    const color1 = '#130f40'; // สีที่ 1 (เข้ม)
-    const color2 = '#2f3640'; // สีที่ 2 (สว่างกว่านิดนึง)
+    const color1 = '#130f40'; 
+    const color2 = '#2f3640'; 
 
     document.addEventListener('DOMContentLoaded', fetchData);
 
@@ -165,11 +204,13 @@
     function renderCards(data) {
         const container = document.getElementById('ea-container');
         const loader = document.getElementById('loader');
+        const contactSection = document.getElementById('contact-section'); // อ้างอิงส่วนปุ่ม LINE
         
         if (loader) loader.style.display = 'none';
 
         if (!data || data.length === 0) {
             container.innerHTML = '<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>';
+            contactSection.style.display = 'block'; // ให้ปุ่ม LINE แสดงแม้ไม่พบข้อมูล
             return;
         }
 
@@ -190,7 +231,8 @@
             html += `
                 <div class="col">
                     <div class="ea-card" style="background-color: ${bgColor}">
-                        <div class="p-4"> <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="p-4"> 
+                            <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="badge rounded-pill bg-primary">Running</span>
                             </div>
                             <h5 class="fw-bold">${item.name}</h5>
@@ -208,13 +250,18 @@
 
                             <div class="balance-box text-center mt-3">
                                 <small class="text-muted d-block mb-1">Start Balance</small>
-                                <h2 class="fw-bold text-white mb-0">$${item.balance}</h2> </div>
+                                <h2 class="fw-bold text-white mb-0">$${item.balance}</h2> 
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
         });
+        
         container.innerHTML = html;
+        
+        // แสดงปุ่ม LINE หลังจากโหลดข้อมูล EA เสร็จ
+        contactSection.style.display = 'block';
     }
 </script>
 
