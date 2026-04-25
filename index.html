@@ -16,7 +16,7 @@
             font-family: 'Kanit', sans-serif; 
             background-color: #121212; 
             margin: 0;
-            padding: 10px 5px; /* ลดขอบซ้ายขวาลงนิดนึงเพื่อให้มีพื้นที่มากขึ้น */
+            padding: 10px 5px; 
             overflow-x: hidden;
             width: 100%;
         }
@@ -44,14 +44,13 @@
 
         .new-version-link:hover { text-decoration: underline; color: #fff176 !important; }
 
-        /* ปรับแต่ง Card สำหรับ 2 คอลัมน์ */
         .ea-card { 
             border: none; 
-            border-radius: 20px; /* ลดความมนลงเล็กน้อย */
+            border-radius: 20px; 
             box-shadow: 0 6px 15px rgba(0,0,0,0.3); 
             overflow: hidden; 
             width: 100%;
-            height: 100%; /* ให้การ์ดสูงเท่ากันทุกใบ */
+            height: 100%; 
             color: #ffffff !important; 
         }
 
@@ -83,12 +82,11 @@
         .balance-box { 
             background-color: rgba(255,255,255,0.15); 
             border-radius: 15px; 
-            padding: 10px; /* ลด Padding */
+            padding: 10px; 
             margin-top: 10px; 
             border: 1px solid rgba(255,255,255,0.1); 
         }
 
-        /* ปรับขนาดอักษรให้เล็กลงพอดีกับ 2 คอลัมน์ */
         .ea-card h5.fw-bold { color: #ffffff !important; font-size: 1.1rem; letter-spacing: 0.5px; margin-bottom: 10px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ea-card .text-muted { color: rgba(255,255,255,0.7) !important; font-weight: 300; font-size: 0.75rem; }
         .ea-card .text-secondary { color: #ffffff !important; font-weight: 500; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -99,7 +97,7 @@
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.3);
             font-weight: 400; 
-            font-size: 0.65rem; /* ลดขนาด Badge */
+            font-size: 0.65rem; 
             padding: 4px 8px;
         }
 
@@ -112,7 +110,8 @@
 <div class="container-fluid">
     <div class="mobile-header">
         <div class="header-flex">
-            <h4 class="fw-bold">EA MONITOR</h4> <a href="https://drive.google.com/drive/folders/19i9MHUJdY4X38LOunNVNMBTj9fh-P9h1" target="_blank" class="new-version-link">New Version + Preset</a>
+            <h4 class="fw-bold">EA MONITOR</h4>
+            <a href="https://drive.google.com/drive/folders/19i9MHUJdY4X38LOunNVNMBTj9fh-P9h1" target="_blank" class="new-version-link">New Version + Preset</a>
         </div>
         <div class="status-online">
             <span class="dot"></span>Live Update
@@ -129,21 +128,9 @@
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwUVLhRbdk2noN4GeHC-j_zaz2mxD8bjUDWIjg2aljSodPvJJzbq-2GHwitiIpHo5a5dQ/exec";
 
-    const darkColors = [
-        '#1e3799', '#009432', '#006266', '#833471', '#b71540', '#130f40', '#5758BB', '#2f3640'
-    ];
-
-    let lastColorIndex = -1;
-
-    function getUniqueRandomColor() {
-        let newIndex;
-        do {
-            newIndex = Math.floor(Math.random() * darkColors.length);
-        } while (newIndex === lastColorIndex);
-        
-        lastColorIndex = newIndex;
-        return darkColors[newIndex];
-    }
+    // กำหนด 2 สีที่ต้องการให้สลับกัน (ตอนนี้เลือกโทน Midnight Blue กับ Gunmetal ให้ครับ)
+    const color1 = '#130f40'; // สีที่ 1 (เข้มกว่า)
+    const color2 = '#2f3640'; // สีที่ 2 (สว่างกว่านิดนึง)
 
     document.addEventListener('DOMContentLoaded', fetchData);
 
@@ -172,16 +159,18 @@
         }
 
         let html = '';
-        lastColorIndex = -1; 
 
-        data.forEach((item) => {
-            const bgColor = getUniqueRandomColor();
+        // ใช้ parameter 'index' ในการเช็คว่าเป็นกล่องที่เท่าไหร่
+        data.forEach((item, index) => {
             
-            // ใส่ .col ครอบเอาไว้เพื่อให้ทำงานร่วมกับ Grid 2 คอลัมน์
+            // เช็คว่าลำดับเป็นเลขคู่หรือเลขคี่ แล้วกำหนดสี
+            const bgColor = (index % 2 === 0) ? color1 : color2;
+            
             html += `
                 <div class="col">
                     <div class="ea-card" style="background-color: ${bgColor}">
-                        <div class="p-3"> <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="badge rounded-pill bg-primary">Running</span>
                             </div>
                             <h5 class="fw-bold" title="${item.name}">${item.name}</h5>
@@ -199,7 +188,8 @@
 
                             <div class="balance-box text-center">
                                 <small class="text-muted d-block mb-1">Start Balance</small>
-                                <h3 class="fw-bold text-white mb-0">$${item.balance}</h3> </div>
+                                <h3 class="fw-bold text-white mb-0">$${item.balance}</h3>
+                            </div>
                         </div>
                     </div>
                 </div>
