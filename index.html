@@ -251,12 +251,15 @@
             const bgColor = (index % 2 === 0) ? color1 : color2;
             
             let typeText = item.type || '-';
-            let styleBgColor = '#555555'; 
+            let styleBgColor = '#555555'; // ค่าเริ่มต้น: สีเทาเข้ม
             
+            // เช็คเงื่อนไขข้อความเพื่อเปลี่ยนสีป้าย (Style Badge)
             if (typeText.includes('เสี่ยงสูง')) {
-                styleBgColor = 'maroon'; 
+                styleBgColor = 'maroon'; // สีแดงเข้ม
             } else if (typeText.includes('เสี่ยงต่ำ')) {
-                styleBgColor = 'darkgreen'; 
+                styleBgColor = 'darkgreen'; // สีเขียวเข้ม
+            } else if (typeText.includes('ทดสอบระบบใหม่')) {
+                styleBgColor = '#b8860b'; // สีเหลืองเข้ม (Dark Goldenrod)
             }
 
             html += `
