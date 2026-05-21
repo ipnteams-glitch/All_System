@@ -1,5 +1,3 @@
-การฟาร์ม EA คือการบริหารพอร์ตการลงทุนที่ไม่พึ่งพา EA ตัวเดียว เพื่อกระจายความเสี่ยง มาดู A vs B อย่างสมดุลกัน: A คือการกระจายด้วยหลาย EA และบริหารเงินพอร์ต ข้อดีคือเสถียรและลด drawdown แต่ต้นทุนซับซ้อน B ใช้ EA เดี่ยวที่มี track record ชัดเจน ง่ายต่อการบริหาร แต่เสี่ยงสูงเมื่อตลาดเปลี่ยน Verdict: ในตลาดไม่แน่นอน A มักชนะในระยะยาวเพราะการกระจายความเสี่ยง แต่หากคุณมีทักษะเลือก EA เดี่ยวที่เข้ากับสภาวะตลาดได้ดี B ก็อาจได้ผลตอบแทนสูงในระยะสั้น วิถีที่ลงตัวคือผสมผสาน: กระจายพอร์ตด้วยหลาย EA พร้อมรีบาลานซ์ความเสี่ยง
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -9,7 +7,7 @@
     <title>EA SYSTEMS MONITOR</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
         * { box-sizing: border-box; }
@@ -25,7 +23,7 @@
 
         .container-fluid { padding: 0; margin: 0; width: 100%; }
 
-        .mobile-header { padding: 20px 0 25px 0; }
+        .mobile-header { padding: 20px 0 15px 0; }
         
         .header-flex {
             display: flex;
@@ -66,16 +64,6 @@
 
         .new-version-link:hover { text-decoration: underline; color: #fff176 !important; }
 
-        .ea-card { 
-            border: none; 
-            border-radius: 25px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
-            overflow: hidden; 
-            width: 100%;
-            height: 100%; 
-            color: #ffffff !important; 
-        }
-
         .status-online { 
             color: #4cd137; 
             font-size: 0.9rem; 
@@ -99,6 +87,35 @@
             0% { opacity: 1; transform: scale(1); } 
             50% { opacity: 0.4; transform: scale(1.2); } 
             100% { opacity: 1; transform: scale(1); } 
+        }
+
+        /* [NEW] กล่องข้อความอธิบายการฟาร์ม EA */
+        .info-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 0 5px 20px 5px;
+            color: #ffffff; /* ตัวหนังสือสีขาว */
+            font-size: 0.85rem;
+            line-height: 1.6;
+            font-weight: 300;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .info-box strong {
+            color: #ffeb3b; /* เน้นหัวข้อและตัวอักษร A, B ให้เป็นสีเหลืองเพื่อให้อ่านง่าย */
+            font-weight: 500;
+        }
+
+        .ea-card { 
+            border: none; 
+            border-radius: 25px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
+            overflow: hidden; 
+            width: 100%;
+            height: 100%; 
+            color: #ffffff !important; 
         }
 
         .balance-box { 
@@ -149,13 +166,11 @@
             color: rgba(255, 255, 255, 0.9);
         }
         
-        /* เอาสีเหลืองแบบตายตัวออก เพื่อให้ JavaScript กำหนดสีแทน */
         .profit-value {
             font-weight: 600;
             margin-left: 5px;
         }
 
-        /* Style สำหรับปุ่ม LINE */
         .line-btn {
             background-color: #06C755; 
             color: #ffffff !important;
@@ -206,6 +221,13 @@
         <div class="status-online">
             <span class="dot"></span>Live Update
         </div>
+    </div>
+
+    <div class="info-box">
+        <strong>การฟาร์ม EA</strong> คือการบริหารพอร์ตการลงทุนที่ไม่พึ่งพา EA ตัวเดียว เพื่อกระจายความเสี่ยง มาดู A vs B อย่างสมดุลกัน:<br><br>
+        <strong>A:</strong> คือการกระจายด้วยหลาย EA และบริหารเงินพอร์ต ข้อดีคือเสถียรและลด drawdown แต่ต้นทุนซับซ้อน<br>
+        <strong>B:</strong> ใช้ EA เดี่ยวที่มี track record ชัดเจน ง่ายต่อการบริหาร แต่เสี่ยงสูงเมื่อตลาดเปลี่ยน<br><br>
+        <strong>Verdict:</strong> ในตลาดไม่แน่นอน A มักชนะในระยะยาวเพราะการกระจายความเสี่ยง แต่หากคุณมีทักษะเลือก EA เดี่ยวที่เข้ากับสภาวะตลาดได้ดี B ก็อาจได้ผลตอบแทนสูงในระยะสั้น วิถีที่ลงตัวคือผสมผสาน: กระจายพอร์ตด้วยหลาย EA พร้อมรีบาลานซ์ความเสี่ยง
     </div>
 
     <div id="loader">
@@ -274,15 +296,11 @@
                 styleBgColor = '#b8860b'; 
             }
 
-            // คำนวณสีสำหรับกำไรสัปดาห์ล่าสุด
             let profitStr = item.profit || '0.00';
-            // ลบลูกน้ำออกก่อนแปลงเป็นตัวเลขเพื่อป้องกันความผิดพลาด
             let profitNum = parseFloat(String(profitStr).replace(/,/g, ''));
             
-            // กำหนดสีเริ่มต้นเป็นสีเขียว Lime สว่าง (สำหรับกรณีเป็นบวก หรือ 0)
             let profitColor = '#39ff14'; 
             if (profitNum < 0) {
-                // ถ้าติดลบ ให้เปลี่ยนเป็นสีแดงสว่าง
                 profitColor = '#ff3b3b'; 
             }
 
@@ -327,5 +345,3 @@
 
 </body>
 </html>
-
-```
