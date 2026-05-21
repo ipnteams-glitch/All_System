@@ -1,3 +1,13 @@
+การปรับให้ตัวเลขเปลี่ยนสีอัตโนมัติตามค่าบวกหรือลบ (Dynamic Color) จะช่วยให้คุณประเมินสถานการณ์ของพอร์ตได้รวดเร็วขึ้นมากครับ
+
+ผมได้นำคลาสสีเหลืองแบบตายตัวออก และเพิ่มตรรกะใน JavaScript ให้ระบบเช็คค่าตัวเลขกำไรก่อนแสดงผล:
+
+* **ถ้ามากกว่าหรือเท่ากับ 0 (บวก):** จะแสดงเป็นสีเขียวสว่าง (Lime: `#39ff14`)
+* **ถ้าน้อยกว่า 0 (ติดลบ):** จะแสดงเป็นสีแดงสว่าง (`#ff3b3b`)
+
+คัดลอกโค้ดฉบับอัปเดตนี้ไปวางทับในไฟล์ `index.html` ของคุณได้เลยครับ:
+
+```html
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -139,7 +149,6 @@
             max-width: 100%;
         }
 
-        /* สไตล์เพิ่มเติมสำหรับแถบข้อมูลกำไรสัปดาห์ล่าสุด */
         .profit-center-box {
             text-align: center;
             margin-top: 15px;
@@ -147,10 +156,11 @@
             font-weight: 500;
             color: rgba(255, 255, 255, 0.9);
         }
+        
+        /* เอาสีเหลืองแบบตายตัวออก เพื่อให้ JavaScript กำหนดสีแทน */
         .profit-value {
-            color: #ffeb3b; /* ตัวเลขกำไรสีเหลืองเด่นชัด */
             font-weight: 600;
-            margin-left: 3px;
+            margin-left: 5px;
         }
 
         /* Style สำหรับปุ่ม LINE */
@@ -272,6 +282,18 @@
                 styleBgColor = '#b8860b'; 
             }
 
+            // คำนวณสีสำหรับกำไรสัปดาห์ล่าสุด
+            let profitStr = item.profit || '0.00';
+            // ลบลูกน้ำออกก่อนแปลงเป็นตัวเลขเพื่อป้องกันความผิดพลาด
+            let profitNum = parseFloat(String(profitStr).replace(/,/g, ''));
+            
+            // กำหนดสีเริ่มต้นเป็นสีเขียว Lime สว่าง (สำหรับกรณีเป็นบวก หรือ 0)
+            let profitColor = '#39ff14'; 
+            if (profitNum < 0) {
+                // ถ้าติดลบ ให้เปลี่ยนเป็นสีแดงสว่าง
+                profitColor = '#ff3b3b'; 
+            }
+
             html += `
                 <div class="col">
                     <div class="ea-card" style="background-color: ${bgColor}">
@@ -293,7 +315,7 @@
                             </div>
 
                             <div class="profit-center-box">
-                                กำไรสัปดาห์ล่าสุด <span class="profit-value">${item.profit || '0.00'}</span>
+                                กำไรสัปดาห์ล่าสุด <span class="profit-value" style="color: ${profitColor};">${profitStr}</span>
                             </div>
 
                             <div class="balance-box text-center mt-3">
@@ -313,3 +335,5 @@
 
 </body>
 </html>
+
+```
