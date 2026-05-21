@@ -32,13 +32,11 @@
             padding: 0 5px;
         }
 
-        /* จัดกลุ่มโลโก้และชื่อ EA ให้อยู่ด้วยกัน */
         .header-title-group {
             display: flex;
             align-items: center;
         }
 
-        /* ปรับขนาดโลโก้ให้พอดีกับความสูงของบรรทัด */
         .header-logo {
             height: 45px; 
             width: auto;  
@@ -141,6 +139,20 @@
             max-width: 100%;
         }
 
+        /* สไตล์เพิ่มเติมสำหรับแถบข้อมูลกำไรสัปดาห์ล่าสุด */
+        .profit-center-box {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .profit-value {
+            color: #ffeb3b; /* ตัวเลขกำไรสีเหลืองเด่นชัด */
+            font-weight: 600;
+            margin-left: 3px;
+        }
+
         /* Style สำหรับปุ่ม LINE */
         .line-btn {
             background-color: #06C755; 
@@ -187,7 +199,6 @@
                 <img src="https://img1.pic.in.th/images/ealogo.png" alt="EA Atlantis Logo" class="header-logo">
                 <h4 class="fw-bold">[EA] ATLANTIS</h4>
             </div>
-            
             <a href="https://drive.google.com/drive/folders/1V2LxJWNmFhOrvp0JRt5CyUy9UDaBB2Tb" target="_blank" class="new-version-link">New Version + Preset</a>
         </div>
         <div class="status-online">
@@ -251,15 +262,14 @@
             const bgColor = (index % 2 === 0) ? color1 : color2;
             
             let typeText = item.type || '-';
-            let styleBgColor = '#555555'; // ค่าเริ่มต้น: สีเทาเข้ม
+            let styleBgColor = '#555555'; 
             
-            // เช็คเงื่อนไขข้อความเพื่อเปลี่ยนสีป้าย (Style Badge)
             if (typeText.includes('เสี่ยงสูง')) {
-                styleBgColor = 'maroon'; // สีแดงเข้ม
+                styleBgColor = 'maroon'; 
             } else if (typeText.includes('เสี่ยงต่ำ')) {
-                styleBgColor = 'darkgreen'; // สีเขียวเข้ม
+                styleBgColor = 'darkgreen'; 
             } else if (typeText.includes('ทดสอบระบบใหม่')) {
-                styleBgColor = '#b8860b'; // สีเหลืองเข้ม (Dark Goldenrod)
+                styleBgColor = '#b8860b'; 
             }
 
             html += `
@@ -280,6 +290,10 @@
                                     <small class="text-muted d-block mb-1">Style</small>
                                     <div class="style-badge" style="background-color: ${styleBgColor};">${typeText}</div> 
                                 </div>
+                            </div>
+
+                            <div class="profit-center-box">
+                                กำไรสัปดาห์ล่าสุด <span class="profit-value">${item.profit || '0.00'}</span>
                             </div>
 
                             <div class="balance-box text-center mt-3">
