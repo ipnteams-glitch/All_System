@@ -89,7 +89,6 @@
             100% { opacity: 1; transform: scale(1); } 
         }
 
-        /* กล่องข้อความอธิบายการฟาร์ม EA */
         .info-box {
             background-color: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -108,15 +107,22 @@
             font-weight: 500;
         }
 
-        /* ข้อความโปรโมท ทดลองใช้ฟรี 1 สัปดาห์ (สีแดง) */
+        /* [UPDATE] ปรับสไตล์ให้เป็น inline-block เพื่อให้จัดกึ่งกลางจาก div ได้ง่ายขึ้น */
         .free-trial-text {
-            text-align: center;
-            color: #ff3b3b; 
+            display: inline-block;
+            color: #ff3b3b !important; 
             font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: 25px;
             letter-spacing: 1px;
             text-shadow: 0 0 15px rgba(255, 59, 59, 0.5); 
+            text-decoration: none; 
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .free-trial-text:hover {
+            transform: scale(1.05); 
+            color: #ff4d4d !important;
+            text-decoration: none;
         }
 
         .ea-card { 
@@ -241,10 +247,12 @@
         <strong>Verdict:</strong> เมื่อตลาดไม่แน่นอน A มักชนะในระยะยาวเพราะการกระจายความเสี่ยงทำได้ดีกว่า แต่หากคุณมีทักษะเลือก EA เดี่ยวที่เข้ากับสภาวะตลาดได้ดี B ก็อาจได้ผลตอบแทนสูงในระยะสั้น วิถีที่ลงตัวคือผสมผสาน: กระจายพอร์ตด้วยหลาย EA พร้อมรีบาลานซ์ความเสี่ยง เพื่อควมยั่งยืนในระยะยาว
     </div>
 
-   <!-- [UPDATE] เปลี่ยนเป็นลิงก์และใส่ URL ปลายทาง -->
-    <a href="https://lin.ee/9B1pFmD" target="_blank" class="free-trial-text">
-        - ทดลองใช้ฟรี -
-    </a>
+    <!-- [UPDATE] ใช้ div คลุมและบังคับจัดกึ่งกลาง (text-center w-100) -->
+    <div class="text-center w-100 mb-4">
+        <a href="https://lin.ee/9B1pFmD" target="_blank" class="free-trial-text">
+            ทดลองใช้ฟรี 1 สัปดาห์
+        </a>
+    </div>
 
     <div id="loader">
         <div class="spinner-border" role="status"></div>
@@ -265,7 +273,6 @@
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwUVLhRbdk2noN4GeHC-j_zaz2mxD8bjUDWIjg2aljSodPvJJzbq-2GHwitiIpHo5a5dQ/exec";
 
-    // [UPDATE] เปลี่ยนสีบล็อกสลับกันเป็น Midnight Blue และ Deep Premium Purple
     const color1 = '#130f40'; // Midnight Blue
     const color2 = '#1e1240'; // Deep Premium Purple
 
