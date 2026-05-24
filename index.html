@@ -107,7 +107,6 @@
             font-weight: 500;
         }
 
-        /* [UPDATE] ปรับสไตล์ให้เป็น inline-block เพื่อให้จัดกึ่งกลางจาก div ได้ง่ายขึ้น */
         .free-trial-text {
             display: inline-block;
             color: #ff3b3b !important; 
@@ -188,8 +187,8 @@
             margin-left: 5px;
         }
 
-        .line-btn {
-            background-color: #06C755; 
+        /* [UPDATE] โครงสร้าง Style สำหรับปุ่ม Social ทั้งหมด */
+        .social-btn {
             color: #ffffff !important;
             border: none;
             border-radius: 50px; 
@@ -201,19 +200,32 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            box-shadow: 0 6px 15px rgba(6, 199, 85, 0.3);
             transition: transform 0.2s ease, background-color 0.2s ease;
-            margin-top: 30px; 
-            margin-bottom: 20px; 
+            margin-bottom: 15px; /* ระยะห่างระหว่างปุ่ม */
         }
 
-        .line-btn:hover {
-            background-color: #05b34c;
+        .social-btn:hover {
             transform: translateY(-2px);
             color: #ffffff;
         }
 
-        .line-icon {
+        /* ปุ่ม LINE */
+        .line-btn { background-color: #06C755; box-shadow: 0 6px 15px rgba(6, 199, 85, 0.3); margin-top: 30px; }
+        .line-btn:hover { background-color: #05b34c; }
+
+        /* ปุ่ม Facebook */
+        .fb-btn { background-color: #1877F2; box-shadow: 0 6px 15px rgba(24, 119, 242, 0.3); }
+        .fb-btn:hover { background-color: #166fe5; }
+
+        /* ปุ่ม YouTube */
+        .yt-btn { background-color: #FF0000; box-shadow: 0 6px 15px rgba(255, 0, 0, 0.3); }
+        .yt-btn:hover { background-color: #e60000; }
+
+        /* ปุ่ม TikTok */
+        .tt-btn { background-color: #111111; box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1); margin-bottom: 40px;}
+        .tt-btn:hover { background-color: #222222; }
+
+        .social-icon {
             width: 28px;
             height: 28px;
             margin-right: 10px;
@@ -262,7 +274,6 @@
         </div>
     </div>
 
-    <!-- [UPDATE] ใช้ div คลุมและบังคับจัดกึ่งกลาง (text-center w-100) -->
     <div class="text-center w-100 mb-4">
         <a href="https://lin.ee/9B1pFmD" target="_blank" class="free-trial-text">
            - ทดลองใช้ฟรี -
@@ -276,11 +287,33 @@
     <div id="ea-container" class="row row-cols-1 g-3 px-2"></div>
 
     <div id="contact-section" class="px-2" style="display: none;">
-        <a href="https://lin.ee/9B1pFmD" target="_blank" class="line-btn">
-            <svg class="line-icon" viewBox="0 0 24 24">
+        <!-- [UPDATE] โซนปุ่ม Social -->
+        <a href="https://lin.ee/9B1pFmD" target="_blank" class="social-btn line-btn">
+            <svg class="social-icon" viewBox="0 0 24 24">
                 <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.084.922.258 1.057.592.122.303.079.778.039 1.085l-.171 1.027c-.053.303-.242 1.186 1.039.647 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.572-3.843 2.572-5.992zm-15.278 1.954h-3.327v-5.465h1.222v4.306h2.105v1.159zm2.41 0h-1.221v-5.465h1.221v5.465zm5.556-3.805l-2.348 3.805h-1.399v-5.465h1.221v3.251l2.251-3.251h1.496v5.465h-1.221v-3.805zm3.627-1.66h-2.104v1.159h2.104v1.159h-2.104v1.158h2.104v1.159h-3.326v-5.465h3.326v1.16z"/>
             </svg>
             Line Contact : @479ufnya
+        </a>
+
+        <a href="https://www.facebook.com/harvestfarmea" target="_blank" class="social-btn fb-btn">
+            <svg class="social-icon" viewBox="0 0 24 24">
+                <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+            </svg>
+            Facebook Page
+        </a>
+
+        <a href="https://www.youtube.com/watch?v=fHrRiGEaWxk" target="_blank" class="social-btn yt-btn">
+            <svg class="social-icon" viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            YouTube Channel
+        </a>
+
+        <a href="https://www.tiktok.com/@harvestfarmea?_r=1&_t=ZS-96d11l4uEAG" target="_blank" class="social-btn tt-btn">
+            <svg class="social-icon" viewBox="0 0 24 24">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+            </svg>
+            TikTok
         </a>
     </div>
 </div>
