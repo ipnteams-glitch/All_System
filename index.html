@@ -252,41 +252,126 @@
         </div>
     </div>
 
-    <div class="info-box">
-        <div style="text-align: center; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.2);">
-            <strong style="font-size: 1.15rem;">ระบบเทรดอัตโนมัติบนตลาด Forex</strong><br>
-            สร้างกำไรอย่างยั่งยืนด้วยแนวคิด 
-            <strong>EA Farming</strong>
-        </div>
+    <!-- [NEW] Hero Banner Section -->
+    <div class="hero-section text-center">
+        <h1 class="hero-title">HARVEST FARM</h1>
+        <h2 class="hero-subtitle">ระบบเทรดอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
+        <p class="hero-desc">
+            กระจายความเสี่ยงผ่านกองทัพ EA หลากหลายกลยุทธ์ ทำงานสอดประสานกัน 24 ชม.<br>
+            ลด Drawdown ชดเชยความเสี่ยง เพื่อการเติบโตของพอร์ตอย่างยั่งยืน โดยไม่ต้องเฝ้ากราฟ
+        </p>
         
-        แม้คุณจะเทรด Forex เองได้ แต่ถ้าไม่มีเวลาเฝ้ากราฟ ให้ระบบของเราทำงานแทน! ระบบอัตโนมัติจะช่วยคุณเทรดตลอด 24 ชั่วโมง โดยตัดปัญหาเรื่องอารมณ์และความเครียดออกไปอย่างสิ้นเชิง<br><br>
-
-        แต่เนื่องจากตลาดมีความผันผวนสูง <strong>เราจึงไม่แนะนำให้ฝากความหวังไว้กับบอทเพียงตัวเดียว</strong> ระบบของเราจึงถูกพัฒนาขึ้นเพื่อปกป้องพอร์ตการลงทุนของคุณ ด้วยหลักการ "ไม่เก็บไข่ไว้ในตะกร้าใบเดียว":<br>
-
-        <ul style="padding-left: 20px; margin-bottom: 15px; margin-top: 10px;">
-            <li style="margin-bottom: 8px;"><strong>ทีมเทรดที่ทรงพลัง:</strong> กระจายการลงทุนผ่าน EA ประสิทธิภาพสูงกว่า 5 กลยุทธ์ ที่ทำงานสอดประสานกัน</li>
-            <li style="margin-bottom: 8px;"><strong>บริหารและชดเชยความเสี่ยง:</strong> หากสภาวะตลาดเปลี่ยนไป EA ตัวอื่นๆ ในฟาร์มจะช่วยทำกำไรชดเชยกันและกัน</li>
-            <li style="margin-bottom: 0;"><strong>ลดอัตราติดลบ (Drawdown):</strong> กระจายความเสี่ยงไปยังพอร์ตต่างๆ ทำให้กราฟพอร์ตเติบโตได้อย่างมั่นคง</li>
-        </ul>
-
-        <div style="text-align: center; background-color: rgba(76, 209, 55, 0.1); border: 1px solid rgba(76, 209, 55, 0.3); padding: 12px; border-radius: 10px; margin-top: 15px; color: #4cd137; font-weight: 500; font-size: 1.05rem;">
-            ให้กองทัพ EA ที่เชี่ยวชาญดูแลพอร์ตของคุณ<br>เพื่อผลกำไรที่ยั่งยืนและอิสรภาพด้านเวลาอย่างแท้จริง!
+        <div class="hero-features">
+            <span class="feature-tag">🛡️ บริหารความเสี่ยง</span>
+            <span class="feature-tag">⚔️ กระจายหลายกลยุทธ์</span>
+            <span class="feature-tag">📈 กำไรยั่งยืน</span>
         </div>
-    </div>
 
-    <div class="text-center w-100 mb-4">
-        <a href="https://lin.ee/9B1pFmD" target="_blank" class="free-trial-text">
-           - ทดลองใช้ฟรี -
+        <a href="https://lin.ee/9B1pFmD" target="_blank" class="btn-glow-red mt-4">
+            🔥 ทดลองใช้ฟรี 1 สัปดาห์
         </a>
     </div>
 
-    <div id="loader">
-        <div class="spinner-border" role="status"></div>
-    </div>
+    <style>
+        /* CSS สำหรับ Hero Section ใส่เพิ่มเข้าไปในส่วน <style> ของคุณได้เลย */
+        .hero-section {
+            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 20px;
+            margin: 10px 5px 30px 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
 
-    <div id="ea-container" class="row row-cols-1 g-3 px-2"></div>
+        /* เพิ่มแสงสะท้อนจางๆ ด้านหลัง */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(76, 209, 55, 0.1) 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
 
-    <div id="contact-section" class="px-2" style="display: none;">
+        .hero-section > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, #ffeb3b, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        .hero-subtitle {
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .highlight-text {
+            color: #4cd137;
+            text-shadow: 0 0 10px rgba(76, 209, 55, 0.4);
+        }
+
+        .hero-desc {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto 25px auto;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #fff;
+            margin: 5px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* ปุ่มกดเรืองแสงสุดว้าว */
+        .btn-glow-red {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff3b3b, #c0392b);
+            color: white !important;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 12px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 0 20px rgba(255, 59, 59, 0.6);
+            transition: all 0.3s ease;
+            animation: pulse-red 2s infinite;
+        }
+
+        .btn-glow-red:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 59, 59, 0.8);
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); }
+        }
+    </style>
         <!-- [UPDATE] โซนปุ่ม Social -->
         <a href="https://lin.ee/9B1pFmD" target="_blank" class="social-btn line-btn">
             <svg class="social-icon" viewBox="0 0 24 24">
