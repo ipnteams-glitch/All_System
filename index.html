@@ -89,6 +89,7 @@
             100% { opacity: 1; transform: scale(1); } 
         }
 
+        /* CSS สำหรับกล่องข้อมูลเก่า */
         .info-box {
             background-color: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -107,21 +108,101 @@
             font-weight: 500;
         }
 
-        .free-trial-text {
-            display: inline-block;
-            color: #ff3b3b !important; 
-            font-size: 1.5rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-shadow: 0 0 15px rgba(255, 59, 59, 0.5); 
-            text-decoration: none; 
-            transition: transform 0.2s ease, color 0.2s ease;
+        /* CSS สำหรับ Hero Section ใหม่ */
+        .hero-section {
+            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 20px;
+            margin: 10px 5px 20px 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
         }
 
-        .free-trial-text:hover {
-            transform: scale(1.05); 
-            color: #ff4d4d !important;
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(76, 209, 55, 0.1) 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-section > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, #ffeb3b, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        .hero-subtitle {
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .highlight-text {
+            color: #4cd137;
+            text-shadow: 0 0 10px rgba(76, 209, 55, 0.4);
+        }
+
+        .hero-desc {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto 25px auto;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #fff;
+            margin: 5px;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-glow-red {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff3b3b, #c0392b);
+            color: white !important;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 12px 35px;
+            border-radius: 50px;
             text-decoration: none;
+            box-shadow: 0 0 20px rgba(255, 59, 59, 0.6);
+            transition: all 0.3s ease;
+            animation: pulse-red 2s infinite;
+        }
+
+        .btn-glow-red:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 59, 59, 0.8);
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); }
         }
 
         .ea-card { 
@@ -187,7 +268,6 @@
             margin-left: 5px;
         }
 
-        /* [UPDATE] โครงสร้าง Style สำหรับปุ่ม Social ทั้งหมด */
         .social-btn {
             color: #ffffff !important;
             border: none;
@@ -201,7 +281,7 @@
             justify-content: center;
             text-decoration: none;
             transition: transform 0.2s ease, background-color 0.2s ease;
-            margin-bottom: 15px; /* ระยะห่างระหว่างปุ่ม */
+            margin-bottom: 15px;
         }
 
         .social-btn:hover {
@@ -209,19 +289,12 @@
             color: #ffffff;
         }
 
-        /* ปุ่ม LINE */
         .line-btn { background-color: #06C755; box-shadow: 0 6px 15px rgba(6, 199, 85, 0.3); margin-top: 30px; }
         .line-btn:hover { background-color: #05b34c; }
-
-        /* ปุ่ม Facebook */
         .fb-btn { background-color: #1877F2; box-shadow: 0 6px 15px rgba(24, 119, 242, 0.3); }
         .fb-btn:hover { background-color: #166fe5; }
-
-        /* ปุ่ม YouTube */
         .yt-btn { background-color: #FF0000; box-shadow: 0 6px 15px rgba(255, 0, 0, 0.3); }
         .yt-btn:hover { background-color: #e60000; }
-
-        /* ปุ่ม TikTok */
         .tt-btn { background-color: #111111; box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1); margin-bottom: 40px;}
         .tt-btn:hover { background-color: #222222; }
 
@@ -252,7 +325,7 @@
         </div>
     </div>
 
-    <!-- [NEW] Hero Banner Section -->
+    <!-- [NEW] Hero Banner Section (ความว้าว) -->
     <div class="hero-section text-center">
         <h1 class="hero-title">HARVEST FARM</h1>
         <h2 class="hero-subtitle">ระบบเทรดอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
@@ -272,107 +345,22 @@
         </a>
     </div>
 
-    <style>
-        /* CSS สำหรับ Hero Section ใส่เพิ่มเข้าไปในส่วน <style> ของคุณได้เลย */
-        .hero-section {
-            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 40px 20px;
-            margin: 10px 5px 30px 5px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
-        }
+    <!-- [RESTORED] กล่องข้อมูลรายละเอียดเดิมที่คุณต้องการ (A vs B) -->
+    <div class="info-box">
+        <strong>การฟาร์ม EA</strong> คือการบริหารพอร์ตการลงทุนที่ไม่พึ่งพา EA เพียงตัวเดียว เพื่อกระจายความเสี่ยง แบบเดียวกับการบริหารเงินของสถาบันการเงิน มาดู A vs B อย่างสมดุลกัน:<br><br>
+        <strong>A:</strong> คือการกระจายพอตด้วยหลาย EA และบริหารเงินในพอร์ตตามความเหมาะสม ข้อดีคือเสถียรและลด drawdown แต่ต้นทุนซับซ้อนเพราะต้องวางหลายพอร์ต<br>
+        <strong>B:</strong> ใช้ EA เดี่ยวที่มี track record ชัดเจน ง่ายต่อการบริหาร แต่เสี่ยงสูงเมื่อตลาดเปลี่ยนเหมือนวางไข่ในตะกร้าเดียว<br><br>
+        <strong>Verdict:</strong> เมื่อตลาดไม่แน่นอน A มักชนะในระยะยาวเพราะการกระจายความเสี่ยงทำได้ดีกว่า แต่หากคุณมีทักษะเลือก EA เดี่ยวที่เข้ากับสภาวะตลาดได้ดี B ก็อาจได้ผลตอบแทนสูงในระยะสั้น วิถีที่ลงตัวคือผสมผสาน: กระจายพอร์ตด้วยหลาย EA พร้อมรีบาลานซ์ความเสี่ยง เพื่อควมยั่งยืนในระยะยาว
+    </div>
 
-        /* เพิ่มแสงสะท้อนจางๆ ด้านหลัง */
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(76, 209, 55, 0.1) 0%, transparent 60%);
-            z-index: 0;
-            pointer-events: none;
-        }
+    <div id="loader">
+        <div class="spinner-border" role="status"></div>
+    </div>
 
-        .hero-section > * {
-            position: relative;
-            z-index: 1;
-        }
+    <div id="ea-container" class="row row-cols-1 g-3 px-2"></div>
 
-        .hero-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            background: linear-gradient(to right, #ffeb3b, #f39c12);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
-        }
-
-        .hero-subtitle {
-            color: #ffffff;
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-
-        .highlight-text {
-            color: #4cd137;
-            text-shadow: 0 0 10px rgba(76, 209, 55, 0.4);
-        }
-
-        .hero-desc {
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 300;
-            font-size: 1rem;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto 25px auto;
-        }
-
-        .feature-tag {
-            display: inline-block;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 6px 15px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            color: #fff;
-            margin: 5px;
-            backdrop-filter: blur(5px);
-        }
-
-        /* ปุ่มกดเรืองแสงสุดว้าว */
-        .btn-glow-red {
-            display: inline-block;
-            background: linear-gradient(45deg, #ff3b3b, #c0392b);
-            color: white !important;
-            font-size: 1.3rem;
-            font-weight: 600;
-            padding: 12px 35px;
-            border-radius: 50px;
-            text-decoration: none;
-            box-shadow: 0 0 20px rgba(255, 59, 59, 0.6);
-            transition: all 0.3s ease;
-            animation: pulse-red 2s infinite;
-        }
-
-        .btn-glow-red:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 59, 59, 0.8);
-        }
-
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); }
-        }
-    </style>
-        <!-- [UPDATE] โซนปุ่ม Social -->
+    <div id="contact-section" class="px-2" style="display: none;">
+        <!-- โซนปุ่ม Social -->
         <a href="https://lin.ee/9B1pFmD" target="_blank" class="social-btn line-btn">
             <svg class="social-icon" viewBox="0 0 24 24">
                 <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.084.922.258 1.057.592.122.303.079.778.039 1.085l-.171 1.027c-.053.303-.242 1.186 1.039.647 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.572-3.843 2.572-5.992zm-15.278 1.954h-3.327v-5.465h1.222v4.306h2.105v1.159zm2.41 0h-1.221v-5.465h1.221v5.465zm5.556-3.805l-2.348 3.805h-1.399v-5.465h1.221v3.251l2.251-3.251h1.496v5.465h-1.221v-3.805zm3.627-1.66h-2.104v1.159h2.104v1.159h-2.104v1.158h2.104v1.159h-3.326v-5.465h3.326v1.16z"/>
