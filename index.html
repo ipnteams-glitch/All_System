@@ -89,6 +89,20 @@
             100% { opacity: 1; transform: scale(1); } 
         }
 
+        /* [NEW] สไตล์สำหรับรูปภาพที่เพิ่มเข้ามาใหม่ */
+        .system-diagram-container {
+            text-align: center;
+            margin: 10px 5px 25px 5px; /* ระยะห่างบนล่าง */
+        }
+        
+        .system-diagram-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px; /* ทำขอบมนให้รูปภาพ */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* ใส่เงาให้รูปดูมีมิติ */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         /* CSS สำหรับกล่องข้อมูลเก่า */
         .info-box {
             background-color: rgba(255, 255, 255, 0.05);
@@ -325,7 +339,10 @@
         </div>
     </div>
 
-    <!-- [NEW] Hero Banner Section (ความว้าว) -->
+    <div class="system-diagram-container">
+        <img src="https://img2.pic.in.th/sys1-6.png" alt="System Diagram" class="system-diagram-img">
+    </div>
+
     <div class="hero-section text-center">
         <h1 class="hero-title">XAUUSD บน METATRADE 5</h1>
         <h2 class="hero-subtitle">เทรดคู่ทองอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
@@ -345,7 +362,6 @@
         </a>
     </div>
 
-    <!-- [RESTORED] กล่องข้อมูลรายละเอียดเดิมที่คุณต้องการ (A vs B) -->
     <div class="info-box">
         <strong>การฟาร์ม EA</strong> คือการบริหารพอร์ตการลงทุนที่ไม่พึ่งพา EA เพียงตัวเดียว เพื่อกระจายความเสี่ยง แบบเดียวกับการบริหารเงินของสถาบันการเงิน มาดู A vs B อย่างสมดุลกัน:<br><br>
         <strong>A:</strong> คือการกระจายพอตด้วยหลาย EA และบริหารเงินในพอร์ตตามความเหมาะสม ข้อดีคือเสถียรและลด drawdown แต่ต้นทุนซับซ้อนเพราะต้องวางหลายพอร์ต<br>
@@ -360,7 +376,6 @@
     <div id="ea-container" class="row row-cols-1 g-3 px-2"></div>
 
     <div id="contact-section" class="px-2" style="display: none;">
-        <!-- โซนปุ่ม Social -->
         <a href="https://lin.ee/9B1pFmD" target="_blank" class="social-btn line-btn">
             <svg class="social-icon" viewBox="0 0 24 24">
                 <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.084.922.258 1.057.592.122.303.079.778.039 1.085l-.171 1.027c-.053.303-.242 1.186 1.039.647 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.572-3.843 2.572-5.992zm-15.278 1.954h-3.327v-5.465h1.222v4.306h2.105v1.159zm2.41 0h-1.221v-5.465h1.221v5.465zm5.556-3.805l-2.348 3.805h-1.399v-5.465h1.221v3.251l2.251-3.251h1.496v5.465h-1.221v-3.805zm3.627-1.66h-2.104v1.159h2.104v1.159h-2.104v1.158h2.104v1.159h-3.326v-5.465h3.326v1.16z"/>
