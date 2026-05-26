@@ -89,18 +89,24 @@
             100% { opacity: 1; transform: scale(1); } 
         }
 
-        /* [NEW] สไตล์สำหรับรูปภาพที่เพิ่มเข้ามาใหม่ */
+        /* [UPDATE] สไตล์สำหรับรูปภาพ Strategy ที่เพิ่มเข้ามาใหม่ */
         .system-diagram-container {
             text-align: center;
-            margin: 10px 5px 25px 5px; /* ระยะห่างบนล่าง */
+            margin: 10px 5px 25px 5px; 
         }
         
         .system-diagram-img {
             max-width: 100%;
             height: auto;
-            border-radius: 12px; /* ทำขอบมนให้รูปภาพ */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* ใส่เงาให้รูปดูมีมิติ */
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px; 
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2); /* เงาสีฟ้าเรืองแสงอ่อนๆ */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+
+        .system-diagram-img:hover {
+            transform: scale(1.02); /* ขยายรูปนิดนึงตอนเอาเมาส์ชี้ */
+            box-shadow: 0 12px 30px rgba(0, 191, 255, 0.5); /* เพิ่มความสว่างของเงา */
         }
 
         /* CSS สำหรับกล่องข้อมูลเก่า */
@@ -122,7 +128,7 @@
             font-weight: 500;
         }
 
-        /* CSS สำหรับ Hero Section ใหม่ */
+        /* CSS สำหรับ Hero Section */
         .hero-section {
             background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -339,9 +345,9 @@
         </div>
     </div>
 
-<div class="system-diagram-container">
-    <img src="https://cdn.jsdelivr.net/gh/ipnteams-glitch/All_System@main/sysall16.jpg" alt="System Diagram" class="system-diagram-img">
-</div>
+    <div class="system-diagram-container">
+        <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
+    </div>
 
     <div class="hero-section text-center">
         <h1 class="hero-title">XAUUSD บน METATRADE 5</h1>
