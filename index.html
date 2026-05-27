@@ -4,317 +4,293 @@
     <meta charset="UTF-8">
     <base target="_top">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HARVEST FARM - XAUUSD EA</title>
+    <title>HARVEST FARM</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --bg-color: #0b0e14;
-            --card-bg: rgba(20, 25, 35, 0.7);
-            --gold-primary: #FFD700;
-            --gold-secondary: #FDB931;
-            --neon-green: #00E676;
-            --neon-red: #FF3D00;
-        }
-
         * { box-sizing: border-box; }
         
         body { 
             font-family: 'Kanit', sans-serif; 
-            background: radial-gradient(circle at top, #162032 0%, var(--bg-color) 60%);
-            background-attachment: fixed;
-            color: #e2e8f0;
+            background-color: #121212; 
             margin: 0;
             padding: 10px; 
             overflow-x: hidden;
             width: 100%;
         }
 
-        .container-fluid { max-width: 1200px; margin: 0 auto; padding: 0; }
+        .container-fluid { padding: 0; margin: 0; width: 100%; }
 
-        /* Header */
-        .mobile-header { 
-            padding: 20px 10px 15px 10px; 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            margin-bottom: 20px;
-        }
+        .mobile-header { padding: 20px 0 15px 0; }
         
         .header-flex {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 5px;
         }
 
-        .header-title-group { display: flex; align-items: center; }
+        .header-title-group {
+            display: flex;
+            align-items: center;
+        }
 
         .header-logo {
-            height: 50px; 
+            height: 45px; 
             width: auto;  
-            margin-right: 15px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-right: 12px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
         }
 
         .mobile-header h4 { 
             color: #ffffff; 
             margin: 0; 
-            font-size: 1.6rem; 
-            font-weight: 700;
-            background: linear-gradient(to right, #ffffff, #a0aec0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 1.5rem; 
+            font-weight: 600;
+            letter-spacing: 1px; 
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); 
         }
 
         .new-version-link {
-            background: rgba(255, 215, 0, 0.1);
-            color: var(--gold-primary) !important; 
+            color: #ffeb3b !important; 
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: 500;
-            padding: 6px 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 215, 0, 0.3);
             white-space: nowrap; 
-            transition: all 0.3s;
         }
 
-        .new-version-link:hover { 
-            background: var(--gold-primary);
-            color: #000 !important;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-        }
+        .new-version-link:hover { text-decoration: underline; color: #fff176 !important; }
 
         .status-online { 
-            color: var(--neon-green); 
+            color: #4cd137; 
             font-size: 0.9rem; 
             display: flex; 
             align-items: center; 
+            justify-content: center; 
             font-weight: 500;
             margin-top: 15px; 
-            background: rgba(0, 230, 118, 0.05);
-            padding: 5px 12px;
-            border-radius: 20px;
-            display: inline-flex;
-            border: 1px solid rgba(0, 230, 118, 0.2);
         }
 
         .dot { 
-            height: 8px; width: 8px; 
-            background-color: var(--neon-green); 
+            height: 10px; width: 10px; 
+            background-color: #4cd137; 
             border-radius: 50%; 
             display: inline-block; 
             margin-right: 8px; 
-            box-shadow: 0 0 8px var(--neon-green);
-            animation: pulse-green 1.5s infinite; 
+            animation: pulse 1.8s infinite; 
         }
 
-        /* Hero Section */
+        @keyframes pulse { 
+            0% { opacity: 1; transform: scale(1); } 
+            50% { opacity: 0.4; transform: scale(1.2); } 
+            100% { opacity: 1; transform: scale(1); } 
+        }
+
+        /* สไตล์สำหรับรูปภาพ Strategy Overview */
+        .system-diagram-container {
+            text-align: center;
+            margin: 10px 5px 25px 5px; 
+        }
+        
+        .system-diagram-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px; 
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2); 
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+
+        .system-diagram-img:hover {
+            transform: scale(1.02); 
+            box-shadow: 0 12px 30px rgba(0, 191, 255, 0.5); 
+        }
+
+        .info-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 18px; 
+            margin: 0 5px 20px 5px;
+            color: #ffffff; 
+            font-size: 1rem; 
+            line-height: 1.6;
+            font-weight: 300;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .info-box strong {
+            color: #ffeb3b; 
+            font-weight: 500;
+        }
+
         .hero-section {
-            background: linear-gradient(145deg, rgba(20,25,35,0.8) 0%, rgba(11,14,20,0.9) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 50px 20px;
-            margin: 10px 5px 30px 5px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 20px;
+            margin: 10px 5px 20px 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(10px);
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(76, 209, 55, 0.1) 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-section > * {
+            position: relative;
+            z-index: 1;
         }
 
         .hero-title {
             font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--gold-primary), var(--gold-secondary));
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, #ffeb3b, #f39c12);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+            letter-spacing: 2px;
         }
 
         .hero-subtitle {
             color: #ffffff;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 500;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        .highlight-text { color: var(--neon-green); }
+        .highlight-text {
+            color: #4cd137;
+            text-shadow: 0 0 10px rgba(76, 209, 55, 0.4);
+        }
 
         .hero-desc {
-            color: #a0aec0;
+            color: rgba(255, 255, 255, 0.8);
             font-weight: 300;
-            font-size: 1.05rem;
-            line-height: 1.7;
-            max-width: 700px;
-            margin: 0 auto 30px auto;
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto 25px auto;
         }
 
         .feature-tag {
             display: inline-block;
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px 18px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 15px;
             border-radius: 50px;
             font-size: 0.9rem;
-            color: #cbd5e1;
+            color: #fff;
             margin: 5px;
-            transition: all 0.3s;
+            backdrop-filter: blur(5px);
         }
-
-        .feature-tag:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
 
         .btn-glow-red {
             display: inline-block;
-            background: linear-gradient(45deg, #FF3D00, #D50000);
+            background: linear-gradient(45deg, #ff3b3b, #c0392b);
             color: white !important;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 600;
-            padding: 15px 40px;
+            padding: 12px 35px;
             border-radius: 50px;
             text-decoration: none;
-            box-shadow: 0 0 20px rgba(255, 61, 0, 0.4);
+            box-shadow: 0 0 20px rgba(255, 59, 59, 0.6);
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            animation: pulse-red 2s infinite;
         }
 
         .btn-glow-red:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 30px rgba(255, 61, 0, 0.6);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 59, 59, 0.8);
         }
 
-        /* Info Box */
-        .info-box {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 25px; 
-            margin: 0 5px 30px 5px;
-            color: #cbd5e1; 
-            font-size: 1rem; 
-            line-height: 1.7;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); }
         }
-        
-        .info-box .title-text { color: var(--gold-primary); font-size: 1.2rem; margin-bottom: 15px; display: block;}
 
-        .compare-box {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            transition: all 0.3s;
-        }
-        .compare-box:hover { border-color: rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); }
-        .compare-box.green strong { color: var(--neon-green); }
-        .compare-box.red strong { color: #FF5252; }
-
-        /* EA Cards (Dashboard) */
         .ea-card { 
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
+            border: none; 
+            border-radius: 25px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
+            overflow: hidden; 
             width: 100%;
             height: 100%; 
-            color: #ffffff;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ea-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-            border-color: rgba(255, 215, 0, 0.2);
-        }
-
-        /* แสงวิบวับด้านบนการ์ด */
-        .ea-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
-            opacity: 0.5;
+            color: #ffffff !important; 
         }
 
         .balance-box { 
-            background: rgba(0, 0, 0, 0.4); 
-            border-radius: 16px; 
-            padding: 20px; 
-            margin-top: 20px; 
-            border: 1px solid rgba(255,255,255,0.03); 
+            background-color: rgba(255,255,255,0.15); 
+            border-radius: 20px; 
+            padding: 18px; 
+            margin-top: 15px; 
+            border: 1px solid rgba(255,255,255,0.1); 
         }
 
         .ea-card h5.fw-bold { 
-            color: #fff !important; 
-            font-size: 1.4rem; 
-            margin-bottom: 15px !important; 
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            color: #ffeb3b !important; 
+            font-size: 1.35rem; 
+            letter-spacing: 0.5px; 
+            margin-bottom: 12px !important; 
         }
-        
-        .ea-card .text-muted { color: #8b9bb4 !important; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;}
-        .ea-card .text-secondary { color: #e2e8f0 !important; font-weight: 400; font-size: 1.05rem; }
+        .ea-card .text-muted { color: rgba(255,255,255,0.7) !important; font-weight: 300; font-size: 0.85rem; }
+        .ea-card .text-secondary { color: #ffffff !important; font-weight: 500; font-size: 1rem; line-height: 1.4; }
         
         .badge.bg-primary { 
-            background: rgba(0, 230, 118, 0.1) !important; 
-            color: var(--neon-green);
-            border: 1px solid rgba(0, 230, 118, 0.3);
-            font-weight: 500; 
-            padding: 6px 15px;
-            box-shadow: 0 0 10px rgba(0, 230, 118, 0.1);
+            background-color: rgba(255,255,255,0.2) !important; 
+            color: #ffffff;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.3);
+            font-weight: 400; 
+            font-size: 0.75rem; 
+            padding: 6px 12px;
         }
 
         .style-badge {
             display: inline-block;
-            color: #ffffff;
-            padding: 5px 15px;
+            color: #ffffff !important;
+            padding: 4px 12px;
             border-radius: 12px;
             font-size: 0.9rem;
             font-weight: 500;
-            border: 1px solid rgba(255,255,255,0.1);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            white-space: normal; 
+            max-width: 100%;
         }
 
         .profit-center-box {
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            padding: 12px;
             text-align: center;
-            margin-top: 20px;
-            font-size: 1.05rem;
-            color: #cbd5e1;
-            border: 1px dashed rgba(255,255,255,0.1);
+            margin-top: 15px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
         }
         
-        .profit-value { font-weight: 700; font-size: 1.2rem; }
-
-        /* Images */
-        .system-diagram-container { text-align: center; margin: 10px 5px 30px 5px; }
-        .system-diagram-img {
-            max-width: 100%;
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease; 
+        .profit-value {
+            font-weight: 600;
+            margin-left: 5px;
         }
-        .system-diagram-img:hover { transform: scale(1.02); border-color: rgba(255, 215, 0, 0.3); }
 
-        /* Social Buttons */
         .social-btn {
             color: #ffffff !important;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px; 
-            padding: 16px 20px;
+            border: none;
+            border-radius: 50px; 
+            padding: 14px 20px;
             font-size: 1.1rem;
             font-weight: 500;
             width: 100%;
@@ -322,84 +298,33 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: transform 0.2s ease, background-color 0.2s ease;
             margin-bottom: 15px;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
         }
 
-        .social-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .line-btn:hover { background: #06C755; border-color: #06C755; }
-        .fb-btn:hover { background: #1877F2; border-color: #1877F2;}
-        .yt-btn:hover { background: #FF0000; border-color: #FF0000;}
-        .tt-btn:hover { background: #111111; border-color: #333;}
-        
-        .line-btn { margin-top: 30px; }
-        .tt-btn { margin-bottom: 40px; }
-
-        .social-icon { width: 28px; height: 28px; margin-right: 12px; fill: #ffffff; }
-
-        /* Arrow Loader Indicator */
-        #loader { 
-            min-height: 120px; 
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            justify-content: center; 
-            margin: 10px 0 30px 0;
-        }
-
-        .arrow-loader {
-            display: block;
-            width: 20px;
-            height: 20px;
-            border-bottom: 3px solid var(--gold-primary);
-            border-right: 3px solid var(--gold-primary);
-            transform: rotate(45deg);
-            margin: -6px 0; /* ทำให้ลูกศรซ้อนกันนิดๆ */
-            animation: animate-arrow 1.5s infinite;
-        }
-
-        /* ตั้งเวลาแอนิเมชันให้ไล่ระดับกัน */
-        .arrow-loader:nth-child(1) { animation-delay: 0s; }
-        .arrow-loader:nth-child(2) { animation-delay: 0.2s; }
-        .arrow-loader:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes animate-arrow {
-            0% { opacity: 0; transform: rotate(45deg) translate(-10px, -10px); }
-            50% { opacity: 1; }
-            100% { opacity: 0; transform: rotate(45deg) translate(10px, 10px); }
-        }
-
-        @keyframes pulse-green { 
-            0% { box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.4); } 
-            70% { box-shadow: 0 0 0 10px rgba(0, 230, 118, 0); } 
-            100% { box-shadow: 0 0 0 0 rgba(0, 230, 118, 0); } 
-        }
-       /* Portfolio Heading */
-        .portfolio-heading {
-            margin: 50px 5px 25px 5px;
-            text-align: center;
-        }
-        .portfolio-heading h3 {
-            font-size: 1.6rem;
+        .social-btn:hover {
+            transform: translateY(-2px);
             color: #ffffff;
-            letter-spacing: 0.5px;
-            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);
         }
-        .portfolio-heading p {
-            color: #a0aec0;
-            font-size: 1.1rem;
-            margin-bottom: 15px;
+
+        .line-btn { background-color: #06C755; box-shadow: 0 6px 15px rgba(6, 199, 85, 0.3); margin-top: 30px; }
+        .line-btn:hover { background-color: #05b34c; }
+        .fb-btn { background-color: #1877F2; box-shadow: 0 6px 15px rgba(24, 119, 242, 0.3); }
+        .fb-btn:hover { background-color: #166fe5; }
+        .yt-btn { background-color: #FF0000; box-shadow: 0 6px 15px rgba(255, 0, 0, 0.3); }
+        .yt-btn:hover { background-color: #e60000; }
+        .tt-btn { background-color: #111111; box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1); margin-bottom: 40px;}
+        .tt-btn:hover { background-color: #222222; }
+
+        .social-icon {
+            width: 28px;
+            height: 28px;
+            margin-right: 10px;
+            fill: #ffffff;
         }
-        .heading-line {
-            height: 3px;
-            width: 60px;
-            background: var(--gold-primary);
-            margin: 0 auto;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
+
+        #loader { min-height: 200px; display: flex; align-items: center; justify-content: center; }
+        .spinner-border { color: #ffffff !important; }
     </style>
 </head>
 <body>
@@ -408,14 +333,17 @@
     <div class="mobile-header">
         <div class="header-flex">
             <div class="header-title-group">
-                <img src="https://img1.pic.in.th/images/logo14f5db31c2bca372.th.png" alt="Logo" class="header-logo">
-                <h4>HARVEST FARM</h4>
+                <img src="https://img1.pic.in.th/images/logo14f5db31c2bca372.th.png" alt="EA Atlantis Logo" class="header-logo">
+                <h4 class="fw-bold">HARVEST FARM</h4>
             </div>
             <a href="https://drive.google.com/drive/folders/16l_45ZJOdT-qAtkU2gB9S5eWrVlHf_J9" target="_blank" class="new-version-link">New Version + Preset</a>
         </div>
-        <div class="status-online"><span class="dot"></span>Live System Update</div>
+        <div class="status-online">
+            <span class="dot"></span>Live Update
+        </div>
     </div>
 
+    <!-- ส่วนแสดงรูปภาพ Strategy ใหม่ -->
     <div class="system-diagram-container">
         <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
     </div>
@@ -438,41 +366,19 @@
             🔥 ทดลองใช้ฟรี 1 สัปดาห์
         </a>
     </div>
-    <div class="info-box">
-        <strong class="title-text">📌 การฟาร์ม EA คืออะไร?</strong>
-        คือการบริหารพอร์ตการลงทุนที่ไม่พึ่งพา EA เพียงตัวเดียว เพื่อกระจายความเสี่ยง แบบเดียวกับการบริหารเงินของสถาบันการเงิน ลองเปรียบเทียบดูครับ:
-        
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <div class="compare-box green">
-                    <strong>A (แบบฟาร์ม EA):</strong> คือการกระจายพอร์ตด้วยหลาย EA และบริหารเงินในพอร์ตตามความเหมาะสม ข้อดีคือ <span class="text-white">เสถียรและลด Drawdown</span> ได้ดีมาก แต่ต้องอาศัยการจัดการที่ซับซ้อนขึ้น
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="compare-box red">
-                    <strong>B (แบบ EA เดี่ยว):</strong> ใช้ EA เดี่ยวที่เก่งๆ ข้อดีคือจัดการง่าย แต่เมื่อสภาวะตลาดเปลี่ยน <span class="text-white">จะมีความเสี่ยงสูง</span> เหมือนการวางไข่ทั้งหมดไว้ในตะกร้าใบเดียว
-                </div>
-            </div>
-        </div>
-        
-        <p class="mb-0 mt-2" style="color: var(--gold-primary);">
-            <strong>💡 บทสรุป:</strong> เมื่อตลาดไม่แน่นอน แบบ A มักชนะในระยะยาว วิถีที่ลงตัวที่สุดคือการให้เราช่วย <strong>"กระจายพอร์ตด้วยหลาย EA พร้อมรีบาลานซ์ความเสี่ยง"</strong> เพื่อความยั่งยืนของเงินทุนคุณ
-        </p>
-    </div>
 
-    <div class="portfolio-heading">
-        <h3 class="fw-bold">🎯 เลือกกลยุทธ์ EA รุ่นต่างๆ จากทั้งหมด 10 Model ลงในพอร์ตของคุณ</h3>
-        <p>เพื่อบริหารความเสี่ยงอย่างมืออาชีพ</p>
-        <div class="heading-line"></div>
+    <div class="info-box">
+        <strong>การฟาร์ม EA</strong> คือการบริหารพอร์ตการลงทุนที่ไม่พึ่งพา EA เพียงตัวเดียว เพื่อกระจายความเสี่ยง แบบเดียวกับการบริหารเงินของสถาบันการเงิน มาดู A vs B อย่างสมดุลกัน:<br><br>
+        <strong>A:</strong> คือการกระจายพอตด้วยหลาย EA และบริหารเงินในพอร์ตตามความเหมาะสม ข้อดีคือเสถียรและลด drawdown แต่ต้นทุนซับซ้อนเพราะต้องวางหลายพอร์ต<br>
+        <strong>B:</strong> ใช้ EA เดี่ยวที่มี track record ชัดเจน ง่ายต่อการบริหาร แต่เสี่ยงสูงเมื่อตลาดเปลี่ยนเหมือนวางไข่ในตะกร้าเดียว<br><br>
+        <strong>Verdict:</strong> เมื่อตลาดไม่แน่นอน A มักชนะในระยะยาวเพราะการกระจายความเสี่ยงทำได้ดีกว่า แต่หากคุณมีทักษะเลือก EA เดี่ยวที่เข้ากับสภาวะตลาดได้ดี B ก็อาจได้ผลตอบแทนสูงในระยะสั้น วิถีที่ลงตัวคือผสมผสาน: กระจายพอร์ตด้วยหลาย EA พร้อมรีบาลานซ์ความเสี่ยง เพื่อควมยั่งยืนในระยะยาว
     </div>
 
     <div id="loader">
-        <span class="arrow-loader"></span>
-        <span class="arrow-loader"></span>
-        <span class="arrow-loader"></span>
+        <div class="spinner-border" role="status"></div>
     </div>
 
-    <div id="ea-container" class="row row-cols-1 row-cols-md-2 g-3 px-2"></div>
+    <div id="ea-container" class="row row-cols-1 g-3 px-2"></div>
 
     <div id="contact-section" class="px-2" style="display: none;">
         <a href="https://lin.ee/9B1pFmD" target="_blank" class="social-btn line-btn">
@@ -489,7 +395,7 @@
             Facebook Page
         </a>
 
-        <a href="https://youtu.be/FpkwMBMO4nU" target="_blank" class="social-btn yt-btn">
+        <a href="https://www.youtube.com/watch?v=fHrRiGEaWxk" target="_blank" class="social-btn yt-btn">
             <svg class="social-icon" viewBox="0 0 24 24">
                 <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
             </svg>
@@ -508,17 +414,21 @@
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwUVLhRbdk2noN4GeHC-j_zaz2mxD8bjUDWIjg2aljSodPvJJzbq-2GHwitiIpHo5a5dQ/exec";
 
+    const color1 = '#130f40'; // Midnight Blue
+    const color2 = '#1e1240'; // Deep Premium Purple
+
     document.addEventListener('DOMContentLoaded', fetchData);
 
     function fetchData() {
         fetch(API_URL)
             .then(response => response.json())
-            .then(data => { renderCards(data); })
+            .then(data => {
+                renderCards(data);
+            })
             .catch(error => {
                 console.error('Error:', error);
                 document.getElementById('ea-container').innerHTML = 
-                    '<div class="alert alert-danger mx-3 text-center w-100" style="background: rgba(255,0,0,0.1); color:#ff5252; border-color:#ff5252;">เกิดข้อผิดพลาดในการดึงข้อมูล</div>';
-                document.getElementById('loader').style.display = 'none';
+                    '<div class="alert alert-danger mx-3 text-center w-100">เกิดข้อผิดพลาดในการดึงข้อมูล</div>';
             });
     }
 
@@ -530,7 +440,7 @@
         if (loader) loader.style.display = 'none';
 
         if (!data || data.length === 0) {
-            container.innerHTML = '<div class="alert alert-warning mx-3 text-center w-100" style="background: rgba(255,215,0,0.1); color:#FFD700; border-color:#FFD700;">ไม่พบข้อมูลระบบ EA ในขณะนี้</div>';
+            container.innerHTML = '<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>';
             contactSection.style.display = 'block'; 
             return;
         }
@@ -538,58 +448,57 @@
         let html = '';
 
         data.forEach((item, index) => {
-            let typeText = item.type || '-';
-            let styleBgColor = 'rgba(255, 255, 255, 0.1)'; 
-            let styleBorderColor = 'rgba(255, 255, 255, 0.2)';
+            const bgColor = (index % 2 === 0) ? color1 : color2;
             
-            // แยกสีตามระดับความเสี่ยงให้ดูคลีนขึ้น
-            if (typeText.includes('เสี่ยงสูง')) {
-                styleBgColor = 'rgba(255, 61, 0, 0.15)'; 
-                styleBorderColor = 'rgba(255, 61, 0, 0.4)';
+            let typeText = item.type || '-';
+            let styleBgColor = '#555555'; 
+            
+            // อัปเดตสีพื้นหลัง Risk Style ใหม่ตามที่คุณต้องการ
+            if (typeText.includes('ทดสอบระบบ')) {
+                styleBgColor = '#DAA520'; // สีทอง
+            } else if (typeText.includes('เสี่ยงสูง')) {
+                styleBgColor = '#ff3b3b'; // สีแดง
+            } else if (typeText.includes('เสี่ยงกลาง')) {
+                styleBgColor = 'darkgreen'; // สีเขียวเข้ม
             } else if (typeText.includes('เสี่ยงต่ำ')) {
-                styleBgColor = 'rgba(0, 230, 118, 0.15)'; 
-                styleBorderColor = 'rgba(0, 230, 118, 0.4)';
-            } else if (typeText.includes('ทดสอบระบบใหม่')) {
-                styleBgColor = 'rgba(255, 215, 0, 0.15)'; 
-                styleBorderColor = 'rgba(255, 215, 0, 0.4)';
+                styleBgColor = 'limegreen'; // สีเขียวสว่าง Lime
             }
 
             let profitStr = item.profit || '0.00';
             let profitNum = parseFloat(String(profitStr).replace(/,/g, ''));
             
-            let profitColor = '#00E676'; // เขียวสว่าง
+            let profitColor = '#39ff14'; 
             if (profitNum < 0) {
-                profitColor = '#FF3D00'; // แดงสว่าง
+                profitColor = '#ff3b3b'; 
             }
 
-            // นำตัวแปรสีของเก่าออก แล้วใช้ Class .ea-card ที่ตั้งค่า Glassmorphism ไว้แล้วแทน
             html += `
                 <div class="col">
-                    <div class="ea-card">
+                    <div class="ea-card" style="background-color: ${bgColor}">
                         <div class="p-4"> 
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge rounded-pill bg-primary">Running Live</span>
+                                <span class="badge rounded-pill bg-primary">Running</span>
                             </div>
                             <h5 class="fw-bold">${item.name}</h5>
                             
                             <div class="row g-2 mt-2">
                                 <div class="col-6">
                                     <small class="text-muted d-block mb-1">Model</small>
-                                    <div class="text-secondary fw-medium">${item.comment || '-'}</div>
+                                    <div class="text-secondary">${item.comment || '-'}</div>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <small class="text-muted d-block mb-1">Risk Style</small>
-                                    <div class="style-badge" style="background-color: ${styleBgColor}; border-color: ${styleBorderColor};">${typeText}</div> 
+                                    <small class="text-muted d-block mb-1">Style</small>
+                                    <div class="style-badge" style="background-color: ${styleBgColor};">${typeText}</div> 
                                 </div>
                             </div>
 
                             <div class="profit-center-box">
-                                PnL สัปดาห์ล่าสุด <span class="profit-value" style="color: ${profitColor}; text-shadow: 0 0 10px ${profitColor}40;">${profitStr}</span>
+                                กำไรสัปดาห์ล่าสุด <span class="profit-value" style="color: ${profitColor};">${profitStr}</span>
                             </div>
 
                             <div class="balance-box text-center mt-3">
-                                <small class="text-muted d-block mb-1">Current Balance</small>
-                                <h2 class="fw-bold text-white mb-0" style="letter-spacing: 1px;">$${item.balance}</h2> 
+                                <small class="text-muted d-block mb-1">Start Balance</small>
+                                <h2 class="fw-bold text-white mb-0">$${item.balance}</h2> 
                             </div>
                         </div>
                     </div>
