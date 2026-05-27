@@ -339,8 +339,37 @@
 
         .social-icon { width: 28px; height: 28px; margin-right: 12px; fill: #ffffff; }
 
-        #loader { min-height: 200px; display: flex; align-items: center; justify-content: center; }
-        .spinner-border { color: var(--gold-primary) !important; width: 3rem; height: 3rem; }
+        /* Arrow Loader Indicator */
+        #loader { 
+            min-height: 120px; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+            margin: 10px 0 30px 0;
+        }
+
+        .arrow-loader {
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-bottom: 3px solid var(--gold-primary);
+            border-right: 3px solid var(--gold-primary);
+            transform: rotate(45deg);
+            margin: -6px 0; /* ทำให้ลูกศรซ้อนกันนิดๆ */
+            animation: animate-arrow 1.5s infinite;
+        }
+
+        /* ตั้งเวลาแอนิเมชันให้ไล่ระดับกัน */
+        .arrow-loader:nth-child(1) { animation-delay: 0s; }
+        .arrow-loader:nth-child(2) { animation-delay: 0.2s; }
+        .arrow-loader:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes animate-arrow {
+            0% { opacity: 0; transform: rotate(45deg) translate(-10px, -10px); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: rotate(45deg) translate(10px, 10px); }
+        }
 
         @keyframes pulse-green { 
             0% { box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.4); } 
@@ -460,10 +489,9 @@
     </div>
 
     <div id="loader">
-        <div class="spinner-border" role="status"></div>
-    </div>
-    <div id="loader">
-        <div class="spinner-border" role="status"></div>
+        <span class="arrow-loader"></span>
+        <span class="arrow-loader"></span>
+        <span class="arrow-loader"></span>
     </div>
 
     <div id="ea-container" class="row row-cols-1 row-cols-md-2 g-3 px-2"></div>
