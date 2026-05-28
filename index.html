@@ -89,7 +89,6 @@
             100% { opacity: 1; transform: scale(1); } 
         }
 
-        /* สไตล์สำหรับรูปภาพ Strategy Overview */
         .system-diagram-container {
             text-align: center;
             margin: 10px 5px 25px 5px; 
@@ -451,17 +450,19 @@
             const bgColor = (index % 2 === 0) ? color1 : color2;
             
             let typeText = item.type || '-';
-            let styleBgColor = '#555555'; 
+            let styleBgColor = '#555555'; // สีเทาสำหรับอื่นๆ
             
             // อัปเดตสีพื้นหลัง Risk Style ใหม่ตามที่คุณต้องการ
-            if (typeText.includes('ทดสอบระบบ')) {
-                styleBgColor = '#DAA520'; // สีทอง
+            if (typeText.includes('ทดสอบ')) {
+                styleBgColor = '#DAA520'; // สีเดิมเหลืองเข้ม (ทอง)
+            } else if (typeText.includes('ค่อนข้างสูง')) {
+                styleBgColor = '#FF4500'; // สีส้มเข้มเลื่อมแดง (OrangeRed)
             } else if (typeText.includes('เสี่ยงสูง')) {
                 styleBgColor = '#ff3b3b'; // สีแดง
-            } else if (typeText.includes('เสี่ยงกลาง')) {
-                styleBgColor = 'darkgreen'; // สีเขียวเข้ม
+            } else if (typeText.includes('ค่อนข้างต่ำ')) {
+                styleBgColor = 'darkgreen'; // เขียวเข้ม
             } else if (typeText.includes('เสี่ยงต่ำ')) {
-                styleBgColor = 'limegreen'; // สีเขียวสว่าง Lime
+                styleBgColor = 'limegreen'; // สีเขียว Lime
             }
 
             let profitStr = item.profit || '0.00';
