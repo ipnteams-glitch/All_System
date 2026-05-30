@@ -222,12 +222,22 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); }
         }
 
-        /* [UPDATE] สไตล์ใหม่สำหรับกล่อง EA (ไล่สีดำ-เทาเข้มพรีเมียม) */
+        /* [UPDATE] สไตล์ข้อความแนะนำการเลือกกลยุทธ์ */
+        .instruction-title {
+            color: #ff3b3b;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+            margin: 30px 5px 15px 5px;
+            text-shadow: 0 0 15px rgba(255, 59, 59, 0.4);
+            display: none; /* ซ่อนไว้จนกว่าจะโหลดข้อมูลเสร็จ */
+        }
+
         .ea-card { 
-            background: linear-gradient(145deg, #151515 0%, #2b2b2b 100%); /* ไล่สีดำไปเทาเข้ม */
-            border: 1px solid rgba(255, 255, 255, 0.08); /* เส้นขอบบางๆ สีขาว */
+            background: linear-gradient(145deg, #151515 0%, #2b2b2b 100%); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
             border-radius: 25px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6); /* เงาสีดำเข้มให้ดูลึก */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
             overflow: hidden; 
             width: 100%;
             height: 100%; 
@@ -237,11 +247,11 @@
 
         .ea-card:hover {
             transform: translateY(-5px); 
-            box-shadow: 0 12px 25px rgba(255, 255, 255, 0.15); /* เงาตอนชี้เมาส์เปลี่ยนเป็นแสงขาวนวลๆ */
+            box-shadow: 0 12px 25px rgba(255, 255, 255, 0.15); 
         }
 
         .balance-box { 
-            background-color: rgba(255,255,255,0.05); /* กล่องยอดเงินให้จางลงนิดนึงเพื่อตัดกับพื้นดำ */
+            background-color: rgba(255,255,255,0.05); 
             border-radius: 20px; 
             padding: 18px; 
             margin-top: 15px; 
@@ -350,6 +360,7 @@
         </div>
     </div>
 
+    <!-- ส่วนแสดงรูปภาพ Strategy ใหม่ -->
     <div class="system-diagram-container">
         <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
     </div>
@@ -383,6 +394,9 @@
     <div id="loader">
         <div class="spinner-border" role="status"></div>
     </div>
+
+    <!-- [UPDATE] บล็อคข้อความแนะนำก่อนถึงกล่อง EA -->
+    <h4 id="instruction-title" class="instruction-title">เลือกรันกลยุทธที่ต้องการตามข้อมูลด้านล่าง</h4>
 
     <div id="ea-container" class="row row-cols-1 g-3 px-2"></div>
 
@@ -439,6 +453,7 @@
         const container = document.getElementById('ea-container');
         const loader = document.getElementById('loader');
         const contactSection = document.getElementById('contact-section'); 
+        const instructionTitle = document.getElementById('instruction-title'); // [UPDATE] ดึง element ข้อความ
         
         if (loader) loader.style.display = 'none';
 
@@ -448,23 +463,25 @@
             return;
         }
 
+        // [UPDATE] แสดงข้อความหัวข้อเมื่อโหลดข้อมูลสำเร็จ
+        if (instructionTitle) instructionTitle.style.display = 'block';
+
         let html = '';
 
         data.forEach((item, index) => {
             let typeText = item.type || '-';
-            let styleBgColor = '#555555'; // สีเทาสำหรับอื่นๆ
+            let styleBgColor = '#555555'; 
             
-            // อัปเดตสีพื้นหลัง Risk Style ตามที่ต้องการ
             if (typeText.includes('ทดสอบ')) {
-                styleBgColor = '#DAA520'; // สีทอง
+                styleBgColor = '#DAA520'; 
             } else if (typeText.includes('ค่อนข้างสูง')) {
-                styleBgColor = '#FF4500'; // สีส้มเข้มเลื่อมแดง
+                styleBgColor = '#FF4500'; 
             } else if (typeText.includes('เสี่ยงสูง')) {
-                styleBgColor = '#ff3b3b'; // สีแดง
+                styleBgColor = '#ff3b3b'; 
             } else if (typeText.includes('ค่อนข้างต่ำ')) {
-                styleBgColor = 'darkgreen'; // เขียวเข้ม
+                styleBgColor = 'darkgreen'; 
             } else if (typeText.includes('เสี่ยงต่ำ')) {
-                styleBgColor = 'limegreen'; // สีเขียว Lime
+                styleBgColor = 'limegreen'; 
             }
 
             let profitStr = item.profit || '0.00';
