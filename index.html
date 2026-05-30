@@ -222,17 +222,41 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); }
         }
 
-        /* [UPDATE] สไตล์ข้อความแนะนำการเลือกกลยุทธ์ */
-        .instruction-title {
-            color: #ff3b3b;
-            font-size: 1.3rem;
-            font-weight: 600;
-            text-align: center;
-            margin: 30px 5px 15px 5px;
-            text-shadow: 0 0 15px rgba(255, 59, 59, 0.4);
-            display: none; /* ซ่อนไว้จนกว่าจะโหลดข้อมูลเสร็จ */
+        /* [UPDATE] สไตล์ใหม่: กล่องข้อความกรอบทองไล่ระดับ */
+        .instruction-wrapper {
+            margin: 30px 5px 20px 5px;
+            padding: 2px; /* ความหนาของกรอบ */
+            background: linear-gradient(135deg, #FFD700, #FDB931, #b8860b, #FFD700); /* ไล่ระดับสีทอง */
+            background-size: 200% 200%;
+            animation: goldShine 3s ease infinite; /* อนิเมชันไฟวิ่ง */
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.25); /* เงาสีทองเรืองแสงรอบกล่อง */
+            display: none; /* ซ่อนไว้รอโหลดข้อมูล */
         }
 
+        @keyframes goldShine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .instruction-content {
+            background-color: #1a1a1a; /* พื้นหลังสีเทาเข้มตัดกับกรอบทอง */
+            border-radius: 14px; /* โค้งสอดรับกับกรอบนอก */
+            padding: 15px 20px;
+            text-align: center;
+        }
+
+        .instruction-text {
+            color: #ff3b3b; /* ตัวหนังสือสีแดง */
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(255, 59, 59, 0.4); /* เงาตัวหนังสือสีแดงให้ดูพรีเมียม */
+        }
+
+        /* สไตล์กล่อง EA */
         .ea-card { 
             background: linear-gradient(145deg, #151515 0%, #2b2b2b 100%); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
@@ -360,7 +384,7 @@
         </div>
     </div>
 
-    <!-- ส่วนแสดงรูปภาพ Strategy ใหม่ -->
+    <!-- ส่วนแสดงรูปภาพ Strategy -->
     <div class="system-diagram-container">
         <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
     </div>
@@ -395,8 +419,12 @@
         <div class="spinner-border" role="status"></div>
     </div>
 
-    <!-- [UPDATE] บล็อคข้อความแนะนำก่อนถึงกล่อง EA -->
-    <h4 id="instruction-title" class="instruction-title">เลือกรันกลยุทธที่ต้องการตามข้อมูลด้านล่าง</h4>
+    <!-- [UPDATE] บล็อคข้อความแนะนำพร้อมกรอบสีทอง -->
+    <div id="instruction-box" class="instruction-wrapper">
+        <div class="instruction-content">
+            <h4 class="instruction-text">เลือกรันกลยุทธที่ต้องการตามข้อมูลด้านล่าง</h4>
+        </div>
+    </div>
 
     <div id="ea-container" class="row row-cols-1 g-3 px-2"></div>
 
@@ -453,7 +481,7 @@
         const container = document.getElementById('ea-container');
         const loader = document.getElementById('loader');
         const contactSection = document.getElementById('contact-section'); 
-        const instructionTitle = document.getElementById('instruction-title'); // [UPDATE] ดึง element ข้อความ
+        const instructionBox = document.getElementById('instruction-box'); // ดึง element กล่องข้อความ
         
         if (loader) loader.style.display = 'none';
 
@@ -463,8 +491,8 @@
             return;
         }
 
-        // [UPDATE] แสดงข้อความหัวข้อเมื่อโหลดข้อมูลสำเร็จ
-        if (instructionTitle) instructionTitle.style.display = 'block';
+        // แสดงกล่องข้อความที่มีกรอบสีทองเมื่อโหลดข้อมูลสำเร็จ
+        if (instructionBox) instructionBox.style.display = 'block';
 
         let html = '';
 
