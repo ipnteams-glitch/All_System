@@ -222,18 +222,26 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); }
         }
 
+        /* [UPDATE] สไตล์ใหม่สำหรับกล่อง EA (ไล่สีน้ำเงินพรีเมียม) */
         .ea-card { 
-            border: none; 
+            background: linear-gradient(145deg, #0a1128 0%, #162a4d 100%); /* ไล่สีน้ำเงินเข้มไปกรมท่า */
+            border: 1px solid rgba(255, 255, 255, 0.1); 
             border-radius: 25px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4); 
             overflow: hidden; 
             width: 100%;
             height: 100%; 
             color: #ffffff !important; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* เอฟเฟกต์เวลาชี้เมาส์ */
+        }
+
+        .ea-card:hover {
+            transform: translateY(-5px); /* เลื่อนขึ้น 5px */
+            box-shadow: 0 12px 25px rgba(0, 191, 255, 0.25); /* เงาสีฟ้าอ่อน */
         }
 
         .balance-box { 
-            background-color: rgba(255,255,255,0.15); 
+            background-color: rgba(255,255,255,0.1); 
             border-radius: 20px; 
             padding: 18px; 
             margin-top: 15px; 
@@ -342,14 +350,13 @@
         </div>
     </div>
 
-    <!-- ส่วนแสดงรูปภาพ Strategy ใหม่ -->
     <div class="system-diagram-container">
         <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
     </div>
 
     <div class="hero-section text-center">
         <h1 class="hero-title">FOREX บน METATRADE 5</h1>
-        <h2 class="hero-subtitle">เทรดคู่เงินและทองอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
+        <h2 class="hero-subtitle">เทรดคู่ทองและคู่เงินอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
         <p class="hero-desc">
             กระจายความเสี่ยงผ่านกองทัพ EA ที่เชี่ยวชาญหลากหลายกลยุทธ์ ทำงานตลอด 24 ชม.<br>
             ลด Drawdown ชดเชยความเสี่ยง เพื่อการเติบโตของพอร์ตอย่างยั่งยืน โดยไม่ต้องเฝ้ากราฟ
@@ -413,9 +420,6 @@
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwUVLhRbdk2noN4GeHC-j_zaz2mxD8bjUDWIjg2aljSodPvJJzbq-2GHwitiIpHo5a5dQ/exec";
 
-    const color1 = '#130f40'; // Midnight Blue
-    const color2 = '#1e1240'; // Deep Premium Purple
-
     document.addEventListener('DOMContentLoaded', fetchData);
 
     function fetchData() {
@@ -447,12 +451,9 @@
         let html = '';
 
         data.forEach((item, index) => {
-            const bgColor = (index % 2 === 0) ? color1 : color2;
-            
             let typeText = item.type || '-';
             let styleBgColor = '#555555'; // สีเทาสำหรับอื่นๆ
             
-            // อัปเดตสีพื้นหลัง Risk Style ใหม่ตามที่คุณต้องการ
             if (typeText.includes('ทดสอบ')) {
                 styleBgColor = '#DAA520'; // สีเดิมเหลืองเข้ม (ทอง)
             } else if (typeText.includes('ค่อนข้างสูง')) {
@@ -473,9 +474,10 @@
                 profitColor = '#ff3b3b'; 
             }
 
+            // [UPDATE] ลบ inline style background-color ออก เพื่อให้คลาส .ea-card (ที่เป็นไล่สีน้ำเงิน) ทำงานแทน
             html += `
                 <div class="col">
-                    <div class="ea-card" style="background-color: ${bgColor}">
+                    <div class="ea-card">
                         <div class="p-4"> 
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="badge rounded-pill bg-primary">Running</span>
