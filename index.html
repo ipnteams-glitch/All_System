@@ -222,16 +222,15 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); }
         }
 
-        /* [UPDATE] สไตล์ใหม่: กล่องข้อความกรอบทองไล่ระดับ */
         .instruction-wrapper {
             margin: 30px 5px 20px 5px;
-            padding: 2px; /* ความหนาของกรอบ */
-            background: linear-gradient(135deg, #FFD700, #FDB931, #b8860b, #FFD700); /* ไล่ระดับสีทอง */
+            padding: 2px; 
+            background: linear-gradient(135deg, #FFD700, #FDB931, #b8860b, #FFD700); 
             background-size: 200% 200%;
-            animation: goldShine 3s ease infinite; /* อนิเมชันไฟวิ่ง */
+            animation: goldShine 3s ease infinite; 
             border-radius: 16px;
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.25); /* เงาสีทองเรืองแสงรอบกล่อง */
-            display: none; /* ซ่อนไว้รอโหลดข้อมูล */
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.25); 
+            display: none; 
         }
 
         @keyframes goldShine {
@@ -241,22 +240,21 @@
         }
 
         .instruction-content {
-            background-color: #1a1a1a; /* พื้นหลังสีเทาเข้มตัดกับกรอบทอง */
-            border-radius: 14px; /* โค้งสอดรับกับกรอบนอก */
+            background-color: #1a1a1a; 
+            border-radius: 14px; 
             padding: 15px 20px;
             text-align: center;
         }
 
         .instruction-text {
-            color: #ff3b3b; /* ตัวหนังสือสีแดง */
+            color: #ff3b3b; 
             font-size: 1.25rem;
             font-weight: 600;
             margin: 0;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 10px rgba(255, 59, 59, 0.4); /* เงาตัวหนังสือสีแดงให้ดูพรีเมียม */
+            text-shadow: 0 0 10px rgba(255, 59, 59, 0.4); 
         }
 
-        /* สไตล์กล่อง EA */
         .ea-card { 
             background: linear-gradient(145deg, #151515 0%, #2b2b2b 100%); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
@@ -280,6 +278,11 @@
             padding: 18px; 
             margin-top: 15px; 
             border: 1px solid rgba(255,255,255,0.1); 
+            /* [UPDATE] เพิ่ม Flexbox เพื่อให้ตัวอักษรเรียงต่อกันในแนวนอน และอยู่ตรงกลาง */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* ระยะห่างระหว่างคำว่า Start Balance กับ ตัวเลข */
         }
 
         .ea-card h5.fw-bold { 
@@ -384,14 +387,13 @@
         </div>
     </div>
 
-    <!-- ส่วนแสดงรูปภาพ Strategy -->
     <div class="system-diagram-container">
         <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
     </div>
 
     <div class="hero-section text-center">
         <h1 class="hero-title">FOREX บน METATRADE 5</h1>
-        <h2 class="hero-subtitle">เทรดคู่ทองและคู่เงินอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
+        <h2 class="hero-subtitle">เทรดคู่ทองและค่าเงินอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
         <p class="hero-desc">
             กระจายความเสี่ยงผ่านกองทัพ EA ที่เชี่ยวชาญหลากหลายกลยุทธ์ ทำงานตลอด 24 ชม.<br>
             ลด Drawdown ชดเชยความเสี่ยง เพื่อการเติบโตของพอร์ตอย่างยั่งยืน โดยไม่ต้องเฝ้ากราฟ
@@ -419,7 +421,6 @@
         <div class="spinner-border" role="status"></div>
     </div>
 
-    <!-- [UPDATE] บล็อคข้อความแนะนำพร้อมกรอบสีทอง -->
     <div id="instruction-box" class="instruction-wrapper">
         <div class="instruction-content">
             <h4 class="instruction-text">เลือกรันกลยุทธที่ต้องการตามข้อมูลด้านล่าง</h4>
@@ -481,7 +482,7 @@
         const container = document.getElementById('ea-container');
         const loader = document.getElementById('loader');
         const contactSection = document.getElementById('contact-section'); 
-        const instructionBox = document.getElementById('instruction-box'); // ดึง element กล่องข้อความ
+        const instructionBox = document.getElementById('instruction-box'); 
         
         if (loader) loader.style.display = 'none';
 
@@ -491,7 +492,6 @@
             return;
         }
 
-        // แสดงกล่องข้อความที่มีกรอบสีทองเมื่อโหลดข้อมูลสำเร็จ
         if (instructionBox) instructionBox.style.display = 'block';
 
         let html = '';
@@ -520,6 +520,7 @@
                 profitColor = '#ff3b3b'; 
             }
 
+            // [UPDATE] เปลี่ยนแท็ก <h2> ของตัวเลข balance ให้เป็น <span> หรือ <small> เพื่อให้ขนาดเท่ากัน
             html += `
                 <div class="col">
                     <div class="ea-card">
@@ -545,8 +546,8 @@
                             </div>
 
                             <div class="balance-box text-center mt-3">
-                                <small class="text-muted d-block mb-1">Start Balance</small>
-                                <h2 class="fw-bold text-white mb-0">$${item.balance}</h2> 
+                                <span class="text-muted">Start Balance</span>
+                                <span class="fw-bold text-white mb-0" style="font-size: 1rem;">$${item.balance}</span> 
                             </div>
                         </div>
                     </div>
