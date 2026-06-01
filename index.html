@@ -426,12 +426,18 @@
 
     <div class="video-wrapper">
         <iframe 
-            src="https://www.youtube.com/embed/FpkwMBMO4nU?autoplay=1&mute=1&loop=1&playlist=FpkwMBMO4nU&controls=1&rel=0" 
+            src="https://www.youtube.com/embed/FpkwMBMO4nU?loop=1&playlist=FpkwMBMO4nU&controls=1&rel=0" 
             title="YouTube video player" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen>
         </iframe>
     </div>
+
+**💡 สิ่งที่เปลี่ยนแปลงไป:**
+* ลบ `autoplay=1` และ `mute=1` ออกจากลิงก์ `src`
+* เอาคำว่า `autoplay;` ออกจากแท็ก `allow="..."` เพื่อให้บราวเซอร์รู้ว่าเราไม่ได้บังคับเล่นวิดีโอครับ
+
+พอเซฟและอัปโหลดแล้ว เมื่อลูกค้าเข้ามาหน้าเว็บจะเห็นหน้าปกวิดีโอสวยๆ พร้อมปุ่ม Play ตรงกลาง พอพวกลูกค้ากดปุ่มเล่น ก็จะได้ยินเสียงชัดเจนเต็ม 100% เลยครับ!
 
     <div class="hero-section text-center">
         <h1 class="hero-title">FOREX บน METATRADE 5</h1>
