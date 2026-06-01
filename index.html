@@ -437,21 +437,67 @@
 </div>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwUVLhRbdk2noN4GeHC-j_zaz2mxD8bjUDWIjg2aljSodPvJJzbq-2GHwitiIpHo5a5dQ/exec";
+    // 🔴 1. ใช้ช่องทาง Google Visualization API (ใส่ SHEET_ID ตัวเดียวกับหน้า RealTime)
+    //https://docs.google.com/spreadsheets/d/193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ/edit?gid=0#gid=0
+    const SHEET_ID = "193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ"; 
+    const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
 
-    document.addEventListener('DOMContentLoaded', fetchData);
+    document.addEventListener('DOMContentLoaded', fetchIndexData);
 
-    function fetchData() {
-        fetch(API_URL)
-            .then(response => response.json())
-            .then(data => {
-                renderCards(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('ea-container').innerHTML = 
-                    '<div class="alert alert-danger mx-3 text-center w-100">เกิดข้อผิดพลาดในการดึงข้อมูล</div>';
+    async function fetchIndexData() {
+        try {
+            // ป้องกัน Cache เพื่อให้ได้ข้อมูลใหม่เสมอเวลาคนกดเข้าเว็บ
+            const cacheBuster = "&t=" + new Date().getTime();
+            const response = await fetch(GVIZ_URL + cacheBuster);
+            const text = await response.text();
+            
+            // แกะข้อมูล JSON ของ Google
+            const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+            const jsonData = JSON.parse(jsonString);
+            const rows = jsonData.table.rows;
+
+            if (!rows || rows.length === 0) {
+                showError('<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>');
+                return;
+            }
+
+            let data = [];
+            
+            // 🎯 2. วนลูปจับคู่คอลัมน์ (ปรับตัวเลขในวงเล็บ [ ] ให้ตรงกับคอลัมน์ใน Sheet ของคุณ)
+            // A=0, B=1, C=2, D=3, E=4, F=5, G=6, H=7, I=8
+            rows.forEach(row => {
+                if (row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc_number") {
+                    data.push({
+                        name: row.c[1] ? row.c[1].v : "-",       // คอลัมน์ B (ชื่อ EA)
+                        balance: row.c[2] ? row.c[2].v : 0,      // คอลัมน์ C (ทุนเริ่มต้น)
+                        
+                        // ⚠️ ตรงนี้สำคัญ: สมมติว่า "Model" อยู่คอลัมน์ H (7) และ "ความเสี่ยง" อยู่คอลัมน์ I (8)
+                        // ให้คุณแก้เลข 7 และ 8 ให้ตรงกับคอลัมน์ใน Google Sheet ของคุณครับ
+                        comment: row.c[7] ? row.c[7].v : "-",    // Model (เปลี่ยนเลข 7 ตามจริง)
+                        type: row.c[8] ? row.c[8].v : "-"        // Style เสี่ยงสูง/ต่ำ (เปลี่ยนเลข 8 ตามจริง)
+                    });
+                }
             });
+
+            // จัดเรียงชื่อ EA อย่างถูกต้อง (Sys1, Sys2... Sys10)
+            data.sort((a, b) => {
+                return String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' });
+            });
+
+            renderCards(data);
+
+        } catch (error) {
+            console.error('Error:', error);
+            showError('<div class="alert alert-danger mx-3 text-center w-100">เกิดข้อผิดพลาดในการดึงข้อมูล</div>');
+        }
+    }
+
+    function showError(msg) {
+        const loader = document.getElementById('loader');
+        const contactSection = document.getElementById('contact-section');
+        if (loader) loader.style.display = 'none';
+        document.getElementById('ea-container').innerHTML = msg;
+        if (contactSection) contactSection.style.display = 'block';
     }
 
     function renderCards(data) {
@@ -463,8 +509,7 @@
         if (loader) loader.style.display = 'none';
 
         if (!data || data.length === 0) {
-            container.innerHTML = '<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>';
-            contactSection.style.display = 'block'; 
+            showError('<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>');
             return;
         }
 
@@ -472,7 +517,7 @@
 
         let html = '';
 
-        data.forEach((item, index) => {
+        data.forEach((item) => {
             let typeText = item.type || '-';
             let styleBgColor = '#555555'; 
             
@@ -523,7 +568,7 @@
         });
         
         container.innerHTML = html;
-        contactSection.style.display = 'block';
+        if (contactSection) contactSection.style.display = 'block';
     }
 </script>
 
