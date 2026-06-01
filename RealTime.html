@@ -161,58 +161,58 @@
         // 🔴 นำ URL ของ Apps Script ที่ได้จาก Google Sheet มาใส่ตรงนี้
         const API_URL = "https://script.google.com/macros/s/AKfycbwc8soxHbVfzpmIwzMJqUrHgc7MQfEfJ4_cxj-_DpN-5jWJfBEMeKuxsC7T4nTXpXZh/exec";
 
-        // ฟังก์ชันจัดฟอร์แมตตัวเลขให้มีคอมม่าและทศนิยม 2 ตำแหน่ง
-        function formatNumber(num) {
-            return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
+    function formatNumber(num) {
+        return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
 
-        // ฟังก์ชันเลือกสี (เขียว/แดง/ขาว)
-        function getColorClass(num) {
-            if (num > 0) return 'text-green';
-            if (num < 0) return 'text-red';
-            return '';
-        }
+    function getColorClass(num) {
+        if (num > 0) return 'text-green';
+        if (num < 0) return 'text-red';
+        return '';
+    }
 
-        // ฟังก์ชันดึงและแสดงข้อมูล
-        async function fetchRealTimeData() {
-            try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
-                
-                const tableBody = document.getElementById('tableBody');
-                tableBody.innerHTML = ''; // ล้างข้อความโหลดข้อมูล
+    async function fetchRealTimeData() {
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = ''; 
 
-                if (data.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">ไม่มีข้อมูลแสดงผล</td></tr>';
-                    return;
-                }
-
-                // วนลูปสร้างแถวตาราง
-                data.forEach(row => {
-                    const profitClass = getColorClass(row.profit);
-                    const profit7Class = getColorClass(row.profit7day);
-                    
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="text-bold">${row.name}</td>
-                        <td>$${formatNumber(row.balance)}</td>
-                        <td class="${profitClass}">${row.profit > 0 ? '+' : ''}${formatNumber(row.profit)}</td>
-                        <td>${formatNumber(row.margin_lv)}%</td>
-                        <td class="${profit7Class}">${row.profit7day > 0 ? '+' : ''}${formatNumber(row.profit7day)}</td>
-                    `;
-                    tableBody.appendChild(tr);
-                });
-
-            } catch (error) {
-                document.getElementById('tableBody').innerHTML = '<tr><td colspan="5" style="text-align:center; color: red;">❌ เกิดข้อผิดพลาดในการเชื่อมต่อข้อมูล</td></tr>';
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">ไม่มีข้อมูลแสดงผล</td></tr>';
+                return;
             }
-        }
 
-        // เรียกใช้งานทันทีเมื่อเปิดเว็บ
-        fetchRealTimeData();
-        
-        // (ตัวเลือกเสริม) สั่งให้อัปเดตอัตโนมัติทุกๆ 1 นาที
-        setInterval(fetchRealTimeData, 60000); 
-    </script>
+            // 🎯 เพิ่มระบบจัดเรียง Natural Sort ตรงนี้
+            // คำสั่งนี้จะบังคับให้มันอ่านค่าตัวเลขใน String อย่างถูกต้อง (Sys1, Sys2... Sys10, Sys11)
+            data.sort((a, b) => {
+                return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
+            });
+
+            // วนลูปสร้างแถวตาราง หลังจากข้อมูลถูกจัดเรียงอย่างถูกต้องแล้ว
+            data.forEach(row => {
+                const profitClass = getColorClass(row.profit);
+                const profit7Class = getColorClass(row.profit7day);
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="text-bold">${row.name}</td>
+                    <td>$${formatNumber(row.balance)}</td>
+                    <td class="${profitClass}">${row.profit > 0 ? '+' : ''}${formatNumber(row.profit)}</td>
+                    <td>${formatNumber(row.margin_lv)}%</td>
+                    <td class="${profit7Class}">${row.profit7day > 0 ? '+' : ''}${formatNumber(row.profit7day)}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+        } catch (error) {
+            document.getElementById('tableBody').innerHTML = '<tr><td colspan="5" style="text-align:center; color: red;">❌ เกิดข้อผิดพลาดในการเชื่อมต่อข้อมูล</td></tr>';
+        }
+    }
+
+    fetchRealTimeData();
+    setInterval(fetchRealTimeData, 60000); 
+</script>
 </body>
 </html>
