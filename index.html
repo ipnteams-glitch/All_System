@@ -197,31 +197,6 @@
             backdrop-filter: blur(5px);
         }
 
-        .btn-glow-red {
-            display: inline-block;
-            background: linear-gradient(45deg, #ff3b3b, #c0392b);
-            color: white !important;
-            font-size: 1.3rem;
-            font-weight: 600;
-            padding: 12px 35px;
-            border-radius: 50px;
-            text-decoration: none;
-            box-shadow: 0 0 20px rgba(255, 59, 59, 0.6);
-            transition: all 0.3s ease;
-            animation: pulse-red 2s infinite;
-        }
-
-        .btn-glow-red:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 59, 59, 0.8);
-        }
-
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); }
-        }
-
         .instruction-wrapper {
             margin: 30px 5px 20px 5px;
             padding: 2px; 
@@ -278,11 +253,10 @@
             padding: 18px; 
             margin-top: 15px; 
             border: 1px solid rgba(255,255,255,0.1); 
-            /* [UPDATE] เพิ่ม Flexbox เพื่อให้ตัวอักษรเรียงต่อกันในแนวนอน และอยู่ตรงกลาง */
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px; /* ระยะห่างระหว่างคำว่า Start Balance กับ ตัวเลข */
+            gap: 10px; 
         }
 
         .ea-card h5.fw-bold { 
@@ -320,14 +294,9 @@
         .profit-center-box {
             text-align: center;
             margin-top: 15px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .profit-value {
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-left: 5px;
+            color: #4cd137; /* เปลี่ยนเป็นสีเขียวพรีเมียมให้ดูสวยงาม */
         }
 
         .social-btn {
@@ -404,19 +373,17 @@
             <span class="feature-tag">⚔️ กระจายหลายกลยุทธ์</span>
             <span class="feature-tag">📈 กำไรยั่งยืน</span>
         </div>
-<div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
-    
-    <a href="https://lin.ee/9B1pFmD" target="_blank" style="background: linear-gradient(90deg, #10b981 0%, #ef4444 100%); color: #ffffff; padding: 12px 30px; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); display: inline-block; transition: 0.3s; border: 2px solid transparent;">
-        🎁 ทดลองฟรี 1 สัปดาห์
-    </a>
-    
-    <a href="RealTime.html" style="background: linear-gradient(90deg, #D4AF37 0%, #FFDF73 100%); color: #000; padding: 12px 30px; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); display: inline-block; transition: 0.3s; border: 2px solid transparent;">
-        📊 ดูแบบ Real-Time
-    </a>
-    
-</div>
-
-        
+        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
+            
+            <a href="https://lin.ee/9B1pFmD" target="_blank" style="background: linear-gradient(90deg, #10b981 0%, #ef4444 100%); color: #ffffff; padding: 12px 30px; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); display: inline-block; transition: 0.3s; border: 2px solid transparent;">
+                🎁 ทดลองฟรี 1 สัปดาห์
+            </a>
+            
+            <a href="RealTime.html" style="background: linear-gradient(90deg, #D4AF37 0%, #FFDF73 100%); color: #000; padding: 12px 30px; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); display: inline-block; transition: 0.3s; border: 2px solid transparent;">
+                📊 ดูแบบ Real-Time
+            </a>
+            
+        </div>
     </div>
 
     <div class="info-box">
@@ -521,15 +488,6 @@
                 styleBgColor = 'limegreen'; 
             }
 
-            let profitStr = item.profit || '0.00';
-            let profitNum = parseFloat(String(profitStr).replace(/,/g, ''));
-            
-            let profitColor = '#39ff14'; 
-            if (profitNum < 0) {
-                profitColor = '#ff3b3b'; 
-            }
-
-            // [UPDATE] เปลี่ยนแท็ก <h2> ของตัวเลข balance ให้เป็น <span> หรือ <small> เพื่อให้ขนาดเท่ากัน
             html += `
                 <div class="col">
                     <div class="ea-card">
@@ -551,7 +509,7 @@
                             </div>
 
                             <div class="profit-center-box">
-                                กำไรสัปดาห์ล่าสุด <span class="profit-value" style="color: ${profitColor};">${profitStr}</span>
+                                ข้อมูลเบื้องต้น
                             </div>
 
                             <div class="balance-box text-center mt-3">
