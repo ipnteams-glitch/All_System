@@ -1,6 +1,7 @@
 <script>
-        // 🔴 1. นำลิงก์ CSV ที่คุณทำไว้ในขั้นตอนที่ 2 มาใส่ตรงนี้ครับ
-        const CSV_URL = "https://docs.google.com/spreadsheets/d/1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU/export?format=csv&gid=0";
+        // 🔴 ใช้ช่องทาง Google Visualization API แทน CSV (ทะลุบล็อก CORS และโหลดเร็วมาก)
+        const SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
+        const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
 
         function formatNumber(num) {
             return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -14,44 +15,47 @@
 
         async function fetchRealTimeData() {
             try {
-                // ใส่ตัวแปรกำจัด Cache ของ Browser เพื่อให้ดึงข้อมูลใหม่ล่าสุดเสมอ (สำคัญมากสำหรับอัปเดตทุก 3 วิ)
+                // ใส่ตัวแปรกำจัด Cache 
                 const cacheBuster = "&t=" + new Date().getTime();
-                const response = await fetch(CSV_URL + cacheBuster);
-                const csvText = await response.text();
+                const response = await fetch(GVIZ_URL + cacheBuster);
+                const text = await response.text();
                 
-                // แกะไฟล์ CSV แบ่งออกเป็นทีละบรรทัด
-                const rows = csvText.split('\n').map(row => row.trim()).filter(row => row !== '');
+                // ตัดข้อความส่วนเกินที่ Google แถมมาออก ให้เหลือแค่ JSON แท้ๆ
+                const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+                const jsonData = JSON.parse(jsonString);
                 
                 const tableBody = document.getElementById('tableBody');
                 tableBody.innerHTML = ''; 
 
-                // หากมีแต่หัวตาราง หรือไม่มีข้อมูล
-                if (rows.length <= 1) {
+                const rows = jsonData.table.rows;
+
+                // หากไม่มีข้อมูล
+                if (!rows || rows.length === 0) {
                     tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">ไม่มีข้อมูลแสดงผล</td></tr>';
                     return;
                 }
 
-                // แปลงข้อมูล CSV ให้อยู่ในรูปแบบ Object
                 let data = [];
-                for (let i = 1; i < rows.length; i++) { 
-                    const cols = rows[i].split(',');
-                    // คอลัมน์อ้างอิง: B=1(ชื่อ), C=2(ทุน), E=4(กำไรปัจจุบัน), G=6(กำไร 7 วัน)
-                    if (cols.length >= 7 && cols[0] !== "") {
+                
+                // วนลูปดึงข้อมูลจากโครงสร้าง JSON ของ Google
+                rows.forEach(row => {
+                    // ป้องกันการดึงแถวหัวตาราง (acc_Number) มาแสดง
+                    if (row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc_number") {
                         data.push({
-                            name: cols[1],
-                            balance: parseFloat(cols[2] || 0),
-                            profit: parseFloat(cols[4] || 0),
-                            profit7day: parseFloat(cols[6] || 0)
+                            name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
+                            balance: row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0,
+                            profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0,
+                            profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0
                         });
                     }
-                }
+                });
 
                 // จัดเรียงชื่อ EA อย่างถูกต้อง (Sys1, Sys2... Sys10)
                 data.sort((a, b) => {
                     return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
                 });
 
-                // วนลูปสร้างแถวตารางแบบ 4 คอลัมน์
+                // สร้างแถวตาราง
                 data.forEach(row => {
                     const profitClass = getColorClass(row.profit);
                     const profit7Class = getColorClass(row.profit7day);
@@ -75,6 +79,6 @@
         // เรียกใช้งานทันทีเมื่อเปิดเว็บ
         fetchRealTimeData();
         
-        // 🎯 ตั้งค่าดึงข้อมูลใหม่ทุกๆ 3 วินาที (ตอนนี้ตั้ง 3 วิได้เลยครับ เพราะดึงตรงจาก Sheet แล้ว ไม่ผ่าน Apps Script)
+        // ตั้งค่าดึงข้อมูลใหม่ทุกๆ 3 วินาที (ด้วย API ตัวนี้ สามารถรับโหลด 50 เครื่องพร้อมกันได้สบายมากครับ)
         setInterval(fetchRealTimeData, 3000); 
     </script>
