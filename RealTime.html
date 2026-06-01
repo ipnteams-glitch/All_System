@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Trading Performance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f1115;
+            --card-bg: #1c1f26;
+            --text-main: #e2e8f0;
+            --gold: #D4AF37;
+            --green: #10b981;
+            --red: #ef4444;
+            --border: #2d333b;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Kanit', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .header-box {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-box h1 {
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .header-box p {
+            color: #8b949e;
+            margin-top: 0;
+            font-size: 14px;
+        }
+
+        /* ตารางสไตล์พรีเมียม */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right; /* จัดขวาสำหรับตัวเลข */
+        }
+
+        th, td {
+            padding: 16px 20px;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            font-weight: 500;
+            font-size: 15px;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        th:first-child, td:first-child {
+            text-align: left; /* คอลัมน์ชื่อจัดซ้าย */
+        }
+
+        td {
+            border-bottom: 1px solid var(--border);
+            font-size: 15px;
+            color: #c9d1d9;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+            transition: 0.2s;
+        }
+
+        .text-green { color: var(--green); font-weight: 500; }
+        .text-red { color: var(--red); font-weight: 500; }
+        .text-bold { font-weight: 600; }
+
+        /* Loader Animation */
+        .loader {
+            text-align: center;
+            padding: 40px;
+            color: var(--gold);
+            font-size: 18px;
+        }
+
+        /* ปุ่มกลับหน้าหลัก */
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            color: #8b949e;
+            text-decoration: none;
+            border: 1px solid #8b949e;
+            padding: 8px 20px;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+        
+        .back-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-box">
+            <h1>🏆 Live Trading Performance</h1>
+            <p>อัปเดตข้อมูลพอร์ตการลงทุนแบบ Real-Time</p>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ชื่อระบบ (EA Name)</th>
+                        <th>ยอดเงิน (Balance)</th>
+                        <th>กำไรปัจจุบัน (Profit)</th>
+                        <th>Margin Level</th>
+                        <th>กำไร 7 วัน (Profit 7D)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="5">
+                            <div class="loader">⏳ กำลังโหลดข้อมูล...</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="index.html" class="back-btn">← กลับหน้าหลัก</a>
+        </div>
+    </div>
+
+    <script>
+        // 🔴 นำ URL ของ Apps Script ที่ได้จาก Google Sheet มาใส่ตรงนี้
+        const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+        // ฟังก์ชันจัดฟอร์แมตตัวเลขให้มีคอมม่าและทศนิยม 2 ตำแหน่ง
+        function formatNumber(num) {
+            return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // ฟังก์ชันเลือกสี (เขียว/แดง/ขาว)
+        function getColorClass(num) {
+            if (num > 0) return 'text-green';
+            if (num < 0) return 'text-red';
+            return '';
+        }
+
+        // ฟังก์ชันดึงและแสดงข้อมูล
+        async function fetchRealTimeData() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                const tableBody = document.getElementById('tableBody');
+                tableBody.innerHTML = ''; // ล้างข้อความโหลดข้อมูล
+
+                if (data.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">ไม่มีข้อมูลแสดงผล</td></tr>';
+                    return;
+                }
+
+                // วนลูปสร้างแถวตาราง
+                data.forEach(row => {
+                    const profitClass = getColorClass(row.profit);
+                    const profit7Class = getColorClass(row.profit7day);
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="text-bold">${row.name}</td>
+                        <td>$${formatNumber(row.balance)}</td>
+                        <td class="${profitClass}">${row.profit > 0 ? '+' : ''}${formatNumber(row.profit)}</td>
+                        <td>${formatNumber(row.margin_lv)}%</td>
+                        <td class="${profit7Class}">${row.profit7day > 0 ? '+' : ''}${formatNumber(row.profit7day)}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+
+            } catch (error) {
+                document.getElementById('tableBody').innerHTML = '<tr><td colspan="5" style="text-align:center; color: red;">❌ เกิดข้อผิดพลาดในการเชื่อมต่อข้อมูล</td></tr>';
+            }
+        }
+
+        // เรียกใช้งานทันทีเมื่อเปิดเว็บ
+        fetchRealTimeData();
+        
+        // (ตัวเลือกเสริม) สั่งให้อัปเดตอัตโนมัติทุกๆ 1 นาที
+        setInterval(fetchRealTimeData, 60000); 
+    </script>
+</body>
+</html>
