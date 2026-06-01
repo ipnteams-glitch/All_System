@@ -230,6 +230,9 @@
             text-shadow: 0 0 10px rgba(255, 59, 59, 0.4); 
         }
 
+/* ------------------------------------- */
+        /* กล่องการ์ดหลัก (อัปเดตให้รองรับภาพพื้นหลัง) */
+        /* ------------------------------------- */
         .ea-card { 
             background: linear-gradient(145deg, #151515 0%, #2b2b2b 100%); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
@@ -240,11 +243,25 @@
             height: 100%; 
             color: #ffffff !important; 
             transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            position: relative; /* 🟢 บังคับให้ภาพพื้นหลังอยู่แค่ในกรอบนี้ */
+            z-index: 1; /* 🟢 ดันข้อความทั้งหมดให้ลอยอยู่ด้านหน้า */
         }
 
         .ea-card:hover {
             transform: translateY(-5px); 
             box-shadow: 0 12px 25px rgba(255, 255, 255, 0.15); 
+        }
+
+        /* 🟢 โค้ดสำหรับใส่ภาพพื้นหลังและปรับความจาง */
+        .ea-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('block.png'); /* อ้างอิงชื่อไฟล์ภาพของคุณ */
+            background-size: cover; /* จัดภาพให้เต็มกล่อง */
+            background-position: center; /* จัดภาพให้อยู่กึ่งกลาง */
+            opacity: 0.15; /* 🟢 ปรับความจางตรงนี้ (0.15 - 0.30) */
+            z-index: -1; /* 🟢 ซ่อนภาพไว้หลังตัวหนังสือ */
         }
 
         .balance-box { 
