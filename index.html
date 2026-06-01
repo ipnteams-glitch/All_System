@@ -437,21 +437,18 @@
 </div>
 
 <script>
-    // 🔴 1. ใช้ช่องทาง Google Visualization API (ใส่ SHEET_ID ตัวเดียวกับหน้า RealTime)
-    //https://docs.google.com/spreadsheets/d/193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ/edit?usp=sharing
-    const SHEET_ID = "193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ"; 
+    // 🔴 1. อัปเดต SHEET_ID เป็นไฟล์ใหม่ล่าสุดตามภาพ
+    const SHEET_ID = "193XZLwmEDX7oTGZJEEJHkcFszY4bDf5NNFpdr75gDYQ"; 
     const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
 
     document.addEventListener('DOMContentLoaded', fetchIndexData);
 
     async function fetchIndexData() {
         try {
-            // ป้องกัน Cache เพื่อให้ได้ข้อมูลใหม่เสมอเวลาคนกดเข้าเว็บ
             const cacheBuster = "&t=" + new Date().getTime();
             const response = await fetch(GVIZ_URL + cacheBuster);
             const text = await response.text();
             
-            // แกะข้อมูล JSON ของ Google
             const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
             const jsonData = JSON.parse(jsonString);
             const rows = jsonData.table.rows;
@@ -463,23 +460,20 @@
 
             let data = [];
             
-            // 🎯 2. วนลูปจับคู่คอลัมน์ (ปรับตัวเลขในวงเล็บ [ ] ให้ตรงกับคอลัมน์ใน Sheet ของคุณ)
-            // A=0, B=1, C=2, D=3, E=4, F=5, G=6, H=7, I=8
+            // 🎯 2. ตั้งค่าคอลัมน์ใหม่: A=0, B=1, C=2, D=3, E=4
             rows.forEach(row => {
-                if (row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc_number") {
+                // ข้ามบรรทัดที่เป็นหัวตาราง (คำว่า "Original")
+                if (row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "original") {
                     data.push({
-                        name: row.c[1] ? row.c[1].v : "-",       // คอลัมน์ B (ชื่อ EA)
-                        balance: row.c[2] ? row.c[2].v : 0,      // คอลัมน์ C (ทุนเริ่มต้น)
-                        
-                        // ⚠️ ตรงนี้สำคัญ: สมมติว่า "Model" อยู่คอลัมน์ H (7) และ "ความเสี่ยง" อยู่คอลัมน์ I (8)
-                        // ให้คุณแก้เลข 7 และ 8 ให้ตรงกับคอลัมน์ใน Google Sheet ของคุณครับ
-                        comment: row.c[7] ? row.c[7].v : "-",    // Model (เปลี่ยนเลข 7 ตามจริง)
-                        type: row.c[8] ? row.c[8].v : "-"        // Style เสี่ยงสูง/ต่ำ (เปลี่ยนเลข 8 ตามจริง)
+                        name: row.c[2] && row.c[2].v !== null ? row.c[2].v : "-",       // คอลัมน์ C (ชื่อ Sys_1)
+                        comment: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",    // คอลัมน์ B (Model)
+                        balance: row.c[3] && row.c[3].v !== null ? row.c[3].v : "-",    // คอลัมน์ D (ข้อความใต้ข้อมูลเบื้องต้น)
+                        type: row.c[4] && row.c[4].v !== null ? row.c[4].v : "-"        // คอลัมน์ E (Style ความเสี่ยง)
                     });
                 }
             });
 
-            // จัดเรียงชื่อ EA อย่างถูกต้อง (Sys1, Sys2... Sys10)
+            // จัดเรียงชื่อ EA (Sys_1, Sys_2... Sys_10) อย่างถูกต้อง
             data.sort((a, b) => {
                 return String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' });
             });
@@ -518,9 +512,10 @@
         let html = '';
 
         data.forEach((item) => {
-            let typeText = item.type || '-';
+            let typeText = String(item.type);
             let styleBgColor = '#555555'; 
             
+            // เช็คคำเพื่อเปลี่ยนสีป้ายกำกับ
             if (typeText.includes('ทดสอบ')) {
                 styleBgColor = '#DAA520'; 
             } else if (typeText.includes('ค่อนข้างสูง')) {
@@ -540,12 +535,12 @@
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="badge rounded-pill bg-primary">Running</span>
                             </div>
-                            <h5 class="fw-bold">${item.name}</h5>
+                            <h5 class="fw-bold" style="color: #ffeb3b;">${item.name}</h5>
                             
                             <div class="row g-2 mt-2">
                                 <div class="col-6">
                                     <small class="text-muted d-block mb-1">Model</small>
-                                    <div class="text-secondary">${item.comment || '-'}</div>
+                                    <div class="text-secondary">${item.comment}</div>
                                 </div>
                                 <div class="col-6 text-end">
                                     <small class="text-muted d-block mb-1">Style</small>
@@ -553,13 +548,14 @@
                                 </div>
                             </div>
 
-                            <div class="profit-center-box">
+                            <div class="profit-center-box" style="text-align: center; margin-top: 20px; font-size: 1.1rem; font-weight: 600; color: #3399ff;">
                                 ข้อมูลเบื้องต้น
                             </div>
 
-                            <div class="balance-box text-center mt-3">
-                                <span class="text-muted">** </span>
-                                <span class="fw-bold text-white mb-0" style="font-size: 1rem;"> ${item.balance}</span> 
+                            <div class="balance-box text-center mt-2" style="background-color: rgba(255,255,255,0.03); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.1);">
+                                <span class="fw-bold text-white mb-0" style="font-size: 0.95rem; line-height: 1.6; display: block; white-space: normal;">
+                                    ${item.balance}
+                                </span> 
                             </div>
                         </div>
                     </div>
