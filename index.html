@@ -89,23 +89,45 @@
             100% { opacity: 1; transform: scale(1); } 
         }
 
-        .system-diagram-container {
+.system-diagram-container {
             text-align: center;
             margin: 10px 5px 25px 5px; 
         }
         
+        /* ------------------------------------- */
+        /* เอฟเฟกต์ภาพลอยได้แบบล้ำสมัย (Modern Floating) */
+        /* ------------------------------------- */
         .system-diagram-img {
             max-width: 100%;
             height: auto;
             border-radius: 15px; 
-            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2); 
             border: 1px solid rgba(255, 255, 255, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            /* 🟢 สั่งให้เล่นแอนิเมชันชื่อ floatingModern วนลูปไปเรื่อยๆ */
+            animation: floatingModern 4s ease-in-out infinite;
         }
 
+        /* เมื่อเอาเมาส์ไปชี้ ให้ภาพขยายใหญ่ขึ้นนิดนึงและสว่างขึ้น */
         .system-diagram-img:hover {
-            transform: scale(1.02); 
-            box-shadow: 0 12px 30px rgba(0, 191, 255, 0.5); 
+            transform: scale(1.03) translateY(-10px); 
+            box-shadow: 0 15px 40px rgba(0, 191, 255, 0.7); 
+            /* หยุดแอนิเมชันชั่วคราวตอนเอาเมาส์ชี้ */
+            animation-play-state: paused; 
+        }
+
+        /* 🟢 โครงสร้างการเคลื่อนไหว: ลอยขึ้นลง + แสงกระพริบช้าๆ */
+        @keyframes floatingModern {
+            0% {
+                transform: translateY(0px);
+                box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2);
+            }
+            50% {
+                transform: translateY(-12px); /* ลอยขึ้น 12 พิกเซล */
+                box-shadow: 0 15px 35px rgba(0, 191, 255, 0.5); /* แสงสีฟ้าสว่างขึ้น */
+            }
+            100% {
+                transform: translateY(0px);
+                box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2);
+            }
         }
 
         .info-box {
