@@ -522,8 +522,9 @@
 
 <script>
     // 🔴 1. อัปเดต SHEET_ID เป็นไฟล์ใหม่ล่าสุดตามภาพ
-    const SHEET_ID = "193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ"; 
-    const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+    // 🟢 อัปเดตเพิ่ม &headers=1 ต่อท้ายลิงก์เดิมเพื่อล็อกแถวหัวตารางครับ
+const SHEET_ID = "193XZLwmEDX7oTGZJEEJHkcFsZY4bDf5NNFpdr75gDYQ"; 
+const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0&headers=1`;
     //                https://docs.google.com/spreadsheets/d/193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ/edit?usp=sharing
     document.addEventListener('DOMContentLoaded', fetchIndexData);
 
@@ -546,16 +547,19 @@
             
             // 🎯 2. ตั้งค่าคอลัมน์ใหม่: A=0, B=1, C=2, D=3, E=4
             rows.forEach(row => {
-                // ข้ามบรรทัดที่เป็นหัวตาราง (คำว่า "Original")
-                if (row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "original") {
+            // ดึงข้อมูลเมื่อคอลัมน์แรกมีค่า และไม่ใช่คำว่า original หรือตัวหัวตาราง
+            if (row && row.c && row.c[0] && row.c[0].v !== null) {
+                let checkKey = String(row.c[0].v).toLowerCase();
+                if (checkKey !== "original" && checkKey !== "acc_number" && checkKey !== "acc") {
                     data.push({
-                        name: row.c[2] && row.c[2].v !== null ? row.c[2].v : "-",       // คอลัมน์ C (ชื่อ Sys_1)
+                        name: row.c[2] && row.c[2].v !== null ? row.c[2].v : "-",       // คอลัมน์ C (ชื่อระบบ)
                         comment: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",    // คอลัมน์ B (Model)
-                        balance: row.c[3] && row.c[3].v !== null ? row.c[3].v : "-",    // คอลัมน์ D (ข้อความใต้ข้อมูลเบื้องต้น)
+                        balance: row.c[3] && row.c[3].v !== null ? row.c[3].v : "-",    // คอลัมน์ D (ข้อมูลเบื้องต้น)
                         type: row.c[4] && row.c[4].v !== null ? row.c[4].v : "-"        // คอลัมน์ E (Style ความเสี่ยง)
                     });
                 }
-            });
+            }
+        });
 
             // จัดเรียงชื่อ EA (Sys_1, Sys_2... Sys_10) อย่างถูกต้อง
             data.sort((a, b) => {
