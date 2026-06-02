@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HARVEST FARM</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Kanit', sans-serif; 
+            background-color: #121212; 
+            margin: 0;
+            padding: 10px; 
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .container-fluid { padding: 0; margin: 0; width: 100%; }
+
+        .mobile-header { padding: 20px 0 15px 0; }
+        
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5px;
+        }
+
+        .header-title-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-logo {
+            height: 45px; 
+            width: auto;  
+            margin-right: 12px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-header h4 { 
+            color: #ffffff; 
+            margin: 0; 
+            font-size: 1.5rem; 
+            font-weight: 600;
+            letter-spacing: 1px; 
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); 
+        }
+
+        .new-version-link {
+            color: #ffeb3b !important; 
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap; 
+        }
+
+        .new-version-link:hover { text-decoration: underline; color: #fff176 !important; }
+
+        /* ── ปุ่มสมัครสมาชิก ── */
+        .register-section {
+            text-align: center;
+            margin: 15px 5px 20px 5px;
+        }
+        .register-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff !important;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 32px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            animation: registerPulse 2.5s ease-in-out infinite;
+        }
+        .register-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+            color: #fff !important;
+        }
+        @keyframes registerPulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 4px 30px rgba(118, 75, 162, 0.7); }
+        }
+
+        .status-online { 
+            color: #4cd137; 
+            font-size: 0.9rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 500;
+            margin-top: 15px; 
+        }
+
+        .dot { 
+            height: 10px; width: 10px; 
+            background-color: #4cd137; 
+            border-radius: 50%; 
+            display: inline-block; 
+            margin-right: 8px; 
+            animation: pulse 1.8s infinite; 
+        }
+
+        @keyframes pulse { 
+            0% { opacity: 1; transform: scale(1); } 
+            50% { opacity: 0.4; transform: scale(1.2); } 
+            100% { opacity: 1; transform: scale(1); } 
+        }
+
+.system-diagram-container {
+            text-align: center;
+            margin: 10px 5px 25px 5px; 
+        }
+        
+        /* ------------------------------------- */
+        /* เอฟเฟกต์ภาพลอยได้แบบล้ำสมัย (Modern Floating) */
+        /* ------------------------------------- */
+        .system-diagram-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px; 
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            /* 🟢 สั่งให้เล่นแอนิเมชันชื่อ floatingModern วนลูปไปเรื่อยๆ */
+            animation: floatingModern 4s ease-in-out infinite;
+        }
+
+        /* เมื่อเอาเมาส์ไปชี้ ให้ภาพขยายใหญ่ขึ้นนิดนึงและสว่างขึ้น */
+        .system-diagram-img:hover {
+            transform: scale(1.03) translateY(-10px); 
+            box-shadow: 0 15px 40px rgba(0, 191, 255, 0.7); 
+            /* หยุดแอนิเมชันชั่วคราวตอนเอาเมาส์ชี้ */
+            animation-play-state: paused; 
+        }
+
+        /* 🟢 โครงสร้างการเคลื่อนไหว: ลอยขึ้นลง + แสงกระพริบช้าๆ */
+        @keyframes floatingModern {
+            0% {
+                transform: translateY(0px);
+                box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2);
+            }
+            50% {
+                transform: translateY(-12px); /* ลอยขึ้น 12 พิกเซล */
+                box-shadow: 0 15px 35px rgba(0, 191, 255, 0.5); /* แสงสีฟ้าสว่างขึ้น */
+            }
+            100% {
+                transform: translateY(0px);
+                box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2);
+            }
+        }
+
+        .info-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 18px; 
+            margin: 0 5px 20px 5px;
+            color: #ffffff; 
+            font-size: 1rem; 
+            line-height: 1.6;
+            font-weight: 300;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .info-box strong {
+            color: #ffeb3b; 
+            font-weight: 500;
+        }
+
+        .hero-section {
+            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 20px;
+            margin: 10px 5px 20px 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(76, 209, 55, 0.1) 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-section > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, #ffeb3b, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        .hero-subtitle {
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .highlight-text {
+            color: #4cd137;
+            text-shadow: 0 0 10px rgba(76, 209, 55, 0.4);
+        }
+
+        .hero-desc {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto 25px auto;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #fff;
+            margin: 5px;
+            backdrop-filter: blur(5px);
+        }
+
+        .instruction-wrapper {
+            margin: 30px 5px 20px 5px;
+            padding: 2px; 
+            background: linear-gradient(135deg, #FFD700, #FDB931, #b8860b, #FFD700); 
+            background-size: 200% 200%;
+            animation: goldShine 3s ease infinite; 
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.25); 
+            display: none; 
+        }
+
+        @keyframes goldShine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .instruction-content {
+            background-color: #1a1a1a; 
+            border-radius: 14px; 
+            padding: 15px 20px;
+            text-align: center;
+        }
+
+        .instruction-text {
+            color: #ff3b3b; 
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(255, 59, 59, 0.4); 
+        }
+
+/* ------------------------------------- */
+        /* กล่องการ์ดหลัก (อัปเดตให้รองรับภาพพื้นหลัง) */
+        /* ------------------------------------- */
+        .ea-card { 
+            background: linear-gradient(145deg, #151515 0%, #2b2b2b 100%); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 25px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
+            overflow: hidden; 
+            width: 100%;
+            height: 100%; 
+            color: #ffffff !important; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            position: relative; /* 🟢 บังคับให้ภาพพื้นหลังอยู่แค่ในกรอบนี้ */
+            z-index: 1; /* 🟢 ดันข้อความทั้งหมดให้ลอยอยู่ด้านหน้า */
+        }
+
+        .ea-card:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 12px 25px rgba(255, 255, 255, 0.15); 
+        }
+
+        /* 🟢 โค้ดสำหรับใส่ภาพพื้นหลังและปรับความจาง */
+        .ea-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('block.png'); /* อ้างอิงชื่อไฟล์ภาพของคุณ */
+            background-size: cover; /* จัดภาพให้เต็มกล่อง */
+            background-position: center; /* จัดภาพให้อยู่กึ่งกลาง */
+            opacity: 0.15; /* 🟢 ปรับความจางตรงนี้ (0.15 - 0.30) */
+            z-index: -1; /* 🟢 ซ่อนภาพไว้หลังตัวหนังสือ */
+        }
+
+        .balance-box { 
+            background-color: rgba(255,255,255,0.05); 
+            border-radius: 20px; 
+            padding: 18px; 
+            margin-top: 15px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; 
+        }
+
+        .ea-card h5.fw-bold { 
+            color: #ffeb3b !important; 
+            font-size: 1.35rem; 
+            letter-spacing: 0.5px; 
+            margin-bottom: 12px !important; 
+        }
+        .ea-card .text-muted { color: rgba(255,255,255,0.6) !important; font-weight: 300; font-size: 0.85rem; }
+        .ea-card .text-secondary { color: #ffffff !important; font-weight: 500; font-size: 1rem; line-height: 1.4; }
+        
+        .badge.bg-primary { 
+            background-color: rgba(255,255,255,0.15) !important; 
+            color: #ffffff;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-weight: 400; 
+            font-size: 0.75rem; 
+            padding: 6px 12px;
+        }
+
+        .style-badge {
+            display: inline-block;
+            color: #ffffff !important;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            white-space: normal; 
+            max-width: 100%;
+        }
+
+        .profit-center-box {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #3399ff; /* 🔵 เปลี่ยนเป็นสีน้ำเงินสว่าง เพื่อให้ดูโดดเด่นบนพื้นดำ */
+        }
+
+        .social-btn {
+            color: #ffffff !important;
+            border: none;
+            border-radius: 50px; 
+            padding: 14px 20px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            margin-bottom: 15px;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+            color: #ffffff;
+        }
+
+        .line-btn { background-color: #06C755; box-shadow: 0 6px 15px rgba(6, 199, 85, 0.3); margin-top: 30px; }
+        .line-btn:hover { background-color: #05b34c; }
+        .fb-btn { background-color: #1877F2; box-shadow: 0 6px 15px rgba(24, 119, 242, 0.3); }
+        .fb-btn:hover { background-color: #166fe5; }
+        .yt-btn { background-color: #FF0000; box-shadow: 0 6px 15px rgba(255, 0, 0, 0.3); }
+        .yt-btn:hover { background-color: #e60000; }
+        .tt-btn { background-color: #111111; box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1); margin-bottom: 40px;}
+        .tt-btn:hover { background-color: #222222; }
+
+        .social-icon {
+            width: 28px;
+            height: 28px;
+            margin-right: 10px;
+            fill: #ffffff;
+        }
+
+        #loader { min-height: 200px; display: flex; align-items: center; justify-content: center; }
+        .spinner-border { color: #ffffff !important; }
+
+/* ------------------------------------- */
+        /* กรอบวิดีโอ YouTube แบบ Responsive */
+        /* ------------------------------------- */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* สัดส่วน 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            border-radius: 15px;
+            margin: 10px 5px 25px 5px;
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="mobile-header">
+        <div class="header-flex">
+            <div class="header-title-group">
+                <img src="https://img1.pic.in.th/images/logo14f5db31c2bca372.th.png" alt="EA Atlantis Logo" class="header-logo">
+                <h4 class="fw-bold">HARVEST FARM</h4>
+            </div>
+            <a href="https://drive.google.com/drive/folders/16l_45ZJOdT-qAtkU2gB9S5eWrVlHf_J9" target="_blank" class="new-version-link">New Version + Preset</a>
+        </div>
+        <div class="status-online">
+            <span class="dot"></span>Live Update
+        </div>
+    </div>
+
+    <!-- 🔐 ปุ่มสมัครสมาชิก / จัดการพอร์ต -->
+    <div class="register-section">
+        <a href="https://mt5-license-manager.vercel.app" target="_blank" class="register-btn">
+            🔐 สมัครสมาชิก / จัดการพอร์ต MT5
+        </a>
+    </div>
+
+<div class="system-diagram-container">
+        <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
+    </div>
+
+    <div class="video-wrapper">
+        <iframe 
+            src="https://www.youtube.com/embed/FpkwMBMO4nU?loop=1&playlist=FpkwMBMO4nU&controls=1&rel=0" 
+            title="YouTube video player" 
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+    </div>
+
+
+    <div class="hero-section text-center">
+        <h1 class="hero-title">FOREX บน METATRADE 5</h1>
+        <h2 class="hero-subtitle">เทรดคู่ทองและค่าเงินอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
+        <p class="hero-desc">
+            กระจายความเสี่ยงผ่านกองทัพ EA ที่เชี่ยวชาญหลากหลายกลยุทธ์ ทำงานตลอด 24 ชม.<br>
+            ลด Drawdown ชดเชยความเสี่ยง เพื่อการเติบโตของพอร์ตอย่างยั่งยืน โดยไม่ต้องเฝ้ากราฟ
+        </p>
+        
+        <div class="hero-features">
+            <span class="feature-tag">🛡️ บริหารความเสี่ยง</span>
+            <span class="feature-tag">⚔️ กระจายหลายกลยุทธ์</span>
+            <span class="feature-tag">📈 กำไรยั่งยืน</span>
+        </div>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
+            
+            <a href="https://lin.ee/9B1pFmD" target="_blank" style="background: linear-gradient(90deg, #10b981 0%, #ef4444 100%); color: #ffffff; padding: 12px 30px; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); display: inline-block; transition: 0.3s; border: 2px solid transparent;">
+                🎁 ทดลองฟรี 1 สัปดาห์
+            </a>
+            
+            <a href="RealTime.html" style="background: linear-gradient(90deg, #D4AF37 0%, #FFDF73 100%); color: #000; padding: 12px 30px; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); display: inline-block; transition: 0.3s; border: 2px solid transparent;">
+                📊 ดูแบบ Real-Time
+            </a>
+            
+        </div>
+    </div>
+
+    <div class="info-box">
+        <strong>การฟาร์ม EA</strong> คือการบริหารพอร์ตการลงทุนที่ไม่พึ่งพา EA เพียงตัวเดียว เพื่อกระจายความเสี่ยง แบบเดียวกับการบริหารเงินของสถาบันการเงิน มาดู A vs B อย่างสมดุลกัน:<br><br>
+        <strong>A:</strong> คือการกระจายพอตด้วยหลาย EA และบริหารเงินในพอร์ตตามความเหมาะสม ข้อดีคือเสถียรและลด drawdown แต่ต้นทุนซับซ้อนเพราะต้องวางหลายพอร์ต<br>
+        <strong>B:</strong> ใช้ EA เดี่ยวที่มี track record ชัดเจน ง่ายต่อการบริหาร แต่เสี่ยงสูงเมื่อตลาดเปลี่ยนเหมือนวางไข่ในตะกร้าเดียว<br><br>
+        <strong>Verdict:</strong> เมื่อตลาดไม่แน่นอน A มักชนะในระยะยาวเพราะการกระจายความเสี่ยงทำได้ดีกว่า แต่หากคุณมีทักษะเลือก EA เดี่ยวที่เข้ากับสภาวะตลาดได้ดี B ก็อาจได้ผลตอบแทนสูงในระยะสั้น วิถีที่ลงตัวคือผสมผสาน: กระจายพอร์ตด้วยหลาย EA พร้อมรีบาลานซ์ความเสี่ยง เพื่อควมยั่งยืนในระยะยาว
+    </div>
+
+    <div id="loader">
+        <div class="spinner-border" role="status"></div>
+    </div>
+
+<div id="instruction-box" class="instruction-wrapper">
+        <div class="instruction-content">
+            
+            <div style="background: linear-gradient(135deg, #1a2a6c, #11998e, #38ef7d); padding: 2px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);">
+                <div style="background-color: #151515; border-radius: 10px; padding: 12px 15px;">
+                    <span style="font-size: 1.15rem; color: #fff;">
+                        💻 <strong style="color: #ffeb3b; font-size: 1.25rem;">แนะนำ!</strong> VPS ราคาถูกพร้อมติดตั้ง
+                        <span style="color: #4cd137; font-weight: 600;">⚡ รันได้สูงสุด 9 พอร์ต</span>
+                    </span>
+                </div>
+            </div>
+            
+            <h4 class="instruction-text">เลือกรันกลยุทธได้ตามต้องการ</h4>
+        </div>
+    </div>
+
+   <div id="ea-container" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 px-2"></div>
+    
+    <div id="contact-section" class="px-2" style="display: none;">
+        <a href="https://lin.ee/9B1pFmD" target="_blank" class="social-btn line-btn">
+            <svg class="social-icon" viewBox="0 0 24 24">
+                <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.084.922.258 1.057.592.122.303.079.778.039 1.085l-.171 1.027c-.053.303-.242 1.186 1.039.647 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.572-3.843 2.572-5.992zm-15.278 1.954h-3.327v-5.465h1.222v4.306h2.105v1.159zm2.41 0h-1.221v-5.465h1.221v5.465zm5.556-3.805l-2.348 3.805h-1.399v-5.465h1.221v3.251l2.251-3.251h1.496v5.465h-1.221v-3.805zm3.627-1.66h-2.104v1.159h2.104v1.159h-2.104v1.158h2.104v1.159h-3.326v-5.465h3.326v1.16z"/>
+            </svg>
+            Line Contact : @479ufnya
+        </a>
+
+        <a href="https://www.facebook.com/harvestfarmea" target="_blank" class="social-btn fb-btn">
+            <svg class="social-icon" viewBox="0 0 24 24">
+                <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+            </svg>
+            Facebook Page
+        </a>
+
+        <a href="https://youtu.be/FpkwMBMO4nU" target="_blank" class="social-btn yt-btn">
+            <svg class="social-icon" viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            YouTube Channel
+        </a>
+
+        <a href="https://www.tiktok.com/@harvestfarmea?_r=1&_t=ZS-96d11l4uEAG" target="_blank" class="social-btn tt-btn">
+            <svg class="social-icon" viewBox="0 0 24 24">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+            </svg>
+            TikTok
+        </a>
+    </div>
+</div>
+
+<script>
+    // 🔴 1. อัปเดต SHEET_ID ให้ตรงกับลิงก์ของจริง 100% 
+    const SHEET_ID = "193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ"; 
+    
+    // 🟢 2. คงคำสั่ง &headers=1 ไว้ เพื่อบังคับให้ Google ไม่กลืน Sys_1 และ Sys_2 หายไป
+    const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0&headers=1`;
+    
+    document.addEventListener('DOMContentLoaded', fetchIndexData);
+
+    async function fetchIndexData() {
+        try {
+            const cacheBuster = "&t=" + new Date().getTime();
+            const response = await fetch(GVIZ_URL + cacheBuster);
+            const text = await response.text();
+            
+            const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+            const jsonData = JSON.parse(jsonString);
+            const rows = jsonData.table.rows;
+
+            if (!rows || rows.length === 0) {
+                showError('<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>');
+                return;
+            }
+
+            let data = [];
+            
+            // 🎯 3. ดึงข้อมูล (เริ่มอ่านตั้งแต่ Sys_1 โดยไม่พลาด)
+            rows.forEach(row => {
+                if (row && row.c && row.c[0] && row.c[0].v !== null) {
+                    let checkKey = String(row.c[0].v).toLowerCase();
+                    // ข้ามเฉพาะแถวที่เป็นหัวตารางจริงๆ
+                    if (checkKey !== "original" && checkKey !== "acc_number" && checkKey !== "acc") {
+                        data.push({
+                            name: row.c[2] && row.c[2].v !== null ? row.c[2].v : "-",       // คอลัมน์ C (ชื่อระบบ)
+                            comment: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",    // คอลัมน์ B (Model)
+                            balance: row.c[3] && row.c[3].v !== null ? row.c[3].v : "-",    // คอลัมน์ D (ข้อมูลเบื้องต้น)
+                            type: row.c[4] && row.c[4].v !== null ? row.c[4].v : "-"        // คอลัมน์ E (Style ความเสี่ยง)
+                        });
+                    }
+                }
+            });
+
+            // จัดเรียงชื่อ EA (Sys_1, Sys_2... Sys_10) อย่างถูกต้อง
+            data.sort((a, b) => {
+                return String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' });
+            });
+
+            renderCards(data);
+
+        } catch (error) {
+            console.error('Error:', error);
+            showError('<div class="alert alert-danger mx-3 text-center w-100">เกิดข้อผิดพลาดในการดึงข้อมูล</div>');
+        }
+    }
+
+    function showError(msg) {
+        const loader = document.getElementById('loader');
+        const contactSection = document.getElementById('contact-section');
+        if (loader) loader.style.display = 'none';
+        document.getElementById('ea-container').innerHTML = msg;
+        if (contactSection) contactSection.style.display = 'block';
+    }
+
+    function renderCards(data) {
+        const container = document.getElementById('ea-container');
+        const loader = document.getElementById('loader');
+        const contactSection = document.getElementById('contact-section'); 
+        const instructionBox = document.getElementById('instruction-box'); 
+        
+        if (loader) loader.style.display = 'none';
+
+        if (!data || data.length === 0) {
+            showError('<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>');
+            return;
+        }
+
+        if (instructionBox) instructionBox.style.display = 'block';
+
+        let html = '';
+
+        data.forEach((item) => {
+            let typeText = String(item.type);
+            let styleBgColor = '#555555'; 
+            
+            // เช็คคำเพื่อเปลี่ยนสีป้ายกำกับ
+            if (typeText.includes('ทดสอบ')) {
+                styleBgColor = '#DAA520'; 
+            } else if (typeText.includes('ค่อนข้างสูง')) {
+                styleBgColor = '#FF4500'; 
+            } else if (typeText.includes('เสี่ยงสูง')) {
+                styleBgColor = '#ff3b3b'; 
+            } else if (typeText.includes('ค่อนข้างต่ำ')) {
+                styleBgColor = 'darkgreen'; 
+            } else if (typeText.includes('เสี่ยงต่ำ')) {
+                styleBgColor = 'limegreen'; 
+            }
+
+            html += `
+                <div class="col">
+                    <div class="ea-card">
+                        <div class="p-4"> 
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge rounded-pill bg-primary">Running</span>
+                            </div>
+                            <h5 class="fw-bold" style="color: #ffeb3b;">${item.name}</h5>
+                            
+                            <div class="row g-2 mt-2">
+                                <div class="col-6">
+                                    <small class="text-muted d-block mb-1">Model</small>
+                                    <div class="text-secondary">${item.comment}</div>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <small class="text-muted d-block mb-1">Style</small>
+                                    <div class="style-badge" style="background-color: ${styleBgColor};">${typeText}</div> 
+                                </div>
+                            </div>
+
+                            <div class="profit-center-box" style="text-align: center; margin-top: 20px; font-size: 1.1rem; font-weight: 600; color: #3399ff;">
+                                ข้อมูลเบื้องต้น
+                            </div>
+
+                            <div class="balance-box text-center mt-2" style="background-color: rgba(255,255,255,0.03); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.1);">
+                                <span class="fw-bold text-white mb-0" style="font-size: 0.95rem; line-height: 1.6; display: block; white-space: normal;">
+                                    ${item.balance}
+                                </span> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+        if (contactSection) contactSection.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
