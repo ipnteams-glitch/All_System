@@ -163,78 +163,92 @@
         <div style="text-align: center;">
             <a href="index.html" class="back-btn">← กลับหน้าหลัก</a>
         </div>
-    </div> <script>
-        const SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
-        const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+    </div> 
+ <script>
+    // 🔴 1. รหัสชีตสำหรับหน้า RealTime.html โดยเฉพาะ
+    const SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
+    const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
 
-        function formatNumber(num) {
-            return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
+    // ฟังก์ชันจัดฟอร์แมตตัวเลขให้มีคอมม่าและทศนิยม 2 ตำแหน่ง
+    function formatNumber(num) {
+        if (isNaN(num)) return "0.00";
+        return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
 
-        function getColorClass(num) {
-            if (num > 0) return 'text-green';
-            if (num < 0) return 'text-red';
-            return '';
-        }
+    async function fetchRealTimeData() {
+        try {
+            const cacheBuster = "&t=" + new Date().getTime();
+            const response = await fetch(GVIZ_URL + cacheBuster);
+            const text = await response.text();
+            
+            // แกะเอาเฉพาะส่วนที่เป็น JSON ออกมา
+            const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+            const jsonData = JSON.parse(jsonString);
+            
+            // เช็คว่าใน HTML มี <tbody id="tableBody"> หรือไม่
+            const tableBody = document.getElementById('tableBody') || document.querySelector('tbody');
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = ''; 
 
-        async function fetchRealTimeData() {
-            try {
-                const cacheBuster = "&t=" + new Date().getTime();
-                const response = await fetch(GVIZ_URL + cacheBuster);
-                const text = await response.text();
-                
-                const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-                const jsonData = JSON.parse(jsonString);
-                
-                const tableBody = document.getElementById('tableBody');
-                tableBody.innerHTML = ''; 
+            const rows = jsonData.table.rows;
 
-                const rows = jsonData.table.rows;
+            // ถ้าน้อยกว่าหรือเท่ากับ 1 แปลว่ามีแค่หัวตาราง หรือไม่มีข้อมูลเลย
+            if (!rows || rows.length <= 1) { 
+                tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">กำลังรอรับข้อมูลจากระบบ...</td></tr>';
+                return;
+            }
 
-                if (!rows || rows.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">ไม่มีข้อมูลแสดงผล</td></tr>';
-                    return;
+            let data = [];
+            
+            // 🎯 2. ดึงข้อมูลให้ตรงกับคอลัมน์ชีตใหม่ (เริ่มลูปที่ 1 เพื่อข้ามหัวตาราง)
+            for (let i = 1; i < rows.length; i++) {
+                let row = rows[i];
+                // เช็คว่าคอลัมน์ A (พอร์ต) มีข้อมูล ถึงจะดึงมาแสดง
+                if (row && row.c && row.c[0] && row.c[0].v !== null && row.c[0].v !== "") { 
+                    data.push({
+                        name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",               // คอลัมน์ B (ชื่อ Sys)
+                        balance: row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0,  // คอลัมน์ C (Balance)
+                        profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0,   // คอลัมน์ E (Profit)
+                        profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0 // คอลัมน์ G (Profit 7 Day)
+                    });
                 }
+            }
 
-                let data = [];
+            // จัดเรียงชื่อ EA (Sys_1, Sys_2... Sys_10) 
+            data.sort((a, b) => {
+                return String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' });
+            });
+
+            // 🎯 3. นำข้อมูลมาสร้างเป็นตาราง
+            data.forEach(row => {
+                // กำหนดสี: บวกสีเขียว ลบสีแดง ศูนย์สีขาว
+                let profitColor = row.profit > 0 ? '#4cd137' : (row.profit < 0 ? '#ff3b3b' : '#ffffff');
+                let p7Color = row.profit7day > 0 ? '#4cd137' : (row.profit7day < 0 ? '#ff3b3b' : '#ffffff');
                 
-                rows.forEach(row => {
-                    if (row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "original") {
-                        data.push({
-                            name: row.c[2] && row.c[2].v !== null ? row.c[2].v : "-",               // คอลัมน์ C (ชื่อระบบ เช่น Sys_6)
-                            balance: row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) : 0,  // คอลัมน์ H (Balance ตัวเลขดิบ)
-                            profit: row.c[5] && row.c[5].v !== null ? parseFloat(row.c[5].v) : 0,   // คอลัมน์ F (กำไรปัจจุบันดิบ)
-                            profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0 // คอลัมน์ G (กำไรสัปดาห์)
-                        });
-                    }
-                });
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight: bold; color: #ffeb3b;">${row.name}</td>
+                    <td style="color: ${profitColor}; font-weight: 500;">${row.profit > 0 ? '+' : ''}${formatNumber(row.profit)}</td>
+                    <td style="color: ${p7Color}; font-weight: 500;">${row.profit7day > 0 ? '+' : ''}${formatNumber(row.profit7day)}</td>
+                    <td>$${formatNumber(row.balance)}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
 
-                data.sort((a, b) => {
-                    return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
-                });
-
-                data.forEach(row => {
-                    const profitClass = getColorClass(row.profit);
-                    const profit7Class = getColorClass(row.profit7day);
-                    
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="text-bold">${row.name}</td>
-                        <td class="${profitClass}">${row.profit > 0 ? '+' : ''}${formatNumber(row.profit)}</td>
-                        <td class="${profit7Class}">${row.profit7day > 0 ? '+' : ''}${formatNumber(row.profit7day)}</td>
-                        <td>$${formatNumber(row.balance)}</td>
-                    `;
-                    tableBody.appendChild(tr);
-                });
-
-            } catch (error) {
-                console.error("Fetch Error:", error);
-                document.getElementById('tableBody').innerHTML = '<tr><td colspan="4" style="text-align:center; color: red;">❌ เกิดข้อผิดพลาดในการเชื่อมต่อข้อมูล</td></tr>';
+        } catch (error) {
+            console.error("Fetch Error:", error);
+            const tableBody = document.getElementById('tableBody') || document.querySelector('tbody');
+            if(tableBody) {
+                tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ เกิดข้อผิดพลาด หรือไฟล์ Google Sheet ยังไม่เปิดแชร์ (Anyone with the link)</td></tr>';
             }
         }
+    }
 
-        fetchRealTimeData();
-        setInterval(fetchRealTimeData, 3000); 
-    </script>
+    // โหลดข้อมูลทันทีที่เปิดหน้าเว็บ
+    fetchRealTimeData();
+    // สั่งให้อัปเดตข้อมูลอัตโนมัติทุกๆ 3 วินาที
+    setInterval(fetchRealTimeData, 3000); 
+</script>    
 </body>
 </html>
