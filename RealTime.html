@@ -201,11 +201,12 @@
 
             let data = [];
             
-            // 🎯 2. ดึงข้อมูลให้ตรงกับคอลัมน์ชีตใหม่ (เริ่มลูปที่ 1 เพื่อข้ามหัวตาราง)
-            for (let i = 1; i < rows.length; i++) {
+            // 🎯 เริ่มลูปที่ 0 (เพื่อไม่ให้พลาด Sys_11)
+            for (let i = 0; i < rows.length; i++) {
                 let row = rows[i];
-                // เช็คว่าคอลัมน์ A (พอร์ต) มีข้อมูล ถึงจะดึงมาแสดง
-                if (row && row.c && row.c[0] && row.c[0].v !== null && row.c[0].v !== "") { 
+                
+                // เช็คว่ามีข้อมูล และต้องไม่ใช่บรรทัดหัวตาราง (คำว่า "acc")
+                if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") { 
                     data.push({
                         name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",               // คอลัมน์ B (ชื่อ Sys)
                         balance: row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0,  // คอลัมน์ C (Balance)
