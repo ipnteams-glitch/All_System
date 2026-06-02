@@ -199,12 +199,12 @@
                 let data = [];
                 
                 rows.forEach(row => {
-                    if (row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc_number") {
+                    if (row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "original") {
                         data.push({
-                            name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
-                            balance: row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0,
-                            profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0,
-                            profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0
+                            name: row.c[2] && row.c[2].v !== null ? row.c[2].v : "-",               // คอลัมน์ C (ชื่อระบบ เช่น Sys_6)
+                            balance: row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) : 0,  // คอลัมน์ H (Balance ตัวเลขดิบ)
+                            profit: row.c[5] && row.c[5].v !== null ? parseFloat(row.c[5].v) : 0,   // คอลัมน์ F (กำไรปัจจุบันดิบ)
+                            profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0 // คอลัมน์ G (กำไรสัปดาห์)
                         });
                     }
                 });
