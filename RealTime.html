@@ -188,6 +188,11 @@
         return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
+    function formatInteger(num) {
+        if (isNaN(num)) return "0";
+        return Math.round(num).toLocaleString('en-US', { maximumFractionDigits: 0 });
+    }
+
     // ⭐ สร้าง HTML ดาว
     function renderStars(count) {
         let html = '<div class="stars">';
@@ -252,9 +257,9 @@
                         ${renderStars(row.stars)}
                     </td>
                     <td style="color: ${profitColor}; font-weight: 500;">${row.profit > 0 ? '+' : ''}${formatNumber(row.profit)}</td>
-                    <td style="color: ${p7Color}; font-weight: 500;">${row.profit7day > 0 ? '+' : ''}${formatNumber(row.profit7day)}</td>
-                    <td style="color: ${lwColor}; font-weight: 500;">${row.lastWeekProfit > 0 ? '+' : ''}${formatNumber(row.lastWeekProfit)}</td>
-                    <td>$${formatNumber(row.balance)}</td>
+                    <td style="color: ${p7Color}; font-weight: 500;">${row.profit7day > 0 ? '+' : ''}${formatInteger(row.profit7day)}</td>
+                    <td style="color: ${lwColor}; font-weight: 500;">${row.lastWeekProfit > 0 ? '+' : ''}${formatInteger(row.lastWeekProfit)}</td>
+                    <td>$${formatInteger(row.balance)}</td>
                 `;
                 tableBody.appendChild(tr);
             });
@@ -264,9 +269,9 @@
             const weekColor = sumWeek > 0 ? '#4cd137' : (sumWeek < 0 ? '#ff3b3b' : '#D4AF37');
             const lwColor = sumLastWeek > 0 ? '#4cd137' : (sumLastWeek < 0 ? '#ff3b3b' : '#D4AF37');
             document.getElementById('sumProfit').innerHTML = `<span style="color:${sumColor}">${sumProfit > 0 ? '+' : ''}${formatNumber(sumProfit)}</span>`;
-            document.getElementById('sumWeek').innerHTML = `<span style="color:${weekColor}">${sumWeek > 0 ? '+' : ''}${formatNumber(sumWeek)}</span>`;
-            document.getElementById('sumLastWeek').innerHTML = `<span style="color:${lwColor}">${sumLastWeek > 0 ? '+' : ''}${formatNumber(sumLastWeek)}</span>`;
-            document.getElementById('sumBalance').innerHTML = `$${formatNumber(sumBalance)}`;
+            document.getElementById('sumWeek').innerHTML = `<span style="color:${weekColor}">${sumWeek > 0 ? '+' : ''}${formatInteger(sumWeek)}</span>`;
+            document.getElementById('sumLastWeek').innerHTML = `<span style="color:${lwColor}">${sumLastWeek > 0 ? '+' : ''}${formatInteger(sumLastWeek)}</span>`;
+            document.getElementById('sumBalance').innerHTML = `$${formatInteger(sumBalance)}`;
             document.getElementById('tableFoot').style.display = '';
         } catch (error) {
             console.error("Fetch Error:", error);
