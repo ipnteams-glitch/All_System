@@ -93,6 +93,55 @@
             50% { box-shadow: 0 4px 30px rgba(118, 75, 162, 0.7); }
         }
 
+        /* ── ปุ่ม MyPortfolio ── */
+        .portfolio-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: #fff !important;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 32px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(17, 153, 142, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .portfolio-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(56, 239, 125, 0.6);
+            color: #fff !important;
+        }
+
+        /* ── Portfolio Modal ── */
+        .portfolio-overlay {
+            display: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85); z-index: 9999;
+            overflow-y: auto; padding: 20px;
+        }
+        .portfolio-overlay.active { display: block; }
+        .portfolio-container {
+            max-width: 700px; margin: 30px auto;
+            background: #1a1a2e; border-radius: 20px;
+            padding: 25px; color: #fff;
+        }
+        .portfolio-card-item {
+            background: linear-gradient(145deg, #151515 0%, #2b2b2b 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 15px; padding: 20px; margin-bottom: 12px;
+        }
+        .portfolio-stat {
+            font-size: 0.85rem; color: #aaa; margin-bottom: 2px;
+        }
+        .portfolio-value {
+            font-size: 1.1rem; font-weight: 600;
+        }
+        .portfolio-value.green { color: #38ef7d; }
+        .portfolio-value.red { color: #ff4757; }
+
         .status-online { 
             color: #4cd137; 
             font-size: 0.9rem; 
@@ -455,6 +504,36 @@
             🔐 สมัครสมาชิก / จัดการพอร์ต MT5
         </a>
     </div>
+    <div class="register-section" style="margin-top: -5px;">
+        <button onclick="togglePortfolio()" class="portfolio-btn">
+            📊 MyPortfolio
+        </button>
+    </div>
+
+    <!-- 📊 Portfolio Modal -->
+    <div id="portfolioOverlay" class="portfolio-overlay">
+        <div class="portfolio-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="text-white m-0">📊 MyPortfolio</h4>
+                <button onclick="togglePortfolio()" class="btn btn-sm btn-outline-light rounded-pill px-3">✕ ปิด</button>
+            </div>
+            <div id="portfolioForm" class="mb-3">
+                <div class="input-group">
+                    <input id="portfolioEmail" type="email" class="form-control" placeholder="Gmail ของคุณ" style="background:#2b2b2b;color:#fff;border-color:#444;">
+                </div>
+                <div class="d-flex gap-2 mt-2">
+                    <input id="newMt5Account" type="text" class="form-control" placeholder="MT5 Account" style="background:#2b2b2b;color:#fff;border-color:#444;flex:1;">
+                    <input id="newBroker" type="text" class="form-control" placeholder="Broker" style="background:#2b2b2b;color:#fff;border-color:#444;flex:1;">
+                    <button onclick="addPortfolioAccount()" class="btn btn-sm btn-success rounded-pill px-3">➕ เพิ่ม</button>
+                </div>
+                <div class="d-flex gap-2 mt-2">
+                    <button onclick="fetchPortfolio()" class="btn btn-sm btn-primary rounded-pill px-4">🔍 โหลดพอร์ต</button>
+                    <span id="portfolioMsg" class="text-white-50 small align-self-center"></span>
+                </div>
+            </div>
+            <div id="portfolioList"></div>
+        </div>
+    </div>
 
 <div class="system-diagram-container">
         <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
@@ -694,6 +773,126 @@
         
         container.innerHTML = html;
         if (contactSection) contactSection.style.display = 'block';
+    }
+
+    // ── MyPortfolio ──
+    const API_BASE = "https://mt5-license-manager.vercel.app";
+
+    function togglePortfolio() {
+        const ov = document.getElementById('portfolioOverlay');
+        ov.classList.toggle('active');
+    }
+
+    function showPortfolioMsg(msg, isError) {
+        const el = document.getElementById('portfolioMsg');
+        el.textContent = msg;
+        el.style.color = isError ? '#ff4757' : '#38ef7d';
+        setTimeout(() => { el.textContent = ''; }, 5000);
+    }
+
+    async function fetchPortfolio() {
+        const email = document.getElementById('portfolioEmail').value.trim();
+        if (!email) { showPortfolioMsg('กรุณากรอก Gmail', true); return; }
+        showPortfolioMsg('กำลังโหลด...', false);
+        try {
+            const resp = await fetch(`${API_BASE}/api/portfolio?email=${encodeURIComponent(email)}`);
+            const jsonData = await resp.json();
+            const rows = jsonData.accounts;
+            if (!rows || rows.length === 0) {
+                document.getElementById('portfolioList').innerHTML = '<div class="text-center text-white-50 py-4">ยังไม่มีพอร์ต — เพิ่มพอร์ตแรกของคุณ</div>';
+                showPortfolioMsg('ไม่พบข้อมูล', true);
+                return;
+            }
+
+            renderPortfolioCards(rows);
+            showPortfolioMsg(`พบ ${rows.length} พอร์ต`, false);
+        } catch (e) {
+            console.error(e);
+            document.getElementById('portfolioList').innerHTML = '<div class="text-center text-danger py-3">⚠️ ไม่สามารถโหลดข้อมูลได้ — เช็คว่า API ทำงานอยู่หรือไม่</div>';
+            showPortfolioMsg('โหลดไม่สำเร็จ', true);
+        }
+    }
+
+    function renderPortfolioCards(accounts) {
+        const container = document.getElementById('portfolioList');
+        if (!accounts || accounts.length === 0) {
+            container.innerHTML = '<div class="text-center text-white-50 py-4">ยังไม่มีพอร์ต</div>';
+            return;
+        }
+        let html = '';
+        accounts.forEach(a => {
+            const floatColor = a.floating_pl >= 0 ? 'green' : 'red';
+            const profitColor = a.total_profit >= 0 ? 'green' : 'red';
+            const fmtNum = (n) => (n >= 0 ? '+' : '') + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            html += `
+                <div class="portfolio-card-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="text-white fw-bold" style="font-size:1.1rem;">#${a.mt5_account}</span>
+                            ${a.broker ? `<span class="text-white-50 ms-2 small">${a.broker}</span>` : ''}
+                        </div>
+                        <button onclick="deletePortfolioAccount('${a.id}')" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0" style="font-size:0.7rem;">🗑</button>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-4">
+                            <div class="portfolio-stat">Balance</div>
+                            <div class="portfolio-value text-white">$${a.balance.toLocaleString('en-US', {minimumFractionDigits:2})}</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="portfolio-stat">Float P/L</div>
+                            <div class="portfolio-value ${floatColor}">$${fmtNum(a.floating_pl)}</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="portfolio-stat">Total Profit</div>
+                            <div class="portfolio-value ${profitColor}">$${fmtNum(a.total_profit)}</div>
+                        </div>
+                    </div>
+                    ${a.last_updated ? `<div class="text-end text-white-50 mt-2" style="font-size:0.7rem;">อัปเดต: ${new Date(a.last_updated).toLocaleString('th-TH')}</div>` : ''}
+                </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    async function addPortfolioAccount() {
+        const email = document.getElementById('portfolioEmail').value.trim();
+        const mt5 = document.getElementById('newMt5Account').value.trim();
+        const broker = document.getElementById('newBroker').value.trim();
+        if (!email || !mt5) { showPortfolioMsg('กรุณากรอก Gmail และ MT5 Account', true); return; }
+        showPortfolioMsg('กำลังเพิ่ม...', false);
+        try {
+            const res = await fetch(`${API_BASE}/api/portfolio`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mt5_account: mt5, broker, email })
+            });
+            const data = await res.json();
+            if (data.success || data.account) {
+                showPortfolioMsg('เพิ่มแล้ว — กด "โหลดพอร์ต" เพื่อดู', false);
+                document.getElementById('newMt5Account').value = '';
+                document.getElementById('newBroker').value = '';
+            } else {
+                showPortfolioMsg(data.error || 'เพิ่มไม่สำเร็จ', true);
+            }
+        } catch (e) {
+            showPortfolioMsg('เชื่อมต่อ API ไม่สำเร็จ', true);
+        }
+    }
+
+    async function deletePortfolioAccount(id) {
+        if (!confirm('ยืนยันการลบพอร์ตนี้?')) return;
+        showPortfolioMsg('กำลังลบ...', false);
+        try {
+            const res = await fetch(`${API_BASE}/api/portfolio?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+                showPortfolioMsg('ลบแล้ว — กด "โหลดพอร์ต" เพื่อรีเฟรช', false);
+                fetchPortfolio();
+            } else {
+                showPortfolioMsg(data.error || 'ลบไม่สำเร็จ', true);
+            }
+        } catch (e) {
+            showPortfolioMsg('เชื่อมต่อ API ไม่สำเร็จ', true);
+        }
     }
 </script>
 
