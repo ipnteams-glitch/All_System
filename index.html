@@ -480,6 +480,43 @@
             border: 0;
         }
         
+
+        /* ── RealTime Performance Table ── */
+        .rt-table-container {
+            background: #1c1f26;
+            border-radius: 12px;
+            border: 1px solid #2d333b;
+            overflow-x: auto;
+            margin: 10px 5px 25px 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .rt-table { width: 100%; border-collapse: collapse; text-align: right; }
+        .rt-table th, .rt-table td { padding: 12px 14px; white-space: nowrap; }
+        .rt-table th:first-child, .rt-table td:first-child { min-width: 130px; text-align: left; }
+        .rt-ea-name { font-weight: bold; color: #ffeb3b; font-size: 14px; }
+        .rt-table th {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: #D4AF37; font-weight: 500; font-size: 15px;
+            border-bottom: 2px solid #D4AF37;
+        }
+        .rt-table td { border-bottom: 1px solid #2d333b; font-size: 15px; color: #c9d1d9; }
+        .rt-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.03); transition: 0.2s; }
+        .rt-table tfoot td {
+            background: linear-gradient(90deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
+            border-top: 2px solid #D4AF37; font-weight: 600; font-size: 16px;
+            color: #D4AF37; padding: 14px 20px;
+        }
+        .rt-table tfoot td:first-child { text-align: right; letter-spacing: 1px; }
+        .rt-loader { text-align: center; padding: 40px; color: #D4AF37; font-size: 18px; }
+        .rt-stars { display: inline-block; font-size: 16px; letter-spacing: 2px; margin-top: 2px; }
+        .rt-star-on { color: #D4AF37; } .rt-star-off { color: #3a3f4b; }
+        @media (max-width: 600px) {
+            .rt-table th, .rt-table td { padding: 8px 6px; font-size: 11px; }
+            .rt-table th { font-size: 10px; }
+            .rt-table th:first-child, .rt-table td:first-child { min-width: 80px; }
+            .rt-ea-name { font-size: 10px; } .rt-stars { font-size: 11px; letter-spacing: 0; }
+            .rt-table tfoot td { font-size: 12px; padding: 8px 6px; }
+        }
     </style>
 </head>
 <body>
@@ -535,9 +572,32 @@
         </div>
     </div>
 
-<div class="system-diagram-container">
-        <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
+<div class="rt-table-container">
+        <table class="rt-table">
+            <thead>
+                <tr>
+                    <th>ชื่อ EA</th>
+                    <th>กำไรปัจจุบัน</th>
+                    <th>สัปดาห์นี้</th>
+                    <th>สัปดาห์ที่แล้ว</th>
+                    <th>ทุนเริ่มต้น</th>
+                </tr>
+            </thead>
+            <tbody id="realtimeBody">
+                <tr><td colspan="5"><div class="rt-loader">⏳ กำลังโหลดข้อมูล...</div></td></tr>
+            </tbody>
+            <tfoot id="realtimeFoot" style="display:none;">
+                <tr>
+                    <td>📊 ผลรวม</td>
+                    <td id="rtSumProfit">-</td>
+                    <td id="rtSumWeek">-</td>
+                    <td id="rtSumLastWeek">-</td>
+                    <td id="rtSumBalance">-</td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
+
 
     <div class="video-wrapper">
         <iframe 
@@ -604,6 +664,11 @@
             
             <h4 class="instruction-text">เลือกรันกลยุทธได้ตามต้องการ</h4>
         </div>
+    </div>
+
+
+<div class="system-diagram-container">
+        <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
     </div>
 
    <div id="ea-container" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 px-2"></div>
@@ -894,6 +959,90 @@
             showPortfolioMsg('เชื่อมต่อ API ไม่สำเร็จ', true);
         }
     }
+
+    // ── RealTime Performance Table ──
+    const RT_SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
+    const RT_GVIZ_URL = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+
+    function rtFormatNumber(num) {
+        if (isNaN(num)) return "0.00";
+        return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function rtFormatInteger(num) {
+        if (isNaN(num)) return "0";
+        return Math.round(num).toLocaleString('en-US', { maximumFractionDigits: 0 });
+    }
+    function rtRenderStars(count) {
+        let html = '<div class="rt-stars">';
+        for (let i = 0; i < 5; i++) {
+            html += i < count ? '<span class="rt-star-on">★</span>' : '<span class="rt-star-off">★</span>';
+        }
+        html += '</div>';
+        return html;
+    }
+    async function fetchRealTimeData() {
+        try {
+            const cacheBuster = "&t=" + new Date().getTime();
+            const response = await fetch(RT_GVIZ_URL + cacheBuster);
+            const text = await response.text();
+            const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+            const jsonData = JSON.parse(jsonString);
+            const tableBody = document.getElementById('realtimeBody');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            const rows = jsonData.table.rows;
+            if (!rows || rows.length <= 1) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color:#8b949e;">กำลังรอรับข้อมูลจากระบบ...</td></tr>';
+                return;
+            }
+            let data = [];
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
+                    const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
+                    const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
+                    const lastWeekProfit = row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) : 0;
+                    const stars = row.c[8] && row.c[8].v !== null ? parseInt(row.c[8].v) : 0;
+                    data.push({
+                        name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
+                        balance: balance,
+                        profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0,
+                        profit7day: profit7day,
+                        lastWeekProfit: lastWeekProfit,
+                        stars: stars
+                    });
+                }
+            }
+            data.sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
+            let sumProfit = 0, sumWeek = 0, sumLastWeek = 0, sumBalance = 0;
+            data.forEach(row => {
+                sumProfit += row.profit;
+                sumWeek += row.profit7day;
+                sumLastWeek += row.lastWeekProfit;
+                sumBalance += row.balance;
+                let profitColor = row.profit > 0 ? '#4cd137' : (row.profit < 0 ? '#ff3b3b' : '#ffffff');
+                let p7Color = row.profit7day > 0 ? '#4cd137' : (row.profit7day < 0 ? '#ff3b3b' : '#ffffff');
+                let lwColor = row.lastWeekProfit > 0 ? '#4cd137' : (row.lastWeekProfit < 0 ? '#ff3b3b' : '#ffffff');
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td><span class="rt-ea-name">${row.name}</span>${rtRenderStars(row.stars)}</td><td style="color:${profitColor};font-weight:500;">${row.profit > 0 ? '+' : ''}${rtFormatNumber(row.profit)}</td><td style="color:${p7Color};font-weight:500;">${row.profit7day > 0 ? '+' : ''}${rtFormatInteger(row.profit7day)}</td><td style="color:${lwColor};font-weight:500;">${row.lastWeekProfit > 0 ? '+' : ''}${rtFormatInteger(row.lastWeekProfit)}</td><td>$${rtFormatInteger(row.balance)}</td>`;
+                tableBody.appendChild(tr);
+            });
+            const sumColor = sumProfit > 0 ? '#4cd137' : (sumProfit < 0 ? '#ff3b3b' : '#D4AF37');
+            const weekColor = sumWeek > 0 ? '#4cd137' : (sumWeek < 0 ? '#ff3b3b' : '#D4AF37');
+            const lwColor = sumLastWeek > 0 ? '#4cd137' : (sumLastWeek < 0 ? '#ff3b3b' : '#D4AF37');
+            document.getElementById('rtSumProfit').innerHTML = `<span style="color:${sumColor}">${sumProfit > 0 ? '+' : ''}${rtFormatNumber(sumProfit)}</span>`;
+            document.getElementById('rtSumWeek').innerHTML = `<span style="color:${weekColor}">${sumWeek > 0 ? '+' : ''}${rtFormatInteger(sumWeek)}</span>`;
+            document.getElementById('rtSumLastWeek').innerHTML = `<span style="color:${lwColor}">${sumLastWeek > 0 ? '+' : ''}${rtFormatInteger(sumLastWeek)}</span>`;
+            document.getElementById('rtSumBalance').innerHTML = `$${rtFormatInteger(sumBalance)}`;
+            document.getElementById('realtimeFoot').style.display = '';
+        } catch (error) {
+            console.error("RealTime Fetch Error:", error);
+            const tableBody = document.getElementById('realtimeBody');
+            if (tableBody) { tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ เกิดข้อผิดพลาด หรือไฟล์ Google Sheet ยังไม่เปิดแชร์</td></tr>'; }
+        }
+    }
+    fetchRealTimeData();
+    setInterval(fetchRealTimeData, 3000);
 </script>
 
 </body>
