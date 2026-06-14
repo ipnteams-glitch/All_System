@@ -782,17 +782,15 @@
             let typeText = String(item.type);
             let styleBgColor = '#555555'; 
             
-            // เช็คคำเพื่อเปลี่ยนสีป้ายกำกับ
-            if (typeText.includes('ทดสอบ')) {
+            // color badge by risk level
+            if (typeText.includes('ทดสอบ') || typeText.includes('Testing')) {
                 styleBgColor = '#DAA520'; 
-            } else if (typeText.includes('ค่อนข้างสูง')) {
-                styleBgColor = '#FF4500'; 
-            } else if (typeText.includes('เสี่ยงสูง')) {
+            } else if (typeText.includes('High Risk') || typeText.includes('เสี่ยงสูง')) {
                 styleBgColor = '#ff3b3b'; 
-            } else if (typeText.includes('ค่อนข้างต่ำ')) {
-                styleBgColor = 'darkgreen'; 
-            } else if (typeText.includes('เสี่ยงต่ำ')) {
-                styleBgColor = 'limegreen'; 
+            } else if (typeText.includes('Medium Risk') || typeText.includes('ค่อนข้างสูง') || typeText.includes('ค่อนข้างต่ำ')) {
+                styleBgColor = '#FF8C00'; 
+            } else if (typeText.includes('Low Risk') || typeText.includes('เสี่ยงต่ำ')) {
+                styleBgColor = '#2ecc71'; 
             }
 
             html += `
