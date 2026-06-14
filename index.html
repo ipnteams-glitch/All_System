@@ -528,7 +528,8 @@
                 <img src="https://img1.pic.in.th/images/logo14f5db31c2bca372.th.png" alt="EA Atlantis Logo" class="header-logo">
                 <h4 class="fw-bold">HARVEST FARM</h4>
             </div>
-            <a href="https://drive.google.com/drive/folders/16l_45ZJOdT-qAtkU2gB9S5eWrVlHf_J9" target="_blank" class="new-version-link">New Version + Preset</a>
+            <a href="https://drive.google.com/drive/folders/16l_45ZJOdT-qAtkU2gB9S5eWrVlHf_J9" target="_blank" class="new-version-link" data-i18n="new_version">New Version + Preset</a>
+            <button id="lang-switch" class="lang-switch" onclick="toggleLang()">EN</button>
         </div>
         <div class="status-online">
             <span class="dot"></span>Live Update
@@ -599,7 +600,7 @@
     <!-- 🔐 ปุ่มสมัครสมาชิก / จัดการพอร์ต -->
     <div class="register-section" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
         <a href="https://mt5-license-manager.vercel.app/api/auth/signin/google?callbackUrl=/dashboard" target="_blank" class="register-btn">
-            🔐 สมัครสมาชิก / จัดการพอร์ต
+            <span data-i18n="register_btn">🔐 สมัครสมาชิก / จัดการพอร์ต</span>
         </a>
         <a href="https://mt5-license-manager.vercel.app/login?callbackUrl=/portfolio" target="_blank" class="portfolio-btn">
             📊 MyPortfolio
@@ -607,22 +608,22 @@
     </div>
 
     <div class="hero-section text-center">
-        <h1 class="hero-title">FOREX บน METATRADE 5</h1>
-        <h2 class="hero-subtitle">เทรดคู่ทองและค่าเงินอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
-        <p class="hero-desc">
+        <h1 class="hero-title" data-i18n="hero_title">FOREX บน METATRADE 5</h1>
+        <h2 class="hero-subtitle" data-i18n="html" data-i18n-html="hero_subtitle">เทรดคู่ทองและค่าเงินอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
+        <p class="hero-desc" data-i18n="html" data-i18n-html="hero_desc">
             กระจายความเสี่ยงผ่านกองทัพ EA ที่เชี่ยวชาญหลากหลายกลยุทธ์ ทำงานตลอด 24 ชม.<br>
             ลด Drawdown ชดเชยความเสี่ยง เพื่อการเติบโตของพอร์ตอย่างยั่งยืน โดยไม่ต้องเฝ้ากราฟ
         </p>
         
         <div class="hero-features">
-            <span class="feature-tag">🛡️ บริหารความเสี่ยง</span>
-            <span class="feature-tag">⚔️ กระจายหลายกลยุทธ์</span>
-            <span class="feature-tag">📈 กำไรยั่งยืน</span>
+            <span class="feature-tag" data-i18n="feature_risk">🛡️ บริหารความเสี่ยง</span>
+            <span class="feature-tag" data-i18n="feature_multi">⚔️ กระจายหลายกลยุทธ์</span>
+            <span class="feature-tag" data-i18n="feature_profit">📈 กำไรยั่งยืน</span>
         </div>
         <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
             
             <a href="https://mt5-license-manager.vercel.app" target="_blank" style="background: linear-gradient(90deg, #10b981 0%, #ef4444 100%); color: #ffffff; padding: 12px 30px; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); display: inline-block; transition: 0.3s; border: 2px solid transparent;">
-                🎁 ทดลองฟรี 1 สัปดาห์
+                <span data-i18n="trial_btn">🎁 ทดลองฟรี 1 สัปดาห์</span>
             </a>
             
             
@@ -630,11 +631,11 @@
     </div>
 
     <div style="text-align:center; padding: 5px 20px 15px 20px;">
-        <p style="color:#ef4444; font-size:0.8rem; margin:0; opacity:0.85;">*การลงทุนมีความเสี่ยง ผู้ใช้ควรศึกษาข้อมูลก่อนตัดสินใจ เราเป็นเพียงผู้ให้บริการซอฟแวร์เท่านั้น ไม่รับผิดชอบต่อความเสียหายทุกกรณี</p>
+        <p style="color:#ef4444; font-size:0.8rem; margin:0; opacity:0.85;" data-i18n="disclaimer">*การลงทุนมีความเสี่ยง ผู้ใช้ควรศึกษาข้อมูลก่อนตัดสินใจ เราเป็นเพียงผู้ให้บริการซอฟแวร์เท่านั้น ไม่รับผิดชอบต่อความเสียหายทุกกรณี</p>
     </div>
 
     <div class="info-box">
-        <strong>การฟาร์ม EA</strong> คือการบริหารพอร์ตการลงทุนที่ไม่พึ่งพา EA เพียงตัวเดียว เพื่อกระจายความเสี่ยง แบบเดียวกับการบริหารเงินของสถาบันการเงิน มาดู A vs B อย่างสมดุลกัน:<br><br>
+        <strong data-i18n="farming_title">การฟาร์ม EA</strong> คือการบริหารพอร์ตการลงทุนที่ไม่พึ่งพา EA เพียงตัวเดียว เพื่อกระจายความเสี่ยง แบบเดียวกับการบริหารเงินของสถาบันการเงิน มาดู A vs B อย่างสมดุลกัน:<br><br>
         <strong>A:</strong> คือการกระจายพอตด้วยหลาย EA และบริหารเงินในพอร์ตตามความเหมาะสม ข้อดีคือเสถียรและลด drawdown แต่ต้นทุนซับซ้อนเพราะต้องวางหลายพอร์ต<br>
         <strong>B:</strong> ใช้ EA เดี่ยวที่มี track record ชัดเจน ง่ายต่อการบริหาร แต่เสี่ยงสูงเมื่อตลาดเปลี่ยนเหมือนวางไข่ในตะกร้าเดียว<br><br>
         <strong>Verdict:</strong> เมื่อตลาดไม่แน่นอน A มักชนะในระยะยาวเพราะการกระจายความเสี่ยงทำได้ดีกว่า แต่หากคุณมีทักษะเลือก EA เดี่ยวที่เข้ากับสภาวะตลาดได้ดี B ก็อาจได้ผลตอบแทนสูงในระยะสั้น วิถีที่ลงตัวคือผสมผสาน: กระจายพอร์ตด้วยหลาย EA พร้อมรีบาลานซ์ความเสี่ยง เพื่อควมยั่งยืนในระยะยาว
@@ -650,13 +651,13 @@
             <div style="background: linear-gradient(135deg, #1a2a6c, #11998e, #38ef7d); padding: 2px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);">
                 <div style="background-color: #151515; border-radius: 10px; padding: 12px 15px;">
                     <span style="font-size: 1.15rem; color: #fff;">
-                        💻 <strong style="color: #ffeb3b; font-size: 1.25rem;">แนะนำ!</strong> VPS ราคาถูกพร้อมติดตั้ง
-                        <span style="color: #4cd137; font-weight: 600;">⚡ รันได้สูงสุด 9 พอร์ต</span>
+                        <span data-i18n="html" data-i18n-html="vps_recommend">💻 <strong style="color: #ffeb3b; font-size: 1.25rem;">แนะนำ!</strong> VPS ราคาถูกพร้อมติดตั้ง</span>
+                        <span style="color: #4cd137; font-weight: 600;" data-i18n="vps_desc">⚡ รันได้สูงสุด 9 พอร์ต</span>
                     </span>
                 </div>
             </div>
             
-            <h4 class="instruction-text">เลือกรันกลยุทธได้ตามต้องการ</h4>
+            <h4 class="instruction-text" data-i18n="instruction">เลือกรันกลยุทธได้ตามต้องการ</h4>
         </div>
     </div>
 
@@ -705,6 +706,7 @@
     // 🟢 2. คงคำสั่ง &headers=1 ไว้ เพื่อบังคับให้ Google ไม่กลืน Sys_1 และ Sys_2 หายไป
     const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0&headers=1`;
     
+    async function renderAllCards() { await fetchIndexData(); }
     document.addEventListener('DOMContentLoaded', fetchIndexData);
 
     async function fetchIndexData() {
@@ -718,7 +720,7 @@
             const rows = jsonData.table.rows;
 
             if (!rows || rows.length === 0) {
-                showError('<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>');
+                showError('<div class="alert alert-warning mx-3 text-center w-100">'+t('no_data')+'</div>');
                 return;
             }
 
@@ -749,7 +751,7 @@
 
         } catch (error) {
             console.error('Error:', error);
-            showError('<div class="alert alert-danger mx-3 text-center w-100">เกิดข้อผิดพลาดในการดึงข้อมูล</div>');
+            showError('<div class="alert alert-danger mx-3 text-center w-100">'+t('error_fetch')+'</div>');
         }
     }
 
@@ -770,7 +772,7 @@
         if (loader) loader.style.display = 'none';
 
         if (!data || data.length === 0) {
-            showError('<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>');
+            showError('<div class="alert alert-warning mx-3 text-center w-100">'+t('no_data')+'</div>');
             return;
         }
 
@@ -780,18 +782,19 @@
 
         data.forEach((item) => {
             let typeText = String(item.type);
+            let displayType = tr(typeText);
             let styleBgColor = '#555555'; 
             
-            // เช็คคำเพื่อเปลี่ยนสีป้ายกำกับ
-            if (typeText.includes('ทดสอบ')) {
+            // check keywords to color the badge
+            if (typeText.includes('ทดสอบ') || typeText.includes('Testing')) {
                 styleBgColor = '#DAA520'; 
-            } else if (typeText.includes('ค่อนข้างสูง')) {
+            } else if (typeText.includes('ค่อนข้างสูง') || typeText.includes('Moderately High')) {
                 styleBgColor = '#FF4500'; 
-            } else if (typeText.includes('เสี่ยงสูง')) {
+            } else if (typeText.includes('เสี่ยงสูง') || typeText.includes('High Risk')) {
                 styleBgColor = '#ff3b3b'; 
-            } else if (typeText.includes('ค่อนข้างต่ำ')) {
+            } else if (typeText.includes('ค่อนข้างต่ำ') || typeText.includes('Moderately Low')) {
                 styleBgColor = 'darkgreen'; 
-            } else if (typeText.includes('เสี่ยงต่ำ')) {
+            } else if (typeText.includes('เสี่ยงต่ำ') || typeText.includes('Low Risk')) {
                 styleBgColor = 'limegreen'; 
             }
 
@@ -800,23 +803,23 @@
                     <div class="ea-card">
                         <div class="p-4"> 
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge rounded-pill bg-primary">Running</span>
+                                <span class="badge rounded-pill bg-primary">${t('running')}</span>
                             </div>
                             <h5 class="fw-bold" style="color: #ffeb3b;">${item.name}</h5>
                             
                             <div class="row g-2 mt-2">
                                 <div class="col-6">
-                                    <small class="text-muted d-block mb-1">Model</small>
+                                    <small class="text-muted d-block mb-1">${t('model')}</small>
                                     <div class="text-secondary">${item.comment}</div>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <small class="text-muted d-block mb-1">Style</small>
-                                    <div class="style-badge" style="background-color: ${styleBgColor};">${typeText}</div> 
+                                    <small class="text-muted d-block mb-1">${t('style')}</small>
+                                    <div class="style-badge" style="background-color: ${styleBgColor};">${displayType}</div> 
                                 </div>
                             </div>
 
                             <div class="profit-center-box" style="text-align: center; margin-top: 20px; font-size: 1.1rem; font-weight: 600; color: #3399ff;">
-                                ข้อมูลเบื้องต้น
+                                ${t('overview')}
                             </div>
 
                             <div class="balance-box text-center mt-2" style="background-color: rgba(255,255,255,0.03); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.1);">
@@ -986,7 +989,7 @@
             tableBody.innerHTML = '';
             const rows = jsonData.table.rows;
             if (!rows || rows.length <= 1) {
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color:#8b949e;">กำลังรอรับข้อมูลจากระบบ...</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color:#8b949e;">'+t('loading')+'</td></tr>';
                 return;
             }
             let data = [];
@@ -1032,7 +1035,7 @@
         } catch (error) {
             console.error("RealTime Fetch Error:", error);
             const tableBody = document.getElementById('realtimeBody');
-            if (tableBody) { tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ เกิดข้อผิดพลาด หรือไฟล์ Google Sheet ยังไม่เปิดแชร์</td></tr>'; }
+            if (tableBody) { tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ '+t('error_fetch')+'</td></tr>'; }
         }
     }
     fetchRealTimeData();
