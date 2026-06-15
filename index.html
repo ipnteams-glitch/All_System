@@ -767,11 +767,54 @@
                 return String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' });
             });
 
-            renderCards(data);
+            // Fetch RealTime profit data and merge
+            fetchRealTimeProfit().then(rtData => {
+                // Merge by name
+                data.forEach(item => {
+                    const rt = rtData.find(r => String(r.name).trim() === String(item.name).trim());
+                    if (rt) {
+                        item.profit = rt.profit;
+                        item.profit7day = rt.profit7day;
+                        item.lastWeekProfit = rt.lastWeekProfit;
+                        item.balanceNum = rt.balance; // use RealTime balance (number)
+                    }
+                });
+                renderCards(data);
+            });
 
         } catch (error) {
             console.error('Error:', error);
             showError('<div class="alert alert-danger mx-3 text-center w-100">เกิดข้อผิดพลาดในการดึงข้อมูล</div>');
+        }
+    }
+
+    // Fetch profit data from RealTime sheet for donut charts
+    async function fetchRealTimeProfit() {
+        const RT_SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
+        const url = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+        try {
+            const resp = await fetch(url);
+            const text = await resp.text();
+            const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
+            const rows = json.table.rows;
+            if (!rows) return [];
+            const result = [];
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
+                    result.push({
+                        name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
+                        balance: row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) || 0 : 0,
+                        profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) || 0 : 0,
+                        profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) || 0 : 0,
+                        lastWeekProfit: row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) || 0 : 0,
+                    });
+                }
+            }
+            return result;
+        } catch(e) {
+            console.error("fetchRealTimeProfit error:", e);
+            return [];
         }
     }
 
@@ -784,13 +827,14 @@
     }
 
     function renderCards(data) {
-        function renderDonut(balanceNum, profit7day) {
+        function renderDonut(balanceNum, profit7day, lastWeekProfit) {
+            var totalProfit = profit7day + lastWeekProfit;
             var circ = 2 * Math.PI * 26;
-            var pct = balanceNum > 0 ? (profit7day / balanceNum) * 100 : 0;
+            var pct = balanceNum > 0 ? (totalProfit / balanceNum) * 100 : 0;
             var absPct = Math.min(Math.abs(pct), 100);
             var arc = (absPct / 100) * circ;
-            var color = profit7day >= 0 ? '#00c853' : '#ff1744';
-            var sign = profit7day >= 0 ? '+' : '';
+            var color = totalProfit >= 0 ? '#00c853' : '#ff1744';
+            var sign = totalProfit >= 0 ? '+' : '';
             return '<div class="donut-wrap">'
                 + '<svg width="64" height="64" viewBox="0 0 64 64" class="donut-svg">'
                 + '<circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6"/>'
@@ -841,7 +885,7 @@
                         <div class="p-4"> 
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="badge rounded-pill bg-primary">Running</span>
-                                ` + renderDonut(item.balanceNum, item.profit7day) + `
+                                ` + renderDonut(item.balanceNum, item.profit7day, item.lastWeekProfit) + `
                             </div>
                             <h5 class="fw-bold" style="color: #ffeb3b;">${item.name}</h5>
                             
