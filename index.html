@@ -64,6 +64,21 @@
 
         .new-version-link:hover { text-decoration: underline; color: #fff176 !important; }
 
+        /* ── Language Switch ── */
+        .lang-switch {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .lang-switch:hover { background: rgba(255,255,255,0.2); }
+
         /* ── ปุ่มสมัครสมาชิก ── */
         .register-section {
             text-align: center;
@@ -92,55 +107,6 @@
             0%, 100% { box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4); }
             50% { box-shadow: 0 4px 30px rgba(118, 75, 162, 0.7); }
         }
-
-        /* ── ปุ่ม MyPortfolio ── */
-        .portfolio-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: #fff !important;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 600;
-            padding: 12px 32px;
-            border-radius: 50px;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(17, 153, 142, 0.4);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
-        .portfolio-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(56, 239, 125, 0.6);
-            color: #fff !important;
-        }
-
-        /* ── Portfolio Modal ── */
-        .portfolio-overlay {
-            display: none;
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85); z-index: 9999;
-            overflow-y: auto; padding: 20px;
-        }
-        .portfolio-overlay.active { display: block; }
-        .portfolio-container {
-            max-width: 700px; margin: 30px auto;
-            background: #1a1a2e; border-radius: 20px;
-            padding: 25px; color: #fff;
-        }
-        .portfolio-card-item {
-            background: linear-gradient(145deg, #151515 0%, #2b2b2b 100%);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 15px; padding: 20px; margin-bottom: 12px;
-        }
-        .portfolio-stat {
-            font-size: 0.85rem; color: #aaa; margin-bottom: 2px;
-        }
-        .portfolio-value {
-            font-size: 1.1rem; font-weight: 600;
-        }
-        .portfolio-value.green { color: #38ef7d; }
-        .portfolio-value.red { color: #ff4757; }
 
         .status-online { 
             color: #4cd137; 
@@ -480,43 +446,25 @@
             border: 0;
         }
         
+        /* —— Performance Donut —— */
+        .donut-wrap {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            animation: donut-pop 0.6s ease-out forwards;
+        }
+        .donut-svg {
+            overflow: visible;
+        }
+        .donut-arc {
+            transition: stroke-dasharray 0.8s ease;
+        }
+        @keyframes donut-pop {
+            0% { transform: scale(0.3); opacity: 0; }
+            60% { transform: scale(1.08); }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
-        /* ── RealTime Performance Table ── */
-        .rt-table-container {
-            background: #1c1f26;
-            border-radius: 12px;
-            border: 1px solid #2d333b;
-            overflow-x: auto;
-            margin: 10px 5px 25px 5px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        .rt-table { width: 100%; border-collapse: collapse; text-align: right; }
-        .rt-table th, .rt-table td { padding: 12px 14px; white-space: nowrap; }
-        .rt-table th:first-child, .rt-table td:first-child { min-width: 130px; text-align: left; }
-        .rt-ea-name { font-weight: bold; color: #ffeb3b; font-size: 14px; }
-        .rt-table th {
-            background-color: rgba(212, 175, 55, 0.1);
-            color: #D4AF37; font-weight: 500; font-size: 15px;
-            border-bottom: 2px solid #D4AF37;
-        }
-        .rt-table td { border-bottom: 1px solid #2d333b; font-size: 15px; color: #c9d1d9; }
-        .rt-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.03); transition: 0.2s; }
-        .rt-table tfoot td {
-            background: linear-gradient(90deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
-            border-top: 2px solid #D4AF37; font-weight: 600; font-size: 16px;
-            color: #D4AF37; padding: 14px 20px;
-        }
-        .rt-table tfoot td:first-child { text-align: right; letter-spacing: 1px; }
-        .rt-loader { text-align: center; padding: 40px; color: #D4AF37; font-size: 18px; }
-        .rt-stars { display: inline-block; font-size: 16px; letter-spacing: 2px; margin-top: 2px; }
-        .rt-star-on { color: #D4AF37; } .rt-star-off { color: #3a3f4b; }
-        @media (max-width: 600px) {
-            .rt-table th, .rt-table td { padding: 8px 6px; font-size: 11px; }
-            .rt-table th { font-size: 10px; }
-            .rt-table th:first-child, .rt-table td:first-child { min-width: 80px; }
-            .rt-ea-name { font-size: 10px; } .rt-stars { font-size: 11px; letter-spacing: 0; }
-            .rt-table tfoot td { font-size: 12px; padding: 8px 6px; }
-        }
     </style>
 </head>
 <body>
@@ -528,64 +476,24 @@
                 <img src="https://img1.pic.in.th/images/logo14f5db31c2bca372.th.png" alt="EA Atlantis Logo" class="header-logo">
                 <h4 class="fw-bold">HARVEST FARM</h4>
             </div>
-            <a href="https://drive.google.com/drive/folders/16l_45ZJOdT-qAtkU2gB9S5eWrVlHf_J9" target="_blank" class="new-version-link">New Version + Preset</a>
+            <a href="https://drive.google.com/drive/folders/16l_45ZJOdT-qAtkU2gB9S5eWrVlHf_J9" target="_blank" class="new-version-link" data-i18n="new_version">New Version + Preset</a>
+            <button id="lang-switch" class="lang-switch" onclick="toggleLang()">EN</button>
         </div>
         <div class="status-online">
             <span class="dot"></span>Live Update
         </div>
     </div>
 
-    <!-- 📊 Portfolio Modal -->
-    <div id="portfolioOverlay" class="portfolio-overlay">
-        <div class="portfolio-container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="text-white m-0">📊 MyPortfolio</h4>
-                <button onclick="togglePortfolio()" class="btn btn-sm btn-outline-light rounded-pill px-3">✕ ปิด</button>
-            </div>
-            <div id="portfolioForm" class="mb-3">
-                <div class="input-group">
-                    <input id="portfolioEmail" type="email" class="form-control" placeholder="Gmail ของคุณ" style="background:#2b2b2b;color:#fff;border-color:#444;">
-                </div>
-                <div class="d-flex gap-2 mt-2">
-                    <input id="newMt5Account" type="text" class="form-control" placeholder="MT5 Account" style="background:#2b2b2b;color:#fff;border-color:#444;flex:1;">
-                    <input id="newBroker" type="text" class="form-control" placeholder="Broker" style="background:#2b2b2b;color:#fff;border-color:#444;flex:1;">
-                    <button onclick="addPortfolioAccount()" class="btn btn-sm btn-success rounded-pill px-3">➕ เพิ่ม</button>
-                </div>
-                <div class="d-flex gap-2 mt-2">
-                    <button onclick="fetchPortfolio()" class="btn btn-sm btn-primary rounded-pill px-4">🔍 โหลดพอร์ต</button>
-                    <span id="portfolioMsg" class="text-white-50 small align-self-center"></span>
-                </div>
-            </div>
-            <div id="portfolioList"></div>
-        </div>
+    <!-- 🔐 ปุ่มสมัครสมาชิก / จัดการพอร์ต -->
+    <div class="register-section">
+        <a href="https://mt5-license-manager.vercel.app" target="_blank" class="register-btn">
+            <span data-i18n="register_btn">🔐 สมัครสมาชิก / จัดการพอร์ต MT5</span>
+        </a>
     </div>
 
-<div class="rt-table-container">
-        <table class="rt-table">
-            <thead>
-                <tr>
-                    <th>ชื่อ EA</th>
-                    <th>กำไรปัจจุบัน</th>
-                    <th>สัปดาห์นี้</th>
-                    <th>สัปดาห์ที่แล้ว</th>
-                    <th>ทุนเริ่มต้น</th>
-                </tr>
-            </thead>
-            <tbody id="realtimeBody">
-                <tr><td colspan="5"><div class="rt-loader">⏳ กำลังโหลดข้อมูล...</div></td></tr>
-            </tbody>
-            <tfoot id="realtimeFoot" style="display:none;">
-                <tr>
-                    <td>📊 ผลรวม</td>
-                    <td id="rtSumProfit">-</td>
-                    <td id="rtSumWeek">-</td>
-                    <td id="rtSumLastWeek">-</td>
-                    <td id="rtSumBalance">-</td>
-                </tr>
-            </tfoot>
-        </table>
+<div class="system-diagram-container">
+        <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
     </div>
-
 
     <div class="video-wrapper">
         <iframe 
@@ -596,19 +504,10 @@
         </iframe>
     </div>
 
-    <!-- 🔐 ปุ่มสมัครสมาชิก / จัดการพอร์ต -->
-    <div class="register-section" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
-        <a href="https://mt5-license-manager.vercel.app/api/auth/signin/google?callbackUrl=/dashboard" target="_blank" class="register-btn">
-            🔐 สมัครสมาชิก / จัดการพอร์ต
-        </a>
-        <a href="https://mt5-license-manager.vercel.app/login?callbackUrl=/portfolio" target="_blank" class="portfolio-btn">
-            📊 MyPortfolio
-        </a>
-    </div>
 
     <div class="hero-section text-center">
-        <h1 class="hero-title">FOREX บน METATRADE 5</h1>
-        <h2 class="hero-subtitle">เทรดคู่ทองและค่าเงินอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
+        <h1 class="hero-title" data-i18n="hero_title">FOREX บน METATRADE 5</h1>
+        <h2 class="hero-subtitle" data-i18n="html" data-i18n-html="hero_subtitle">เทรดคู่ทองและค่าเงินอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
         <p class="hero-desc">
             กระจายความเสี่ยงผ่านกองทัพ EA ที่เชี่ยวชาญหลากหลายกลยุทธ์ ทำงานตลอด 24 ชม.<br>
             ลด Drawdown ชดเชยความเสี่ยง เพื่อการเติบโตของพอร์ตอย่างยั่งยืน โดยไม่ต้องเฝ้ากราฟ
@@ -622,15 +521,18 @@
         <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
             
             <a href="https://mt5-license-manager.vercel.app" target="_blank" style="background: linear-gradient(90deg, #10b981 0%, #ef4444 100%); color: #ffffff; padding: 12px 30px; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); display: inline-block; transition: 0.3s; border: 2px solid transparent;">
-                🎁 ทดลองฟรี 1 สัปดาห์
+                <span data-i18n="trial_btn">🎁 ทดลองฟรี 1 สัปดาห์</span>
             </a>
             
+            <a href="RealTime.html" style="background: linear-gradient(90deg, #D4AF37 0%, #FFDF73 100%); color: #000; padding: 12px 30px; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); display: inline-block; transition: 0.3s; border: 2px solid transparent;">
+                <span data-i18n="realtime_btn">📊 ดูแบบ Real-Time</span>
+            </a>
             
         </div>
     </div>
 
     <div style="text-align:center; padding: 5px 20px 15px 20px;">
-        <p style="color:#ef4444; font-size:0.8rem; margin:0; opacity:0.85;">*การลงทุนมีความเสี่ยง ผู้ใช้ควรศึกษาข้อมูลก่อนตัดสินใจ เราเป็นเพียงผู้ให้บริการซอฟแวร์เท่านั้น ไม่รับผิดชอบต่อความเสียหายทุกกรณี</p>
+        <p style="color:#ef4444; font-size:0.8rem; margin:0; opacity:0.85;" data-i18n="disclaimer">*การลงทุนมีความเสี่ยง ผู้ใช้ควรศึกษาข้อมูลก่อนตัดสินใจ เราเป็นเพียงผู้ให้บริการซอฟแวร์เท่านั้น ไม่รับผิดชอบต่อความเสียหายทุกกรณี</p>
     </div>
 
     <div class="info-box">
@@ -656,13 +558,8 @@
                 </div>
             </div>
             
-            <h4 class="instruction-text">เลือกรันกลยุทธได้ตามต้องการ</h4>
+            <h4 class="instruction-text" data-i18n="instruction">เลือกรันกลยุทธได้ตามต้องการ</h4>
         </div>
-    </div>
-
-
-<div class="system-diagram-container">
-        <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
     </div>
 
    <div id="ea-container" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 px-2"></div>
@@ -672,7 +569,7 @@
             <svg class="social-icon" viewBox="0 0 24 24">
                 <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.084.922.258 1.057.592.122.303.079.778.039 1.085l-.171 1.027c-.053.303-.242 1.186 1.039.647 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.572-3.843 2.572-5.992zm-15.278 1.954h-3.327v-5.465h1.222v4.306h2.105v1.159zm2.41 0h-1.221v-5.465h1.221v5.465zm5.556-3.805l-2.348 3.805h-1.399v-5.465h1.221v3.251l2.251-3.251h1.496v5.465h-1.221v-3.805zm3.627-1.66h-2.104v1.159h2.104v1.159h-2.104v1.158h2.104v1.159h-3.326v-5.465h3.326v1.16z"/>
             </svg>
-            Line Contact : @harvestfarm
+            Line Contact : @479ufnya
         </a>
 
         <a href="https://www.facebook.com/harvestfarmea" target="_blank" class="social-btn fb-btn">
@@ -705,6 +602,7 @@
     // 🟢 2. คงคำสั่ง &headers=1 ไว้ เพื่อบังคับให้ Google ไม่กลืน Sys_1 และ Sys_2 หายไป
     const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0&headers=1`;
     
+    async function renderAllCards() { await fetchIndexData(); }
     document.addEventListener('DOMContentLoaded', fetchIndexData);
 
     async function fetchIndexData() {
@@ -718,7 +616,7 @@
             const rows = jsonData.table.rows;
 
             if (!rows || rows.length === 0) {
-                showError('<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>');
+                showError('<div class="alert alert-warning mx-3 text-center w-100">'+t('no_data')+'</div>');
                 return;
             }
 
@@ -749,7 +647,7 @@
 
         } catch (error) {
             console.error('Error:', error);
-            showError('<div class="alert alert-danger mx-3 text-center w-100">เกิดข้อผิดพลาดในการดึงข้อมูล</div>');
+            showError('<div class="alert alert-danger mx-3 text-center w-100">'+t('error_fetch')+'</div>');
         }
     }
 
@@ -762,6 +660,26 @@
     }
 
     function renderCards(data) {
+        function renderDonut(balance, profit7day) {
+            var circ = 2 * Math.PI * 26;
+            var pct = balance > 0 ? (profit7day / balance) * 100 : 0;
+            var absPct = Math.min(Math.abs(pct), 100);
+            var arc = (absPct / 100) * circ;
+            var color = profit7day >= 0 ? '#00c853' : '#ff1744';
+            var sign = profit7day >= 0 ? '+' : '';
+            return '<div class="donut-wrap">'
+                + '<svg width="64" height="64" viewBox="0 0 64 64" class="donut-svg">'
+                + '<circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6"/>'
+                + '<circle cx="32" cy="32" r="26" fill="none" class="donut-arc" '
+                + 'stroke="' + color + '" stroke-width="6" stroke-linecap="round" '
+                + 'stroke-dasharray="' + arc.toFixed(1) + ' ' + (circ - arc).toFixed(1) + '" '
+                + 'stroke-dashoffset="' + (circ * 0.25).toFixed(1) + '" '
+                + 'transform="rotate(-90 32 32)"/>'
+                + '<text x="32" y="36" text-anchor="middle" fill="' + color + '" '
+                + 'font-family="Kanit, sans-serif" font-size="12" font-weight="700">'
+                + sign + pct.toFixed(0) + '%</text>'
+                + '</svg></div>';
+        }
         const container = document.getElementById('ea-container');
         const loader = document.getElementById('loader');
         const contactSection = document.getElementById('contact-section'); 
@@ -770,7 +688,7 @@
         if (loader) loader.style.display = 'none';
 
         if (!data || data.length === 0) {
-            showError('<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>');
+            showError('<div class="alert alert-warning mx-3 text-center w-100">'+t('no_data')+'</div>');
             return;
         }
 
@@ -782,15 +700,17 @@
             let typeText = String(item.type);
             let styleBgColor = '#555555'; 
             
-            // color badge by risk level
-            if (typeText.includes('ทดสอบ') || typeText.includes('Testing')) {
+            // เช็คคำเพื่อเปลี่ยนสีป้ายกำกับ
+            if (typeText.includes('ทดสอบ')) {
                 styleBgColor = '#DAA520'; 
-            } else if (typeText.includes('High Risk') || typeText.includes('เสี่ยงสูง')) {
+            } else if (typeText.includes('ค่อนข้างสูง')) {
+                styleBgColor = '#FF4500'; 
+            } else if (typeText.includes('เสี่ยงสูง')) {
                 styleBgColor = '#ff3b3b'; 
-            } else if (typeText.includes('Medium Risk') || typeText.includes('ค่อนข้างสูง') || typeText.includes('ค่อนข้างต่ำ')) {
-                styleBgColor = '#FF8C00'; 
-            } else if (typeText.includes('Low Risk') || typeText.includes('เสี่ยงต่ำ')) {
-                styleBgColor = '#2ecc71'; 
+            } else if (typeText.includes('ค่อนข้างต่ำ')) {
+                styleBgColor = 'darkgreen'; 
+            } else if (typeText.includes('เสี่ยงต่ำ')) {
+                styleBgColor = 'limegreen'; 
             }
 
             html += `
@@ -799,6 +719,7 @@
                         <div class="p-4"> 
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="badge rounded-pill bg-primary">Running</span>
+                                ` + renderDonut(item.balance, item.profit7day) + `
                             </div>
                             <h5 class="fw-bold" style="color: #ffeb3b;">${item.name}</h5>
                             
@@ -831,210 +752,6 @@
         container.innerHTML = html;
         if (contactSection) contactSection.style.display = 'block';
     }
-
-    // ── MyPortfolio ──
-    const API_BASE = "https://mt5-license-manager.vercel.app";
-
-    function togglePortfolio() {
-        const ov = document.getElementById('portfolioOverlay');
-        ov.classList.toggle('active');
-    }
-
-    function showPortfolioMsg(msg, isError) {
-        const el = document.getElementById('portfolioMsg');
-        el.textContent = msg;
-        el.style.color = isError ? '#ff4757' : '#38ef7d';
-        setTimeout(() => { el.textContent = ''; }, 5000);
-    }
-
-    async function fetchPortfolio() {
-        const email = document.getElementById('portfolioEmail').value.trim();
-        if (!email) { showPortfolioMsg('กรุณากรอก Gmail', true); return; }
-        showPortfolioMsg('กำลังโหลด...', false);
-        try {
-            const resp = await fetch(`${API_BASE}/api/portfolio?email=${encodeURIComponent(email)}`);
-            const jsonData = await resp.json();
-            const rows = jsonData.accounts;
-            if (!rows || rows.length === 0) {
-                document.getElementById('portfolioList').innerHTML = '<div class="text-center text-white-50 py-4">ยังไม่มีพอร์ต — เพิ่มพอร์ตแรกของคุณ</div>';
-                showPortfolioMsg('ไม่พบข้อมูล', true);
-                return;
-            }
-
-            renderPortfolioCards(rows);
-            showPortfolioMsg(`พบ ${rows.length} พอร์ต`, false);
-        } catch (e) {
-            console.error(e);
-            document.getElementById('portfolioList').innerHTML = '<div class="text-center text-danger py-3">⚠️ ไม่สามารถโหลดข้อมูลได้ — เช็คว่า API ทำงานอยู่หรือไม่</div>';
-            showPortfolioMsg('โหลดไม่สำเร็จ', true);
-        }
-    }
-
-    function renderPortfolioCards(accounts) {
-        const container = document.getElementById('portfolioList');
-        if (!accounts || accounts.length === 0) {
-            container.innerHTML = '<div class="text-center text-white-50 py-4">ยังไม่มีพอร์ต</div>';
-            return;
-        }
-        let html = '';
-        accounts.forEach(a => {
-            const floatColor = a.floating_pl >= 0 ? 'green' : 'red';
-            const profitColor = a.total_profit >= 0 ? 'green' : 'red';
-            const fmtNum = (n) => (n >= 0 ? '+' : '') + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            html += `
-                <div class="portfolio-card-item">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <span class="text-white fw-bold" style="font-size:1.1rem;">#${a.mt5_account}</span>
-                            ${a.broker ? `<span class="text-white-50 ms-2 small">${a.broker}</span>` : ''}
-                        </div>
-                        <button onclick="deletePortfolioAccount('${a.id}')" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0" style="font-size:0.7rem;">🗑</button>
-                    </div>
-                    <div class="row g-2">
-                        <div class="col-4">
-                            <div class="portfolio-stat">Balance</div>
-                            <div class="portfolio-value text-white">$${a.balance.toLocaleString('en-US', {minimumFractionDigits:2})}</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="portfolio-stat">Float P/L</div>
-                            <div class="portfolio-value ${floatColor}">$${fmtNum(a.floating_pl)}</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="portfolio-stat">Total Profit</div>
-                            <div class="portfolio-value ${profitColor}">$${fmtNum(a.total_profit)}</div>
-                        </div>
-                    </div>
-                    ${a.last_updated ? `<div class="text-end text-white-50 mt-2" style="font-size:0.7rem;">อัปเดต: ${new Date(a.last_updated).toLocaleString('th-TH')}</div>` : ''}
-                </div>`;
-        });
-        container.innerHTML = html;
-    }
-
-    async function addPortfolioAccount() {
-        const email = document.getElementById('portfolioEmail').value.trim();
-        const mt5 = document.getElementById('newMt5Account').value.trim();
-        const broker = document.getElementById('newBroker').value.trim();
-        if (!email || !mt5) { showPortfolioMsg('กรุณากรอก Gmail และ MT5 Account', true); return; }
-        showPortfolioMsg('กำลังเพิ่ม...', false);
-        try {
-            const res = await fetch(`${API_BASE}/api/portfolio`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mt5_account: mt5, broker, email })
-            });
-            const data = await res.json();
-            if (data.success || data.account) {
-                showPortfolioMsg('เพิ่มแล้ว — กด "โหลดพอร์ต" เพื่อดู', false);
-                document.getElementById('newMt5Account').value = '';
-                document.getElementById('newBroker').value = '';
-            } else {
-                showPortfolioMsg(data.error || 'เพิ่มไม่สำเร็จ', true);
-            }
-        } catch (e) {
-            showPortfolioMsg('เชื่อมต่อ API ไม่สำเร็จ', true);
-        }
-    }
-
-    async function deletePortfolioAccount(id) {
-        if (!confirm('ยืนยันการลบพอร์ตนี้?')) return;
-        showPortfolioMsg('กำลังลบ...', false);
-        try {
-            const res = await fetch(`${API_BASE}/api/portfolio?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
-            const data = await res.json();
-            if (data.success) {
-                showPortfolioMsg('ลบแล้ว — กด "โหลดพอร์ต" เพื่อรีเฟรช', false);
-                fetchPortfolio();
-            } else {
-                showPortfolioMsg(data.error || 'ลบไม่สำเร็จ', true);
-            }
-        } catch (e) {
-            showPortfolioMsg('เชื่อมต่อ API ไม่สำเร็จ', true);
-        }
-    }
-
-    // ── RealTime Performance Table ──
-    const RT_SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
-    const RT_GVIZ_URL = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
-
-    function rtFormatNumber(num) {
-        if (isNaN(num)) return "0.00";
-        return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-    function rtFormatInteger(num) {
-        if (isNaN(num)) return "0";
-        return Math.round(num).toLocaleString('en-US', { maximumFractionDigits: 0 });
-    }
-    function rtRenderStars(count) {
-        let html = '<div class="rt-stars">';
-        for (let i = 0; i < 5; i++) {
-            html += i < count ? '<span class="rt-star-on">★</span>' : '<span class="rt-star-off">★</span>';
-        }
-        html += '</div>';
-        return html;
-    }
-    async function fetchRealTimeData() {
-        try {
-            const cacheBuster = "&t=" + new Date().getTime();
-            const response = await fetch(RT_GVIZ_URL + cacheBuster);
-            const text = await response.text();
-            const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-            const jsonData = JSON.parse(jsonString);
-            const tableBody = document.getElementById('realtimeBody');
-            if (!tableBody) return;
-            tableBody.innerHTML = '';
-            const rows = jsonData.table.rows;
-            if (!rows || rows.length <= 1) {
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color:#8b949e;">กำลังรอรับข้อมูลจากระบบ...</td></tr>';
-                return;
-            }
-            let data = [];
-            for (let i = 0; i < rows.length; i++) {
-                let row = rows[i];
-                if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
-                    const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
-                    const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
-                    const lastWeekProfit = row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) : 0;
-                    const stars = row.c[8] && row.c[8].v !== null ? parseInt(row.c[8].v) : 0;
-                    data.push({
-                        name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
-                        balance: balance,
-                        profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0,
-                        profit7day: profit7day,
-                        lastWeekProfit: lastWeekProfit,
-                        stars: stars
-                    });
-                }
-            }
-            data.sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
-            let sumProfit = 0, sumWeek = 0, sumLastWeek = 0, sumBalance = 0;
-            data.forEach(row => {
-                sumProfit += row.profit;
-                sumWeek += row.profit7day;
-                sumLastWeek += row.lastWeekProfit;
-                sumBalance += row.balance;
-                let profitColor = row.profit > 0 ? '#4cd137' : (row.profit < 0 ? '#ff3b3b' : '#ffffff');
-                let p7Color = row.profit7day > 0 ? '#4cd137' : (row.profit7day < 0 ? '#ff3b3b' : '#ffffff');
-                let lwColor = row.lastWeekProfit > 0 ? '#4cd137' : (row.lastWeekProfit < 0 ? '#ff3b3b' : '#ffffff');
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td><span class="rt-ea-name">${row.name}</span>${rtRenderStars(row.stars)}</td><td style="color:${profitColor};font-weight:500;">${row.profit > 0 ? '+' : ''}${rtFormatNumber(row.profit)}</td><td style="color:${p7Color};font-weight:500;">${row.profit7day > 0 ? '+' : ''}${rtFormatInteger(row.profit7day)}</td><td style="color:${lwColor};font-weight:500;">${row.lastWeekProfit > 0 ? '+' : ''}${rtFormatInteger(row.lastWeekProfit)}</td><td>$${rtFormatInteger(row.balance)}</td>`;
-                tableBody.appendChild(tr);
-            });
-            const sumColor = sumProfit > 0 ? '#4cd137' : (sumProfit < 0 ? '#ff3b3b' : '#D4AF37');
-            const weekColor = sumWeek > 0 ? '#4cd137' : (sumWeek < 0 ? '#ff3b3b' : '#D4AF37');
-            const lwColor = sumLastWeek > 0 ? '#4cd137' : (sumLastWeek < 0 ? '#ff3b3b' : '#D4AF37');
-            document.getElementById('rtSumProfit').innerHTML = `<span style="color:${sumColor}">${sumProfit > 0 ? '+' : ''}${rtFormatNumber(sumProfit)}</span>`;
-            document.getElementById('rtSumWeek').innerHTML = `<span style="color:${weekColor}">${sumWeek > 0 ? '+' : ''}${rtFormatInteger(sumWeek)}</span>`;
-            document.getElementById('rtSumLastWeek').innerHTML = `<span style="color:${lwColor}">${sumLastWeek > 0 ? '+' : ''}${rtFormatInteger(sumLastWeek)}</span>`;
-            document.getElementById('rtSumBalance').innerHTML = `$${rtFormatInteger(sumBalance)}`;
-            document.getElementById('realtimeFoot').style.display = '';
-        } catch (error) {
-            console.error("RealTime Fetch Error:", error);
-            const tableBody = document.getElementById('realtimeBody');
-            if (tableBody) { tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ เกิดข้อผิดพลาด หรือไฟล์ Google Sheet ยังไม่เปิดแชร์</td></tr>'; }
-        }
-    }
-    fetchRealTimeData();
-    setInterval(fetchRealTimeData, 3000);
 </script>
 
 </body>
