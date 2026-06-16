@@ -1104,7 +1104,7 @@
                 let p7Color = row.profit7day > 0 ? '#4cd137' : (row.profit7day < 0 ? '#ff3b3b' : '#ffffff');
                 let lwColor = row.lastWeekProfit > 0 ? '#4cd137' : (row.lastWeekProfit < 0 ? '#ff3b3b' : '#ffffff');
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td><span class="rt-ea-name">${row.name}</span>${rtRenderStars(row.stars)}${row.stars >= 4 ? ' <span class="rt-recommend">แนะนำ</span>' : ''}</td><td style="color:${profitColor};font-weight:500;">${row.profit > 0 ? '+' : ''}${rtFormatNumber(row.profit)}</td><td style="color:${p7Color};font-weight:500;">${row.profit7day > 0 ? '+' : ''}${rtFormatInteger(row.profit7day)}</td><td style="color:${lwColor};font-weight:500;">${row.lastWeekProfit > 0 ? '+' : ''}${rtFormatInteger(row.lastWeekProfit)}</td><td>$${rtFormatInteger(row.balance)}</td>`;
+                tr.innerHTML = `<td><span class="rt-ea-name">${row.name}</span>${rtRenderStars(row.stars)}${row.stars >= 4 ? ' <span class="rt-recommend">แนะนำ</span>' : (row.stars >= 3 ? ' <span class="rt-recommend">น่าสนใจ</span>' : '')}</td><td style="color:${profitColor};font-weight:500;">${row.profit > 0 ? '+' : ''}${rtFormatNumber(row.profit)}</td><td style="color:${p7Color};font-weight:500;">${row.profit7day > 0 ? '+' : ''}${rtFormatInteger(row.profit7day)}</td><td style="color:${lwColor};font-weight:500;">${row.lastWeekProfit > 0 ? '+' : ''}${rtFormatInteger(row.lastWeekProfit)}</td><td>$${rtFormatInteger(row.balance)}</td>`;
                 tableBody.appendChild(tr);
             });
             const sumColor = sumProfit > 0 ? '#4cd137' : (sumProfit < 0 ? '#ff3b3b' : '#D4AF37');
