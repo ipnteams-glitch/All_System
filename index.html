@@ -510,6 +510,7 @@
         .rt-loader { text-align: center; padding: 40px; color: #D4AF37; font-size: 18px; }
         .rt-stars { display: inline-block; font-size: 16px; letter-spacing: 2px; margin-top: 2px; }
         .rt-star-on { color: #D4AF37; } .rt-star-off { color: #3a3f4b; }
+        .rt-recommend { color: #00c853; font-size: 12px; font-weight: 600; margin-left: 6px; text-shadow: 0 0 6px rgba(0,200,83,0.4); }
         @media (max-width: 600px) {
             .rt-table th, .rt-table td { padding: 8px 6px; font-size: 11px; }
             .rt-table th { font-size: 10px; }
@@ -1103,7 +1104,7 @@
                 let p7Color = row.profit7day > 0 ? '#4cd137' : (row.profit7day < 0 ? '#ff3b3b' : '#ffffff');
                 let lwColor = row.lastWeekProfit > 0 ? '#4cd137' : (row.lastWeekProfit < 0 ? '#ff3b3b' : '#ffffff');
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td><span class="rt-ea-name">${row.name}</span>${rtRenderStars(row.stars)}</td><td style="color:${profitColor};font-weight:500;">${row.profit > 0 ? '+' : ''}${rtFormatNumber(row.profit)}</td><td style="color:${p7Color};font-weight:500;">${row.profit7day > 0 ? '+' : ''}${rtFormatInteger(row.profit7day)}</td><td style="color:${lwColor};font-weight:500;">${row.lastWeekProfit > 0 ? '+' : ''}${rtFormatInteger(row.lastWeekProfit)}</td><td>$${rtFormatInteger(row.balance)}</td>`;
+                tr.innerHTML = `<td><span class="rt-ea-name">${row.name}</span>${rtRenderStars(row.stars)}${row.stars >= 4 ? ' <span class="rt-recommend">แนะนำ</span>' : ''}</td><td style="color:${profitColor};font-weight:500;">${row.profit > 0 ? '+' : ''}${rtFormatNumber(row.profit)}</td><td style="color:${p7Color};font-weight:500;">${row.profit7day > 0 ? '+' : ''}${rtFormatInteger(row.profit7day)}</td><td style="color:${lwColor};font-weight:500;">${row.lastWeekProfit > 0 ? '+' : ''}${rtFormatInteger(row.lastWeekProfit)}</td><td>$${rtFormatInteger(row.balance)}</td>`;
                 tableBody.appendChild(tr);
             });
             const sumColor = sumProfit > 0 ? '#4cd137' : (sumProfit < 0 ? '#ff3b3b' : '#D4AF37');
