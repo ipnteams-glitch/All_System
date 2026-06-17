@@ -1083,13 +1083,15 @@
                     const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
                     const lastWeekProfit = row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) : 0;
                     const stars = row.c[8] && row.c[8].v !== null ? parseInt(row.c[8].v) : 0;
+                    const label = row.c[9] && row.c[9].v !== null ? String(row.c[9].v).trim() : '';
                     data.push({
                         name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
                         balance: balance,
                         profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0,
                         profit7day: profit7day,
                         lastWeekProfit: lastWeekProfit,
-                        stars: stars
+                        stars: stars,
+                        label: label
                     });
                 }
             }
@@ -1104,7 +1106,7 @@
                 let p7Color = row.profit7day > 0 ? '#4cd137' : (row.profit7day < 0 ? '#ff3b3b' : '#ffffff');
                 let lwColor = row.lastWeekProfit > 0 ? '#4cd137' : (row.lastWeekProfit < 0 ? '#ff3b3b' : '#ffffff');
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td><span class="rt-ea-name">${row.name}</span>${rtRenderStars(row.stars)}${row.stars >= 4 ? ' <span class="rt-recommend">แนะนำ</span>' : (row.stars >= 3 ? ' <span class="rt-recommend">น่าสนใจ</span>' : '')}</td><td style="color:${profitColor};font-weight:500;">${row.profit > 0 ? '+' : ''}${rtFormatNumber(row.profit)}</td><td style="color:${p7Color};font-weight:500;">${row.profit7day > 0 ? '+' : ''}${rtFormatInteger(row.profit7day)}</td><td style="color:${lwColor};font-weight:500;">${row.lastWeekProfit > 0 ? '+' : ''}${rtFormatInteger(row.lastWeekProfit)}</td><td>$${rtFormatInteger(row.balance)}</td>`;
+                tr.innerHTML = `<td><span class="rt-ea-name">${row.name}</span>${rtRenderStars(row.stars)}${row.label ? ` <span class="rt-recommend">${row.label}</span>` : ''}</td><td style="color:${profitColor};font-weight:500;">${row.profit > 0 ? '+' : ''}${rtFormatNumber(row.profit)}</td><td style="color:${p7Color};font-weight:500;">${row.profit7day > 0 ? '+' : ''}${rtFormatInteger(row.profit7day)}</td><td style="color:${lwColor};font-weight:500;">${row.lastWeekProfit > 0 ? '+' : ''}${rtFormatInteger(row.lastWeekProfit)}</td><td>$${rtFormatInteger(row.balance)}</td>`;
                 tableBody.appendChild(tr);
             });
             const sumColor = sumProfit > 0 ? '#4cd137' : (sumProfit < 0 ? '#ff3b3b' : '#D4AF37');
