@@ -537,6 +537,51 @@
             60% { transform: scale(1.08); }
             100% { transform: scale(1); opacity: 1; }
         }
+    
+        /* ── Promo Popup ── */
+        .promo-overlay {
+            display: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85); z-index: 10000;
+            overflow-y: auto; padding: 20px;
+            animation: promoFadeIn 0.4s ease;
+        }
+        .promo-overlay.active { display: flex; align-items: center; justify-content: center; }
+        @keyframes promoFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .promo-modal {
+            background: #1a1a2e; border-radius: 20px;
+            max-width: 500px; width: 100%; padding: 24px;
+            border: 2px solid #FF8C00;
+            box-shadow: 0 0 40px rgba(255,140,0,0.3);
+            animation: promoSlideUp 0.5s ease;
+        }
+        @keyframes promoSlideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .promo-modal h3 {
+            color: #FF8C00; font-size: 1.3rem; font-weight: 600;
+            text-align: center; margin-bottom: 6px;
+        }
+        .promo-modal .promo-sub {
+            color: #999; font-size: 0.8rem; text-align: center; margin-bottom: 16px;
+        }
+        .promo-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 16px; margin-bottom: 8px;
+            background: rgba(255,255,255,0.05); border-radius: 12px;
+            border: 1px solid rgba(255,140,0,0.2);
+            transition: all 0.2s;
+        }
+        .promo-item:hover { background: rgba(255,140,0,0.1); border-color: #FF8C00; }
+        .promo-item-name { color: #ffeb3b; font-weight: 600; font-size: 1rem; }
+        .promo-item-label { color: #FF8C00; font-size: 0.85rem; font-style: italic; }
+        .promo-item-profit { color: #4cd137; font-weight: 600; font-size: 0.9rem; }
+        .promo-close {
+            display: block; margin: 20px auto 0;
+            background: linear-gradient(135deg, #FF8C00, #ff6b00);
+            color: #fff; border: none; padding: 10px 40px;
+            border-radius: 50px; font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .promo-close:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,140,0,0.5); }
     </style>
 </head>
 <body>
@@ -1125,7 +1170,59 @@
     }
     fetchRealTimeData();
     setInterval(fetchRealTimeData, 3000);
+
+    // ── Promo Popup: show labeled items ──
+    async function showPromoPopup() {
+        try {
+            const RT_SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
+            const url = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+            const resp = await fetch(url);
+            const text = await resp.text();
+            const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
+            const rows = json.table.rows;
+            if (!rows) return;
+            const labeled = [];
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
+                    const label = row.c[9] && row.c[9].v !== null ? String(row.c[9].v).trim() : '';
+                    if (label) {
+                        const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
+                        labeled.push({
+                            name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
+                            label: label,
+                            profit7day: profit7day
+                        });
+                    }
+                }
+            }
+            if (labeled.length === 0) return;
+            const promoList = document.getElementById('promoList');
+            if (!promoList) return;
+            let html = '';
+            labeled.forEach(item => {
+                const pf = item.profit7day > 0 ? '+' + item.profit7day.toLocaleString() : item.profit7day.toLocaleString();
+                html += `<div class="promo-item">
+                    <div><span class="promo-item-name">${item.name}</span><br><span class="promo-item-label">${item.label}</span></div>
+                    <span class="promo-item-profit">${pf}</span>
+                </div>`;
+            });
+            promoList.innerHTML = html;
+            document.getElementById('promoOverlay').classList.add('active');
+        } catch(e) { /* silent */ }
+    }
+    showPromoPopup();
 </script>
 
+
+<!-- Promo Popup -->
+<div class="promo-overlay active" id="promoOverlay">
+    <div class="promo-modal">
+        <h3>🔥 แนะนำสำหรับคุณ</h3>
+        <p class="promo-sub">ระบบเทรดที่โดดเด่น — เลือกตามสไตล์ของคุณ</p>
+        <div id="promoList"></div>
+        <button class="promo-close" onclick="document.getElementById('promoOverlay').classList.remove('active')">ดูทั้งหมด</button>
+    </div>
+</div>
 </body>
 </html>
