@@ -1187,24 +1187,31 @@
                 if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
                     const label = row.c[9] && row.c[9].v !== null ? String(row.c[9].v).trim() : '';
                     if (label) {
+                        const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
                         const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
+                        const pct = balance > 0 ? (profit7day / balance * 100) : 0;
                         labeled.push({
                             name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
                             label: label,
-                            profit7day: profit7day
+                            profit7day: profit7day,
+                            pct: pct
                         });
                     }
                 }
             }
             if (labeled.length === 0) return;
+            // Sort by name numerically (Sys_1, Sys_2...)
+            labeled.sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
             const promoList = document.getElementById('promoList');
             if (!promoList) return;
             let html = '';
             labeled.forEach(item => {
                 const pf = item.profit7day > 0 ? '+' + item.profit7day.toLocaleString() : item.profit7day.toLocaleString();
+                const pctStr = item.pct.toFixed(1) + '%';
+                const pctColor = item.pct >= 0 ? '#4cd137' : '#ff3b3b';
                 html += `<div class="promo-item">
                     <div><span class="promo-item-name">${item.name}</span><br><span class="promo-item-label">${item.label}</span></div>
-                    <span class="promo-item-profit">${pf}</span>
+                    <div style="text-align:right"><span class="promo-item-profit">${pf}</span><br><span style="color:${pctColor};font-size:0.8rem;font-weight:500">${pctStr}</span></div>
                 </div>`;
             });
             promoList.innerHTML = html;
