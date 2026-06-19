@@ -500,7 +500,9 @@
             border-bottom: 2px solid #D4AF37;
         }
         .rt-table td { border-bottom: 1px solid #2d333b; font-size: 15px; color: #c9d1d9; }
-        .rt-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.03); transition: 0.2s; }
+        .rt-table tbody tr:nth-child(even) { background: rgba(212, 175, 55, 0.04); }
+        .rt-table tbody tr:nth-child(odd) { background: rgba(0, 0, 0, 0.2); }
+        .rt-table tbody tr:hover { background: rgba(255, 215, 0, 0.08) !important; transition: 0.2s; }
         .rt-table tfoot td {
             background: linear-gradient(90deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
             border-top: 2px solid #D4AF37; font-weight: 600; font-size: 16px;
