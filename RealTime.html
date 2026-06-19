@@ -160,8 +160,8 @@
                     <tr>
                         <th>ชื่อ EA</th>
                         <th>กำไรปัจจุบัน</th>
-                        <th>สัปดาห์นี้</th>
-                        <th>สัปดาห์ที่แล้ว</th>
+                        <th>สัปดาห์นี้ (%)</th>
+                        <th>สัปดาห์ที่แล้ว (%)</th>
                         <th>ทุนเริ่มต้น</th>
                     </tr>
                 </thead>
@@ -252,6 +252,8 @@
                 sumWeek += row.profit7day;
                 sumLastWeek += row.lastWeekProfit;
                 sumBalance += row.balance;
+                let pct7 = row.balance > 0 ? (row.profit7day / row.balance * 100) : 0;
+                let pctLw = row.balance > 0 ? (row.lastWeekProfit / row.balance * 100) : 0;
                 
                 let profitColor = row.profit > 0 ? '#4cd137' : (row.profit < 0 ? '#ff3b3b' : '#ffffff');
                 let p7Color = row.profit7day > 0 ? '#4cd137' : (row.profit7day < 0 ? '#ff3b3b' : '#ffffff');
@@ -263,8 +265,8 @@
                         ${renderStars(row.stars)}
                     </td>
                     <td style="color: ${profitColor}; font-weight: 500;">${row.profit > 0 ? '+' : ''}${formatNumber(row.profit)}</td>
-                    <td style="color: ${p7Color}; font-weight: 500;">${row.profit7day > 0 ? '+' : ''}${formatInteger(row.profit7day)}</td>
-                    <td style="color: ${lwColor}; font-weight: 500;">${row.lastWeekProfit > 0 ? '+' : ''}${formatInteger(row.lastWeekProfit)}</td>
+                    <td style="color: ${p7Color}; font-weight: 500;">${row.profit7day > 0 ? '+' : ''}${pct7.toFixed(1)}%</td>
+                    <td style="color: ${lwColor}; font-weight: 500;">${pctLw > 0 ? '+' : ''}${pctLw.toFixed(1)}%</td>
                     <td>$${formatInteger(row.balance)}</td>
                 `;
                 tableBody.appendChild(tr);
@@ -275,8 +277,8 @@
             const weekColor = sumWeek > 0 ? '#4cd137' : (sumWeek < 0 ? '#ff3b3b' : '#D4AF37');
             const lwColor = sumLastWeek > 0 ? '#4cd137' : (sumLastWeek < 0 ? '#ff3b3b' : '#D4AF37');
             document.getElementById('sumProfit').innerHTML = `<span style="color:${sumColor}">${sumProfit > 0 ? '+' : ''}${formatNumber(sumProfit)}</span>`;
-            document.getElementById('sumWeek').innerHTML = `<span style="color:${weekColor}">${sumWeek > 0 ? '+' : ''}${formatInteger(sumWeek)}</span>`;
-            document.getElementById('sumLastWeek').innerHTML = `<span style="color:${lwColor}">${sumLastWeek > 0 ? '+' : ''}${formatInteger(sumLastWeek)}</span>`;
+            let sumPctWeek = sumBalance > 0 ? (sumWeek / sumBalance * 100) : 0; document.getElementById('sumWeek').innerHTML = `<span style="color:${weekColor}">${sumPctWeek > 0 ? '+' : ''}${sumPctWeek.toFixed(1)}%</span>`;
+            let sumPctLastWeek = sumBalance > 0 ? (sumLastWeek / sumBalance * 100) : 0; document.getElementById('sumLastWeek').innerHTML = `<span style="color:${lwColor}">${sumPctLastWeek > 0 ? '+' : ''}${sumPctLastWeek.toFixed(1)}%</span>`;
             document.getElementById('sumBalance').innerHTML = `$${formatInteger(sumBalance)}`;
             document.getElementById('tableFoot').style.display = '';
         } catch (error) {
