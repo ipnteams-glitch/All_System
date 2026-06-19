@@ -9,20 +9,39 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <style>
+        <style>
+        :root {
+            --bg: #080012;
+            --surface: #11052a;
+            --card: #1a0a35;
+            --card-hover: #220d44;
+            --accent: #a855f7;
+            --accent-glow: #c084fc;
+            --accent-deep: #7c3aed;
+            --magenta: #d946ef;
+            --profit: #22c55e;
+            --loss: #ef4444;
+            --text: #e8e0f0;
+            --text-dim: #a094b8;
+            --border: #2d1f4e;
+            --gold: #a855f7;
+        }
+
         * { box-sizing: border-box; }
         
         body { 
             font-family: 'Kanit', sans-serif; 
-            background-color: #121212; 
+            background: radial-gradient(ellipse at 50% 0%, #1a0a35 0%, #080012 60%);
             margin: 0;
             padding: 10px; 
             overflow-x: hidden;
             width: 100%;
+            color: var(--text);
         }
 
         .container-fluid { padding: 0; margin: 0; width: 100%; }
 
+        /* ── Header ── */
         .mobile-header { padding: 20px 0 15px 0; }
         
         .header-flex {
@@ -42,7 +61,7 @@
             width: auto;  
             margin-right: 12px; 
             border-radius: 8px; 
-            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
         }
 
         .mobile-header h4 { 
@@ -51,18 +70,18 @@
             font-size: 1.5rem; 
             font-weight: 600;
             letter-spacing: 1px; 
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); 
+            text-shadow: 0 0 15px rgba(168, 85, 247, 0.5); 
         }
 
         .new-version-link {
-            color: #ffeb3b !important; 
+            color: #c084fc !important; 
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: 500;
             white-space: nowrap; 
         }
 
-        .new-version-link:hover { text-decoration: underline; color: #fff176 !important; }
+        .new-version-link:hover { text-decoration: underline; color: #e9d5ff !important; }
 
         /* ── ปุ่มสมัครสมาชิก ── */
         .register-section {
@@ -71,7 +90,7 @@
         }
         .register-btn {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #7c3aed 0%, #d946ef 100%);
             color: #fff !important;
             text-decoration: none;
             font-size: 1rem;
@@ -79,24 +98,24 @@
             padding: 12px 32px;
             border-radius: 50px;
             letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 0 25px rgba(124, 58, 237, 0.5), 0 0 50px rgba(168, 85, 247, 0.2);
             transition: all 0.3s ease;
             animation: registerPulse 2.5s ease-in-out infinite;
         }
         .register-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+            box-shadow: 0 0 35px rgba(168, 85, 247, 0.7), 0 0 70px rgba(217, 70, 239, 0.3);
             color: #fff !important;
         }
         @keyframes registerPulse {
-            0%, 100% { box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4); }
-            50% { box-shadow: 0 4px 30px rgba(118, 75, 162, 0.7); }
+            0%, 100% { box-shadow: 0 0 25px rgba(124, 58, 237, 0.4), 0 0 50px rgba(168, 85, 247, 0.15); }
+            50% { box-shadow: 0 0 35px rgba(168, 85, 247, 0.6), 0 0 70px rgba(217, 70, 239, 0.25); }
         }
 
         /* ── ปุ่ม MyPortfolio ── */
         .portfolio-btn {
             display: inline-block;
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
             color: #fff !important;
             text-decoration: none;
             font-size: 1rem;
@@ -104,484 +123,385 @@
             padding: 12px 32px;
             border-radius: 50px;
             letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(17, 153, 142, 0.4);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
             transition: all 0.3s ease;
             cursor: pointer;
             border: none;
         }
         .portfolio-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(56, 239, 125, 0.6);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
             color: #fff !important;
+        }
+
+        /* ── Glass Card Base ── */
+        .glass-card {
+            background: rgba(26, 10, 53, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(168, 85, 247, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(168, 85, 247, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* ── Tables ── */
+        .table-container {
+            background: var(--card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow-x: auto; 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(168, 85, 247, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right; 
+        }
+
+        th, td {
+            padding: 12px 14px;
+            white-space: nowrap;
+        }
+
+        th:first-child, td:first-child {
+            min-width: 130px;
+        }
+
+        th {
+            background: linear-gradient(180deg, rgba(124, 58, 237, 0.2), rgba(124, 58, 237, 0.05));
+            color: #c084fc;
+            font-weight: 600;
+            font-size: 14px;
+            border-bottom: 2px solid rgba(168, 85, 247, 0.4);
+            text-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
+        }
+
+        th:first-child, td:first-child {
+            text-align: left; 
+        }
+
+        td {
+            border-bottom: 1px solid rgba(168, 85, 247, 0.08);
+            font-size: 15px;
+            color: var(--text);
+        }
+
+        /* Zebra striping + neon hover */
+        tbody tr:nth-child(even) {
+            background: rgba(124, 58, 237, 0.04);
+        }
+
+        tbody tr:nth-child(odd) {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        tbody tr:hover {
+            background: rgba(168, 85, 247, 0.1) !important;
+            box-shadow: inset 0 0 30px rgba(168, 85, 247, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        /* Live pulse indicator */
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: livePulse 1.5s ease-in-out infinite;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+        }
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(34, 197, 94, 0.6); }
+            50% { opacity: 0.4; box-shadow: 0 0 15px rgba(34, 197, 94, 0.2); }
+        }
+
+        .ea-name-cell {
+            font-weight: bold;
+            color: #c084fc;
+            font-size: 14px;
+        }
+
+        .text-green { color: var(--profit); font-weight: 500; }
+        .text-red { color: var(--loss); font-weight: 500; }
+        .text-bold { font-weight: 600; }
+
+        /* ── Summary row ── */
+        tfoot td {
+            background: linear-gradient(90deg, rgba(124, 58, 237, 0.2), rgba(124, 58, 237, 0.05));
+            border-top: 2px solid rgba(168, 85, 247, 0.5);
+            font-weight: 600;
+            font-size: 16px;
+            color: #c084fc;
+            padding: 14px 20px;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+        }
+        tfoot td:first-child {
+            text-align: right;
+            letter-spacing: 1px;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 40px;
+            color: #c084fc;
+            font-size: 18px;
+        }
+
+        /* ── Stars ── */
+        .stars {
+            display: inline-block;
+            font-size: 16px;
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+        .star-on { color: #d946ef; text-shadow: 0 0 6px rgba(217, 70, 239, 0.4); }
+        .star-off { color: #3a2f50; }
+
+        /* ── EA Cards ── */
+        .ea-card { 
+            background: linear-gradient(145deg, #1a0a35 0%, #220d44 100%);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+        .ea-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(168, 85, 247, 0.5);
+            box-shadow: 0 8px 30px rgba(124, 58, 237, 0.2), 0 0 20px rgba(168, 85, 247, 0.1);
+        }
+        .ea-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #a855f7, #d946ef, #a855f7, transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .ea-card:hover::before {
+            opacity: 1;
+        }
+        .ea-card h5.fw-bold { 
+            color: #c084fc;
+            font-weight: 600;
+            text-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
+        }
+        .ea-card .text-muted { color: #a094b8 !important; font-weight: 300; font-size: 0.85rem; }
+        .ea-card .text-secondary { color: #e8e0f0 !important; font-weight: 500; font-size: 1rem; line-height: 1.4; }
+
+        /* ── Section Headers ── */
+        .section-title {
+            color: #c084fc;
+            font-weight: 600;
+            text-shadow: 0 0 12px rgba(168, 85, 247, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .section-subtitle {
+            color: #a094b8;
+            font-weight: 300;
+            font-size: 0.9rem;
+        }
+
+        /* ── Badges ── */
+        .style-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: rgba(124, 58, 237, 0.15);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        /* ── Promo Popup ── */
+        .promo-overlay {
+            display: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(8, 0, 18, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+        .promo-overlay.active { display: flex; }
+
+        .promo-modal {
+            background: rgba(26, 10, 53, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 420px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(168, 85, 247, 0.1);
+        }
+        .promo-modal h3 {
+            color: #c084fc;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+        }
+        .promo-sub { color: #a094b8; font-size: 0.85rem; }
+        .promo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            background: rgba(168, 85, 247, 0.06);
+            border: 1px solid rgba(168, 85, 247, 0.1);
+            transition: all 0.2s ease;
+        }
+        .promo-item:hover {
+            background: rgba(168, 85, 247, 0.12);
+            border-color: rgba(168, 85, 247, 0.25);
+        }
+        .promo-item-name { color: #e8e0f0; font-weight: 600; }
+        .promo-item-label { color: #a094b8; font-size: 0.8rem; }
+        .promo-item-profit { color: #22c55e; font-weight: 600; }
+
+        .promo-close {
+            display: block;
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+            transition: all 0.3s ease;
+        }
+        .promo-close:hover {
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
         }
 
         /* ── Portfolio Modal ── */
         .portfolio-overlay {
             display: none;
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85); z-index: 9999;
-            overflow-y: auto; padding: 20px;
+            background: rgba(8, 0, 18, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 999;
         }
-        .portfolio-overlay.active { display: block; }
-        .portfolio-container {
-            max-width: 700px; margin: 30px auto;
-            background: #1a1a2e; border-radius: 20px;
-            padding: 25px; color: #fff;
-        }
-        .portfolio-card-item {
-            background: linear-gradient(145deg, #151515 0%, #2b2b2b 100%);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 15px; padding: 20px; margin-bottom: 12px;
-        }
-        .portfolio-stat {
-            font-size: 0.85rem; color: #aaa; margin-bottom: 2px;
-        }
-        .portfolio-value {
-            font-size: 1.1rem; font-weight: 600;
-        }
-        .portfolio-value.green { color: #38ef7d; }
-        .portfolio-value.red { color: #ff4757; }
+        .portfolio-overlay.active { display: flex; align-items: center; justify-content: center; }
 
-        .status-online { 
-            color: #4cd137; 
-            font-size: 0.9rem; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-weight: 500;
-            margin-top: 15px; 
-        }
-
-        .dot { 
-            height: 10px; width: 10px; 
-            background-color: #4cd137; 
-            border-radius: 50%; 
-            display: inline-block; 
-            margin-right: 8px; 
-            animation: pulse 1.8s infinite; 
-        }
-
-        @keyframes pulse { 
-            0% { opacity: 1; transform: scale(1); } 
-            50% { opacity: 0.4; transform: scale(1.2); } 
-            100% { opacity: 1; transform: scale(1); } 
-        }
-
-.system-diagram-container {
-            text-align: center;
-            margin: 10px 5px 25px 5px; 
-        }
-        
-        /* ------------------------------------- */
-        /* เอฟเฟกต์ภาพลอยได้แบบล้ำสมัย (Modern Floating) */
-        /* ------------------------------------- */
-        .system-diagram-img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 15px; 
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            /* 🟢 สั่งให้เล่นแอนิเมชันชื่อ floatingModern วนลูปไปเรื่อยๆ */
-            animation: floatingModern 4s ease-in-out infinite;
-        }
-
-        /* เมื่อเอาเมาส์ไปชี้ ให้ภาพขยายใหญ่ขึ้นนิดนึงและสว่างขึ้น */
-        .system-diagram-img:hover {
-            transform: scale(1.03) translateY(-10px); 
-            box-shadow: 0 15px 40px rgba(0, 191, 255, 0.7); 
-            /* หยุดแอนิเมชันชั่วคราวตอนเอาเมาส์ชี้ */
-            animation-play-state: paused; 
-        }
-
-        /* 🟢 โครงสร้างการเคลื่อนไหว: ลอยขึ้นลง + แสงกระพริบช้าๆ */
-        @keyframes floatingModern {
-            0% {
-                transform: translateY(0px);
-                box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2);
-            }
-            50% {
-                transform: translateY(-12px); /* ลอยขึ้น 12 พิกเซล */
-                box-shadow: 0 15px 35px rgba(0, 191, 255, 0.5); /* แสงสีฟ้าสว่างขึ้น */
-            }
-            100% {
-                transform: translateY(0px);
-                box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2);
-            }
-        }
-
-        .info-box {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 18px; 
-            margin: 0 5px 20px 5px;
-            color: #ffffff; 
-            font-size: 1rem; 
-            line-height: 1.6;
-            font-weight: 300;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        
-        .info-box strong {
-            color: #ffeb3b; 
-            font-weight: 500;
-        }
-
-        .hero-section {
-            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .portfolio-modal {
+            background: rgba(26, 10, 53, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(168, 85, 247, 0.3);
             border-radius: 20px;
-            padding: 40px 20px;
-            margin: 10px 5px 20px 5px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
+            padding: 24px;
+            max-width: 500px;
+            width: 92%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(168, 85, 247, 0.1);
         }
 
-        .hero-section::before {
+        .portfolio-card-item {
+            background: linear-gradient(145deg, #1a0a35 0%, #220d44 100%);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+        .portfolio-card-item:hover {
+            border-color: rgba(168, 85, 247, 0.4);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.1);
+        }
+
+        /* ── Recommend badge ── */
+        .rt-recommend { 
+            color: #d946ef; 
+            font-size: 12px; 
+            font-weight: 300; 
+            font-style: italic; 
+            margin-left: 6px; 
+            text-shadow: 0 0 8px rgba(217, 70, 239, 0.5); 
+        }
+
+        /* ── Back button ── */
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            color: #a094b8;
+            text-decoration: none;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            padding: 10px 24px;
+            border-radius: 10px;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+        .back-btn:hover {
+            border-color: #c084fc;
+            color: #c084fc;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(168, 85, 247, 0.5); }
+
+        /* ── Real-Time section specific ── */
+        .rt-table-container {
+            background: rgba(26, 10, 53, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            overflow-x: auto;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(168, 85, 247, 0.08);
+        }
+
+        /* Glow ring for live sections */
+        .glow-ring {
+            position: relative;
+        }
+        .glow-ring::after {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(76, 209, 55, 0.1) 0%, transparent 60%);
-            z-index: 0;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(168,85,247,0.4), transparent, rgba(217,70,239,0.4), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
             pointer-events: none;
         }
 
-        .hero-section > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            background: linear-gradient(to right, #ffeb3b, #f39c12);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
-        }
-
-        .hero-subtitle {
-            color: #ffffff;
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-
-        .highlight-text {
-            color: #4cd137;
-            text-shadow: 0 0 10px rgba(76, 209, 55, 0.4);
-        }
-
-        .hero-desc {
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 300;
-            font-size: 1rem;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto 25px auto;
-        }
-
-        .feature-tag {
-            display: inline-block;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 6px 15px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            color: #fff;
-            margin: 5px;
-            backdrop-filter: blur(5px);
-        }
-
-        .instruction-wrapper {
-            margin: 30px 5px 20px 5px;
-            padding: 2px; 
-            background: linear-gradient(135deg, #FFD700, #FDB931, #b8860b, #FFD700); 
-            background-size: 200% 200%;
-            animation: goldShine 3s ease infinite; 
-            border-radius: 16px;
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.25); 
-            display: none; 
-        }
-
-        @keyframes goldShine {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .instruction-content {
-            background-color: #1a1a1a; 
-            border-radius: 14px; 
-            padding: 15px 20px;
-            text-align: center;
-        }
-
-        .instruction-text {
-            color: #ff3b3b; 
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 0;
-            letter-spacing: 0.5px;
-            text-shadow: 0 0 10px rgba(255, 59, 59, 0.4); 
-        }
-
-/* ------------------------------------- */
-        /* กล่องการ์ดหลัก (อัปเดตให้รองรับภาพพื้นหลัง) */
-        /* ------------------------------------- */
-        .ea-card { 
-            background: linear-gradient(145deg, #151515 0%, #2b2b2b 100%); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            border-radius: 25px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
-            overflow: hidden; 
-            width: 100%;
-            height: 100%; 
-            color: #ffffff !important; 
-            transition: transform 0.3s ease, box-shadow 0.3s ease; 
-            position: relative; /* 🟢 บังคับให้ภาพพื้นหลังอยู่แค่ในกรอบนี้ */
-            z-index: 1; /* 🟢 ดันข้อความทั้งหมดให้ลอยอยู่ด้านหน้า */
-        }
-
-        .ea-card:hover {
-            transform: translateY(-5px); 
-            box-shadow: 0 12px 25px rgba(255, 255, 255, 0.15); 
-        }
-
-        /* 🟢 โค้ดสำหรับใส่ภาพพื้นหลังและปรับความจาง */
-        .ea-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('block.png'); /* อ้างอิงชื่อไฟล์ภาพของคุณ */
-            background-size: cover; /* จัดภาพให้เต็มกล่อง */
-            background-position: center; /* จัดภาพให้อยู่กึ่งกลาง */
-            opacity: 0.15; /* 🟢 ปรับความจางตรงนี้ (0.15 - 0.30) */
-            z-index: -1; /* 🟢 ซ่อนภาพไว้หลังตัวหนังสือ */
-        }
-
-        .balance-box { 
-            background-color: rgba(255,255,255,0.05); 
-            border-radius: 20px; 
-            padding: 18px; 
-            margin-top: 15px; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px; 
-        }
-
-        .ea-card h5.fw-bold { 
-            color: #ffeb3b !important; 
-            font-size: 1.35rem; 
-            letter-spacing: 0.5px; 
-            margin-bottom: 12px !important; 
-        }
-        .ea-card .text-muted { color: rgba(255,255,255,0.6) !important; font-weight: 300; font-size: 0.85rem; }
-        .ea-card .text-secondary { color: #ffffff !important; font-weight: 500; font-size: 1rem; line-height: 1.4; }
-        
-        .badge.bg-primary { 
-            background-color: rgba(255,255,255,0.15) !important; 
-            color: #ffffff;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.2);
-            font-weight: 400; 
-            font-size: 0.75rem; 
-            padding: 6px 12px;
-        }
-
-        .style-badge {
-            display: inline-block;
-            color: #ffffff !important;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            white-space: normal; 
-            max-width: 100%;
-        }
-
-        .profit-center-box {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #3399ff; /* 🔵 เปลี่ยนเป็นสีน้ำเงินสว่าง เพื่อให้ดูโดดเด่นบนพื้นดำ */
-        }
-
-        .social-btn {
-            color: #ffffff !important;
-            border: none;
-            border-radius: 50px; 
-            padding: 14px 20px;
-            font-size: 1.1rem;
-            font-weight: 500;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            margin-bottom: 15px;
-        }
-
-        .social-btn:hover {
-            transform: translateY(-2px);
-            color: #ffffff;
-        }
-
-        .line-btn { background-color: #06C755; box-shadow: 0 6px 15px rgba(6, 199, 85, 0.3); margin-top: 30px; }
-        .line-btn:hover { background-color: #05b34c; }
-        .fb-btn { background-color: #1877F2; box-shadow: 0 6px 15px rgba(24, 119, 242, 0.3); }
-        .fb-btn:hover { background-color: #166fe5; }
-        .yt-btn { background-color: #FF0000; box-shadow: 0 6px 15px rgba(255, 0, 0, 0.3); }
-        .yt-btn:hover { background-color: #e60000; }
-        .tt-btn { background-color: #111111; box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1); margin-bottom: 40px;}
-        .tt-btn:hover { background-color: #222222; }
-
-        .social-icon {
-            width: 28px;
-            height: 28px;
-            margin-right: 10px;
-            fill: #ffffff;
-        }
-
-        #loader { min-height: 200px; display: flex; align-items: center; justify-content: center; }
-        .spinner-border { color: #ffffff !important; }
-
-/* ------------------------------------- */
-        /* กรอบวิดีโอ YouTube แบบ Responsive */
-        /* ------------------------------------- */
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* สัดส่วน 16:9 */
-            height: 0;
-            overflow: hidden;
-            max-width: 100%;
-            border-radius: 15px;
-            margin: 10px 5px 25px 5px;
-            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-        
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-        
-
-        /* ── RealTime Performance Table ── */
-        .rt-table-container {
-            background: #1c1f26;
-            border-radius: 12px;
-            border: 1px solid #2d333b;
-            overflow-x: auto;
-            margin: 10px 5px 25px 5px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        .rt-table { width: 100%; border-collapse: collapse; text-align: right; }
-        .rt-table th, .rt-table td { padding: 12px 14px; white-space: nowrap; }
-        .rt-table th:first-child, .rt-table td:first-child { min-width: 130px; text-align: left; }
-        .rt-ea-name { font-weight: bold; color: #ffeb3b; font-size: 14px; }
-        .rt-table th {
-            background-color: rgba(212, 175, 55, 0.1);
-            color: #D4AF37; font-weight: 500; font-size: 15px;
-            border-bottom: 2px solid #D4AF37;
-        }
-        .rt-table td { border-bottom: 1px solid #2d333b; font-size: 15px; color: #c9d1d9; }
-        .rt-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.03); transition: 0.2s; }
-        .rt-table tfoot td {
-            background: linear-gradient(90deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
-            border-top: 2px solid #D4AF37; font-weight: 600; font-size: 16px;
-            color: #D4AF37; padding: 14px 20px;
-        }
-        .rt-table tfoot td:first-child { text-align: right; letter-spacing: 1px; }
-        .rt-loader { text-align: center; padding: 40px; color: #D4AF37; font-size: 18px; }
-        .rt-stars { display: inline-block; font-size: 16px; letter-spacing: 2px; margin-top: 2px; }
-        .rt-star-on { color: #D4AF37; } .rt-star-off { color: #3a3f4b; }
-        .rt-recommend { color: #FF8C00; font-size: 12px; font-weight: 300; font-style: italic; margin-left: 6px; text-shadow: 0 0 6px rgba(255,140,0,0.4); }
+        /* ── Mobile Responsive ── */
         @media (max-width: 600px) {
-            .rt-table th, .rt-table td { padding: 8px 6px; font-size: 11px; }
-            .rt-table th { font-size: 10px; }
-            .rt-table th:first-child, .rt-table td:first-child { min-width: 80px; }
-            .rt-ea-name { font-size: 10px; } .rt-stars { font-size: 11px; letter-spacing: 0; }
-            .rt-table tfoot td { font-size: 12px; padding: 8px 6px; }
+            th, td { padding: 8px 6px; font-size: 11px; }
+            th { font-size: 10px; }
+            .mobile-header h4 { font-size: 1.2rem; }
+            th:first-child, td:first-child { min-width: 80px; }
+            .ea-name-cell { font-size: 10px; }
+            .stars { font-size: 11px; letter-spacing: 0; }
+            tfoot td { font-size: 12px; padding: 10px 8px; }
+            .register-btn, .portfolio-btn { padding: 10px 20px; font-size: 0.9rem; }
+            .promo-modal, .portfolio-modal { padding: 16px; }
         }
-        
-        /* —— Performance Donut —— */
-        .donut-wrap {
-            width: 64px;
-            height: 64px;
-            flex-shrink: 0;
-            animation: donut-pop 0.6s ease-out forwards;
-        }
-        .donut-svg {
-            overflow: visible;
-        }
-        .donut-arc {
-            transition: stroke-dasharray 0.8s ease;
-        }
-        @keyframes donut-pop {
-            0% { transform: scale(0.3); opacity: 0; }
-            60% { transform: scale(1.08); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-    
-        /* ── Promo Popup ── */
-        .promo-overlay {
-            display: none;
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85); z-index: 10000;
-            overflow-y: auto; padding: 20px;
-            animation: promoFadeIn 0.4s ease;
-        }
-        .promo-overlay.active { display: flex; align-items: center; justify-content: center; }
-        @keyframes promoFadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .promo-modal {
-            background: #1a1a2e; border-radius: 20px;
-            max-width: 500px; width: 100%; padding: 24px;
-            border: 2px solid #FF8C00;
-            box-shadow: 0 0 40px rgba(255,140,0,0.3);
-            animation: promoSlideUp 0.5s ease;
-        }
-        @keyframes promoSlideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .promo-modal h3 {
-            color: #FF8C00; font-size: 1.3rem; font-weight: 600;
-            text-align: center; margin-bottom: 6px;
-        }
-        .promo-modal .promo-sub {
-            color: #999; font-size: 0.8rem; text-align: center; margin-bottom: 16px;
-        }
-        .promo-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 16px; margin-bottom: 8px;
-            background: rgba(255,255,255,0.05); border-radius: 12px;
-            border: 1px solid rgba(255,140,0,0.2);
-            transition: all 0.2s;
-        }
-        .promo-item:hover { background: rgba(255,140,0,0.1); border-color: #FF8C00; }
-        .promo-item-name { color: #ffeb3b; font-weight: 600; font-size: 1rem; }
-        .promo-item-label { color: #FF8C00; font-size: 0.85rem; font-style: italic; }
-        .promo-item-profit { color: #4cd137; font-weight: 600; font-size: 0.9rem; }
-        .promo-close {
-            display: block; margin: 20px auto 0;
-            background: linear-gradient(135deg, #FF8C00, #ff6b00);
-            color: #fff; border: none; padding: 10px 40px;
-            border-radius: 50px; font-size: 0.95rem; font-weight: 600;
-            cursor: pointer; transition: all 0.3s;
-        }
-        .promo-close:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,140,0,0.5); }
     </style>
 </head>
 <body>
