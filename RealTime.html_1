@@ -15,6 +15,7 @@
             --red: #ef4444;
             --border: #2d333b;
         }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
@@ -22,27 +23,32 @@
             margin: 0;
             padding: 20px 10px; 
         }
+
         .container {
             width: 100%;
             max-width: 900px;
             margin: 0 auto; 
         }
+
         .header-box {
             text-align: center;
             margin-bottom: 30px;
             margin-top: 20px;
         }
+
         .header-box h1 {
             color: var(--gold);
             font-weight: 600;
             margin-bottom: 5px;
             letter-spacing: 1px;
         }
+
         .header-box p {
             color: #8b949e;
             margin-top: 0;
             font-size: 14px;
         }
+
         .table-container {
             background: var(--card-bg);
             border-radius: 12px;
@@ -50,23 +56,18 @@
             overflow-x: auto; 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: right; 
         }
+
         th, td {
-            padding: 12px 14px;
+            padding: 16px 20px;
             white-space: nowrap;
         }
-        th:first-child, td:first-child {
-            min-width: 130px;
-        }
-        .ea-name-cell {
-            font-weight: bold;
-            color: #ffeb3b;
-            font-size: 14px;
-        }
+
         th {
             background-color: rgba(212, 175, 55, 0.1);
             color: var(--gold);
@@ -74,27 +75,33 @@
             font-size: 15px;
             border-bottom: 2px solid var(--gold);
         }
+
         th:first-child, td:first-child {
             text-align: left; 
         }
+
         td {
             border-bottom: 1px solid var(--border);
             font-size: 15px;
             color: #c9d1d9;
         }
+
         tbody tr:hover {
             background-color: rgba(255, 255, 255, 0.03);
             transition: 0.2s;
         }
+
         .text-green { color: var(--green); font-weight: 500; }
         .text-red { color: var(--red); font-weight: 500; }
         .text-bold { font-weight: 600; }
+
         .loader {
             text-align: center;
             padding: 40px;
             color: var(--gold);
             font-size: 18px;
         }
+
         .back-btn {
             display: inline-block;
             margin-top: 30px;
@@ -105,102 +112,67 @@
             border-radius: 6px;
             transition: 0.3s;
         }
+        
         .back-btn:hover {
             border-color: var(--gold);
             color: var(--gold);
         }
-        /* ── Summary Row ── */
-        tfoot td {
-            background: linear-gradient(90deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
-            border-top: 2px solid var(--gold);
-            font-weight: 600;
-            font-size: 16px;
-            color: var(--gold);
-            padding: 14px 20px;
-        }
-        tfoot td:first-child {
-            text-align: right;
-            letter-spacing: 1px;
-        }
-        /* ── Star Ratings ── */
-        .stars {
-            display: inline-block;
-            font-size: 16px;
-            letter-spacing: 2px;
-            margin-top: 2px;
-        }
-        .star-on { color: #D4AF37; }
-        .star-off { color: #3a3f4b; }
+
         @media (max-width: 600px) {
-            th, td { padding: 8px 6px; font-size: 11px; }
-            th { font-size: 10px; }
-            .header-box h1 { font-size: 20px; }
-            th:first-child, td:first-child { min-width: 80px; }
-            .ea-name-cell { font-size: 10px; }
-            .stars { font-size: 11px; letter-spacing: 0; }
-            tfoot td { font-size: 12px; padding: 8px 6px; }
+            th, td {
+                padding: 12px 10px; 
+                font-size: 13px; 
+            }
+            th {
+                font-size: 12px;
+            }
+            .header-box h1 {
+                font-size: 22px;
+            }
         }
     </style>
 </head>
 <body>
+
     <div class="container">
         <div class="header-box">
             <h1>🏆 Live Trading Performance</h1>
             <p>อัปเดตข้อมูลพอร์ตการลงทุนแบบ Real-Time</p>
         </div>
+
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
                         <th>ชื่อ EA</th>
                         <th>กำไรปัจจุบัน</th>
-                        <th>สัปดาห์นี้</th>
-                        <th>สัปดาห์ที่แล้ว</th>
+                        <th>กำไรสัปดาห์ จ-ศ</th>
                         <th>ทุนเริ่มต้น</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
                     <tr>
-                        <td colspan="5"><div class="loader">⏳ กำลังโหลดข้อมูล...</div></td>
+                        <td colspan="4">
+                            <div class="loader">⏳ กำลังโหลดข้อมูล...</div>
+                        </td>
                     </tr>
                 </tbody>
-                <tfoot id="tableFoot" style="display:none;">
-                    <tr>
-                        <td>📊 ผลรวม</td>
-                        <td id="sumProfit">-</td>
-                        <td id="sumWeek">-</td>
-                        <td id="sumLastWeek">-</td>
-                        <td id="sumBalance">-</td>
-                    </tr>
-                </tfoot>
             </table>
         </div>
+
         <div style="text-align: center;">
             <a href="index.html" class="back-btn">← กลับหน้าหลัก</a>
         </div>
     </div> 
-<script>
+ <script>
+    // 🔴 1. รหัสชีตสำหรับหน้า RealTime.html โดยเฉพาะ
     const SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
     const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
 
+    // ฟังก์ชันจัดฟอร์แมตตัวเลขให้มีคอมม่าและทศนิยม 2 ตำแหน่ง
     function formatNumber(num) {
         if (isNaN(num)) return "0.00";
         return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
-    function formatInteger(num) {
-        if (isNaN(num)) return "0";
-        return Math.round(num).toLocaleString('en-US', { maximumFractionDigits: 0 });
-    }
-
-    // ⭐ สร้าง HTML ดาว
-    function renderStars(count) {
-        let html = '<div class="stars">';
-        for (let i = 0; i < 5; i++) {
-            html += i < count ? '<span class="star-on">★</span>' : '<span class="star-off">★</span>';
-        }
-        html += '</div>';
-        return html;
     }
 
     async function fetchRealTimeData() {
@@ -208,81 +180,75 @@
             const cacheBuster = "&t=" + new Date().getTime();
             const response = await fetch(GVIZ_URL + cacheBuster);
             const text = await response.text();
+            
+            // แกะเอาเฉพาะส่วนที่เป็น JSON ออกมา
             const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
             const jsonData = JSON.parse(jsonString);
+            
+            // เช็คว่าใน HTML มี <tbody id="tableBody"> หรือไม่
             const tableBody = document.getElementById('tableBody') || document.querySelector('tbody');
             if (!tableBody) return;
+            
             tableBody.innerHTML = ''; 
+
             const rows = jsonData.table.rows;
+
+            // ถ้าน้อยกว่าหรือเท่ากับ 1 แปลว่ามีแค่หัวตาราง หรือไม่มีข้อมูลเลย
             if (!rows || rows.length <= 1) { 
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;">กำลังรอรับข้อมูลจากระบบ...</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">กำลังรอรับข้อมูลจากระบบ...</td></tr>';
                 return;
             }
+
             let data = [];
+            
+            // 🎯 เริ่มลูปที่ 0 (เพื่อไม่ให้พลาด Sys_11)
             for (let i = 0; i < rows.length; i++) {
                 let row = rows[i];
+                
+                // เช็คว่ามีข้อมูล และต้องไม่ใช่บรรทัดหัวตาราง (คำว่า "acc")
                 if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") { 
-                    const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
-                    const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
-                    const lastWeekProfit = row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) : 0;
-                    // ⭐ ดึงค่าดาวโดยตรงจากคอลัมน์ I (index 8) — คำนวณฝั่ง server แล้ว
-                    const stars = row.c[8] && row.c[8].v !== null ? parseInt(row.c[8].v) : 0;
                     data.push({
-                        name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
-                        balance: balance,
-                        profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0,
-                        profit7day: profit7day,
-                        lastWeekProfit: lastWeekProfit,
-                        stars: stars
+                        name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",               // คอลัมน์ B (ชื่อ Sys)
+                        balance: row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0,  // คอลัมน์ C (Balance)
+                        profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0,   // คอลัมน์ E (Profit)
+                        profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0 // คอลัมน์ G (Profit 7 Day)
                     });
                 }
             }
-            data.sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
-            
-            let sumProfit = 0, sumWeek = 0, sumLastWeek = 0, sumBalance = 0;
-            
+
+            // จัดเรียงชื่อ EA (Sys_1, Sys_2... Sys_10) 
+            data.sort((a, b) => {
+                return String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' });
+            });
+
+            // 🎯 3. นำข้อมูลมาสร้างเป็นตาราง
             data.forEach(row => {
-                sumProfit += row.profit;
-                sumWeek += row.profit7day;
-                sumLastWeek += row.lastWeekProfit;
-                sumBalance += row.balance;
-                
+                // กำหนดสี: บวกสีเขียว ลบสีแดง ศูนย์สีขาว
                 let profitColor = row.profit > 0 ? '#4cd137' : (row.profit < 0 ? '#ff3b3b' : '#ffffff');
                 let p7Color = row.profit7day > 0 ? '#4cd137' : (row.profit7day < 0 ? '#ff3b3b' : '#ffffff');
-                let lwColor = row.lastWeekProfit > 0 ? '#4cd137' : (row.lastWeekProfit < 0 ? '#ff3b3b' : '#ffffff');
+                
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>
-                        <span class="ea-name-cell">${row.name}</span>
-                        ${renderStars(row.stars)}
-                    </td>
+                    <td style="font-weight: bold; color: #ffeb3b;">${row.name}</td>
                     <td style="color: ${profitColor}; font-weight: 500;">${row.profit > 0 ? '+' : ''}${formatNumber(row.profit)}</td>
-                    <td style="color: ${p7Color}; font-weight: 500;">${row.profit7day > 0 ? '+' : ''}${formatInteger(row.profit7day)}</td>
-                    <td style="color: ${lwColor}; font-weight: 500;">${row.lastWeekProfit > 0 ? '+' : ''}${formatInteger(row.lastWeekProfit)}</td>
-                    <td>$${formatInteger(row.balance)}</td>
+                    <td style="color: ${p7Color}; font-weight: 500;">${row.profit7day > 0 ? '+' : ''}${formatNumber(row.profit7day)}</td>
+                    <td>$${formatNumber(row.balance)}</td>
                 `;
                 tableBody.appendChild(tr);
             });
-            
-            // Summary row
-            const sumColor = sumProfit > 0 ? '#4cd137' : (sumProfit < 0 ? '#ff3b3b' : '#D4AF37');
-            const weekColor = sumWeek > 0 ? '#4cd137' : (sumWeek < 0 ? '#ff3b3b' : '#D4AF37');
-            const lwColor = sumLastWeek > 0 ? '#4cd137' : (sumLastWeek < 0 ? '#ff3b3b' : '#D4AF37');
-            document.getElementById('sumProfit').innerHTML = `<span style="color:${sumColor}">${sumProfit > 0 ? '+' : ''}${formatNumber(sumProfit)}</span>`;
-            document.getElementById('sumWeek').innerHTML = `<span style="color:${weekColor}">${sumWeek > 0 ? '+' : ''}${formatInteger(sumWeek)}</span>`;
-            document.getElementById('sumLastWeek').innerHTML = `<span style="color:${lwColor}">${sumLastWeek > 0 ? '+' : ''}${formatInteger(sumLastWeek)}</span>`;
-            document.getElementById('sumBalance').innerHTML = `$${formatInteger(sumBalance)}`;
-            document.getElementById('tableFoot').style.display = '';
+
         } catch (error) {
             console.error("Fetch Error:", error);
             const tableBody = document.getElementById('tableBody') || document.querySelector('tbody');
             if(tableBody) {
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ เกิดข้อผิดพลาด หรือไฟล์ Google Sheet ยังไม่เปิดแชร์</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ เกิดข้อผิดพลาด หรือไฟล์ Google Sheet ยังไม่เปิดแชร์ (Anyone with the link)</td></tr>';
             }
         }
     }
 
+    // โหลดข้อมูลทันทีที่เปิดหน้าเว็บ
     fetchRealTimeData();
+    // สั่งให้อัปเดตข้อมูลอัตโนมัติทุกๆ 3 วินาที
     setInterval(fetchRealTimeData, 3000); 
 </script>    
 </body>

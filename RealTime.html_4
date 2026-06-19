@@ -56,16 +56,8 @@
             text-align: right; 
         }
         th, td {
-            padding: 12px 14px;
+            padding: 16px 20px;
             white-space: nowrap;
-        }
-        th:first-child, td:first-child {
-            min-width: 130px;
-        }
-        .ea-name-cell {
-            font-weight: bold;
-            color: #ffeb3b;
-            font-size: 14px;
         }
         th {
             background-color: rgba(212, 175, 55, 0.1);
@@ -131,14 +123,14 @@
         }
         .star-on { color: #D4AF37; }
         .star-off { color: #3a3f4b; }
+        .ea-name-cell {
+            font-weight: bold;
+            color: #ffeb3b;
+        }
         @media (max-width: 600px) {
-            th, td { padding: 8px 6px; font-size: 11px; }
-            th { font-size: 10px; }
-            .header-box h1 { font-size: 20px; }
-            th:first-child, td:first-child { min-width: 80px; }
-            .ea-name-cell { font-size: 10px; }
-            .stars { font-size: 11px; letter-spacing: 0; }
-            tfoot td { font-size: 12px; padding: 8px 6px; }
+            th, td { padding: 12px 10px; font-size: 13px; }
+            th { font-size: 12px; }
+            .header-box h1 { font-size: 22px; }
         }
     </style>
 </head>
@@ -154,14 +146,13 @@
                     <tr>
                         <th>ชื่อ EA</th>
                         <th>กำไรปัจจุบัน</th>
-                        <th>สัปดาห์นี้</th>
-                        <th>สัปดาห์ที่แล้ว</th>
+                        <th>กำไรสัปดาห์ จ-ศ</th>
                         <th>ทุนเริ่มต้น</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
                     <tr>
-                        <td colspan="5"><div class="loader">⏳ กำลังโหลดข้อมูล...</div></td>
+                        <td colspan="4"><div class="loader">⏳ กำลังโหลดข้อมูล...</div></td>
                     </tr>
                 </tbody>
                 <tfoot id="tableFoot" style="display:none;">
@@ -169,7 +160,6 @@
                         <td>📊 ผลรวม</td>
                         <td id="sumProfit">-</td>
                         <td id="sumWeek">-</td>
-                        <td id="sumLastWeek">-</td>
                         <td id="sumBalance">-</td>
                     </tr>
                 </tfoot>
@@ -188,9 +178,15 @@
         return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    function formatInteger(num) {
-        if (isNaN(num)) return "0";
-        return Math.round(num).toLocaleString('en-US', { maximumFractionDigits: 0 });
+    // ⭐ คำนวณดาว (0-5) จาก % กำไรเทียบทุน
+    function getStars(profit7day, balance) {
+        if (balance <= 0 || profit7day <= 0) return 0;
+        const pct = (profit7day / balance) * 100;
+        if (pct <= 10) return 1;
+        if (pct <= 20) return 2;
+        if (pct <= 30) return 3;
+        if (pct <= 50) return 4;
+        return 5;
     }
 
     // ⭐ สร้าง HTML ดาว
@@ -215,7 +211,7 @@
             tableBody.innerHTML = ''; 
             const rows = jsonData.table.rows;
             if (!rows || rows.length <= 1) { 
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;">กำลังรอรับข้อมูลจากระบบ...</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">กำลังรอรับข้อมูลจากระบบ...</td></tr>';
                 return;
             }
             let data = [];
@@ -225,31 +221,26 @@
                     const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
                     const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
                     const lastWeekProfit = row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) : 0;
-                    // ⭐ ดึงค่าดาวโดยตรงจากคอลัมน์ I (index 8) — คำนวณฝั่ง server แล้ว
-                    const stars = row.c[8] && row.c[8].v !== null ? parseInt(row.c[8].v) : 0;
                     data.push({
                         name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
                         balance: balance,
                         profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0,
                         profit7day: profit7day,
-                        lastWeekProfit: lastWeekProfit,
-                        stars: stars
+                        stars: getStars(lastWeekProfit, balance)
                     });
                 }
             }
             data.sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
             
-            let sumProfit = 0, sumWeek = 0, sumLastWeek = 0, sumBalance = 0;
+            let sumProfit = 0, sumWeek = 0, sumBalance = 0;
             
             data.forEach(row => {
                 sumProfit += row.profit;
                 sumWeek += row.profit7day;
-                sumLastWeek += row.lastWeekProfit;
                 sumBalance += row.balance;
                 
                 let profitColor = row.profit > 0 ? '#4cd137' : (row.profit < 0 ? '#ff3b3b' : '#ffffff');
                 let p7Color = row.profit7day > 0 ? '#4cd137' : (row.profit7day < 0 ? '#ff3b3b' : '#ffffff');
-                let lwColor = row.lastWeekProfit > 0 ? '#4cd137' : (row.lastWeekProfit < 0 ? '#ff3b3b' : '#ffffff');
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>
@@ -257,9 +248,8 @@
                         ${renderStars(row.stars)}
                     </td>
                     <td style="color: ${profitColor}; font-weight: 500;">${row.profit > 0 ? '+' : ''}${formatNumber(row.profit)}</td>
-                    <td style="color: ${p7Color}; font-weight: 500;">${row.profit7day > 0 ? '+' : ''}${formatInteger(row.profit7day)}</td>
-                    <td style="color: ${lwColor}; font-weight: 500;">${row.lastWeekProfit > 0 ? '+' : ''}${formatInteger(row.lastWeekProfit)}</td>
-                    <td>$${formatInteger(row.balance)}</td>
+                    <td style="color: ${p7Color}; font-weight: 500;">${row.profit7day > 0 ? '+' : ''}${formatNumber(row.profit7day)}</td>
+                    <td>$${formatNumber(row.balance)}</td>
                 `;
                 tableBody.appendChild(tr);
             });
@@ -267,17 +257,15 @@
             // Summary row
             const sumColor = sumProfit > 0 ? '#4cd137' : (sumProfit < 0 ? '#ff3b3b' : '#D4AF37');
             const weekColor = sumWeek > 0 ? '#4cd137' : (sumWeek < 0 ? '#ff3b3b' : '#D4AF37');
-            const lwColor = sumLastWeek > 0 ? '#4cd137' : (sumLastWeek < 0 ? '#ff3b3b' : '#D4AF37');
             document.getElementById('sumProfit').innerHTML = `<span style="color:${sumColor}">${sumProfit > 0 ? '+' : ''}${formatNumber(sumProfit)}</span>`;
-            document.getElementById('sumWeek').innerHTML = `<span style="color:${weekColor}">${sumWeek > 0 ? '+' : ''}${formatInteger(sumWeek)}</span>`;
-            document.getElementById('sumLastWeek').innerHTML = `<span style="color:${lwColor}">${sumLastWeek > 0 ? '+' : ''}${formatInteger(sumLastWeek)}</span>`;
-            document.getElementById('sumBalance').innerHTML = `$${formatInteger(sumBalance)}`;
+            document.getElementById('sumWeek').innerHTML = `<span style="color:${weekColor}">${sumWeek > 0 ? '+' : ''}${formatNumber(sumWeek)}</span>`;
+            document.getElementById('sumBalance').innerHTML = `$${formatNumber(sumBalance)}`;
             document.getElementById('tableFoot').style.display = '';
         } catch (error) {
             console.error("Fetch Error:", error);
             const tableBody = document.getElementById('tableBody') || document.querySelector('tbody');
             if(tableBody) {
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ เกิดข้อผิดพลาด หรือไฟล์ Google Sheet ยังไม่เปิดแชร์</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ เกิดข้อผิดพลาด หรือไฟล์ Google Sheet ยังไม่เปิดแชร์</td></tr>';
             }
         }
     }
