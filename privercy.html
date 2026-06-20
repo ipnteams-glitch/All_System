@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>นโยบายความเป็นส่วนตัว — HARVEST FARM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #121212;
+            --card: #1c1f26;
+            --text: #e2e8f0;
+            --muted: #8b949e;
+            --gold: #D4AF37;
+            --border: #2d333b;
+            --accent: #fb923c;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+        }
+        .header {
+            text-align: center;
+            padding: 30px 0 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: var(--accent);
+            font-weight: 500;
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+        }
+        h3 {
+            color: var(--text);
+            font-weight: 500;
+            font-size: 1rem;
+            margin: 16px 0 8px;
+        }
+        p, li {
+            color: var(--text);
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+        ul {
+            list-style: disc;
+            padding-left: 24px;
+            margin: 8px 0;
+        }
+        ul li { margin-bottom: 6px; }
+        a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        a:hover { text-decoration: underline; }
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--muted);
+            border: 1px solid var(--muted);
+            padding: 8px 20px;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+        .back-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            text-decoration: none;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>นโยบายความเป็นส่วนตัว</h1>
+            <p>Privacy Policy — HARVEST FARM</p>
+        </div>
+
+        <div class="card">
+            <h2>1. ข้อมูลที่เราเก็บรวบรวม</h2>
+            <p>เราเก็บข้อมูลเท่าที่จำเป็นเพื่อให้บริการระบบ EA และจัดการพอร์ตการเทรดของคุณ:</p>
+            <ul>
+                <li><strong>ข้อมูลบัญชี:</strong> อีเมล Gmail, ชื่อ, รูปโปรไฟล์ (จากการล็อคอินด้วย Google)</li>
+                <li><strong>ข้อมูลการเทรด:</strong> หมายเลขบัญชี MT5, ชื่อโบรกเกอร์, ยอด Balance, กำไร/ขาดทุน</li>
+                <li><strong>ข้อมูลการใช้งาน:</strong> แพคเกจสมาชิก, วันหมดอายุ, จำนวนพอร์ตที่ใช้งาน</li>
+                <li><strong>ข้อมูลการชำระเงิน:</strong> หมายเลขธุรกรรม, จำนวนเงิน, สถานะการชำระเงิน, สลิป (ถ้ามีการอัปโหลด)</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>2. วัตถุประสงค์ในการเก็บข้อมูล</h2>
+            <p>เราใช้ข้อมูลของคุณเพื่อ:</p>
+            <ul>
+                <li>ยืนยันตัวตนและให้สิทธิ์การใช้งาน EA ตามแพคเกจที่คุณเลือก</li>
+                <li>ตรวจสอบสถานะพอร์ต MT5 — แสดงผลกำไร/ขาดทุนแบบ Real-time</li>
+                <li>ประมวลผลการชำระเงินและต่ออายุแพคเกจ</li>
+                <li>แจ้งเตือนสถานะผ่าน Telegram (สำหรับแอดมิน)</li>
+                <li>ปรับปรุงและพัฒนาระบบให้ดีขึ้น</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>3. การเก็บข้อมูลบน Google Sheets</h2>
+            <p>ข้อมูลสมาชิก, พอร์ตเทรด, และธุรกรรมทั้งหมดถูกจัดเก็บใน Google Sheets ที่มีการควบคุมการเข้าถึงอย่างเข้มงวด:</p>
+            <ul>
+                <li>เฉพาะ Service Account ของระบบเท่านั้นที่อ่าน/เขียนข้อมูลได้</li>
+                <li>Google Sheets ใช้การเข้ารหัสข้อมูลระหว่างส่ง (TLS) และขณะเก็บ (encryption at rest)</li>
+                <li>ข้อมูลจะไม่ถูกเปิดเผยต่อสาธารณะ — เฉพาะเจ้าของบัญชีและแอดมินเท่านั้นที่เข้าถึงได้</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>4. การใช้คุกกี้ (Cookies)</h2>
+            <p>เราใช้คุกกี้ที่จำเป็นต่อการทำงานของระบบเท่านั้น:</p>
+            <ul>
+                <li><strong>Session Cookie:</strong> สำหรับรักษาสถานะการล็อคอิน (NextAuth) — หมดอายุภายใน 3 ชั่วโมง</li>
+                <li><strong>Local Storage:</strong> ใช้เก็บการตั้งค่าภาษา (TH/EN) และสถานะการยอมรับข้อตกลง</li>
+            </ul>
+            <p>เรา <strong>ไม่ใช้</strong> คุกกี้เพื่อการตลาด, การติดตามข้ามเว็บไซต์, หรือโฆษณา</p>
+        </div>
+
+        <div class="card">
+            <h2>5. การแชร์ข้อมูลกับบุคคลที่สาม</h2>
+            <p>เรา <strong>ไม่ขาย, แลกเปลี่ยน, หรือส่งต่อ</strong> ข้อมูลส่วนบุคคลของคุณให้บุคคลภายนอก</p>
+            <p>ข้อยกเว้นที่จำเป็น:</p>
+            <ul>
+                <li><strong>Google:</strong> ใช้สำหรับล็อคอิน (OAuth) และเก็บข้อมูล (Sheets API)</li>
+                <li><strong>EasySlip:</strong> ใช้สร้าง QR Code PromptPay สำหรับการชำระเงิน</li>
+                <li><strong>Telegram:</strong> ใช้ส่งการแจ้งเตือนให้แอดมินเมื่อมีการชำระเงิน</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>6. ความปลอดภัยของข้อมูล</h2>
+            <p>เราใช้มาตรการรักษาความปลอดภัยดังนี้:</p>
+            <ul>
+                <li>การล็อคอินผ่าน Google OAuth 2.0 — รหัสผ่านของคุณไม่ถูกเก็บในระบบ</li>
+                <li>Service Account มีสิทธิ์จำกัดเฉพาะที่จำเป็น (Principle of Least Privilege)</li>
+                <li>การสื่อสารทั้งหมดผ่าน HTTPS</li>
+                <li>Session หมดอายุอัตโนมัติหลังจาก 3 ชั่วโมง</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>7. สิทธิ์ของคุณ</h2>
+            <p>คุณมีสิทธิ์ดังต่อไปนี้:</p>
+            <ul>
+                <li><strong>เข้าถึง:</strong> ดูข้อมูลส่วนตัวของคุณได้ตลอดเวลาที่หน้า Dashboard</li>
+                <li><strong>แก้ไข:</strong> แก้ไขการตั้งค่าพอร์ต ระบบเทรด และการตั้งค่าภาษา</li>
+                <li><strong>ลบ:</strong> ลบพอร์ต MT5 ที่เชื่อมโยงกับบัญชีของคุณได้เอง หรือติดต่อแอดมินเพื่อลบบัญชีทั้งหมด</li>
+                <li><strong>เพิกถอน:</strong> ยกเลิกการเข้าถึง Google OAuth ได้ที่ <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google Account Permissions</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>8. การเปลี่ยนแปลงนโยบาย</h2>
+            <p>เราอาจปรับปรุงนโยบายนี้เป็นครั้งคราว การเปลี่ยนแปลงจะมีผลทันทีเมื่อเผยแพร่บนหน้านี้</p>
+            <p>หากมีการเปลี่ยนแปลงที่สำคัญ เราจะแจ้งให้ทราบผ่านทางหน้า Dashboard หรืออีเมล</p>
+        </div>
+
+        <div class="card">
+            <h2>9. ติดต่อเรา</h2>
+            <p>หากมีคำถามเกี่ยวกับนโยบายความเป็นส่วนตัว หรือต้องการใช้สิทธิ์ของคุณ:</p>
+            <ul>
+                <li><strong>Line OA:</strong> <a href="https://line.me/R/ti/p/@harvestfarm" target="_blank" rel="noopener">@harvestfarm</a></li>
+                <li><strong>เว็บไซต์:</strong> <a href="https://mt5.harvestfarm.site" target="_blank" rel="noopener">mt5.harvestfarm.site</a></li>
+            </ul>
+        </div>
+
+        <a href="/" class="back-btn">← กลับหน้าหลัก</a>
+
+        <div class="footer">
+            <p>&copy; 2026 HARVEST FARM. All rights reserved.</p>
+            <p style="margin-top: 4px;">อัปเดตล่าสุด: 20 มิถุนายน 2569</p>
+        </div>
+    </div>
+</body>
+</html>
