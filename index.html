@@ -422,6 +422,10 @@
         /* Hide original hero styles that conflict */
         .hero-section{display:none}
 
+
+        .realtime-table th{white-space:nowrap}
+        .realtime-table td{white-space:nowrap}
+        .realtime-table tbody tr:hover{background:rgba(255,255,255,0.02)}
     </style>
 </head>
 <body>
@@ -437,7 +441,7 @@
                 <span>📈 กำไรยั่งยืน</span>
             </div>
             <div class="portal-hero-btns">
-                <a href="https://lin.ee/9B1pFmD" target="_blank" class="ph-btn ph-btn-line">🎁 ทดลองฟรี 1 สัปดาห์</a>
+                <a href="https://lin.ee/9B1pFmD" target="_blank" class="ph-btn ph-btn-line">🎁 ทดลองฟรี 1 พอร์ต</a>
                 <a href="RealTime.html" class="ph-btn ph-btn-gold">📊 ดูแบบ Real-Time</a>
             </div>
         </div>
@@ -447,13 +451,42 @@
     <div class="mobile-header">
         <div class="header-flex">
             <div class="header-title-group">
-                <img src="https://img1.pic.in.th/images/logo14f5db31c2bca372.th.png" alt="EA Atlantis Logo" class="header-logo">
-                <h4 class="fw-bold">HARVEST FARM</h4>
+                
             </div>
             <a href="https://drive.google.com/drive/folders/16l_45ZJOdT-qAtkU2gB9S5eWrVlHf_J9" target="_blank" class="new-version-link">New Version + Preset</a>
         </div>
         <div class="status-online">
             <span class="dot"></span>Live Update
+        </div>
+    </div>
+
+
+    <!-- RealTime Summary Table -->
+    <div class="realtime-section" style="margin:10px 5px">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden">
+            <div style="background:linear-gradient(90deg,#1a2a6c,#11998e);padding:10px 16px">
+                <span style="color:#fff;font-weight:600;font-size:0.95rem">📊 Real-Time Portfolio</span>
+                <span id="rtUpdateTime" style="color:rgba(255,255,255,0.6);font-size:0.75rem;float:right"></span>
+            </div>
+            <div style="overflow-x:auto">
+                <table class="realtime-table" style="width:100%;border-collapse:collapse;font-size:0.85rem">
+                    <thead>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);color:#8899bb">
+                            <th style="padding:8px 12px;text-align:left;font-weight:500">Account</th>
+                            <th style="padding:8px 12px;text-align:right;font-weight:500">Balance</th>
+                            <th style="padding:8px 12px;text-align:right;font-weight:500">7-Day P/L</th>
+                            <th style="padding:8px 12px;text-align:right;font-weight:500">%</th>
+                        </tr>
+                    </thead>
+                    <tbody id="realtimeBody">
+                        <tr><td colspan="4" style="text-align:center;padding:20px;color:#555">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="realtimeFoot" style="display:none;padding:10px 16px;border-top:1px solid rgba(255,255,255,0.06);font-size:0.8rem;color:#8899bb">
+                Total Balance: <strong id="rtSumBalance" style="color:#4cd137">$0</strong> &nbsp;|&nbsp;
+                7-Day: <strong id="rtSumPct" style="color:#fff">0%</strong>
+            </div>
         </div>
     </div>
 
@@ -888,6 +921,45 @@ function dr(ts){
 }
 requestAnimationFrame(dr);
 })();
+</script>
+
+<script>
+// RealTime Data Fetch
+async function fetchRealTimeData(){
+    try{
+        const RT_ID="1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
+        const url="https://docs.google.com/spreadsheets/d/"+RT_ID+"/gviz/tq?tqx=out:json&gid=0";
+        const r=await fetch(url); const t=await r.text();
+        const j=JSON.parse(t.substring(t.indexOf("{"),t.lastIndexOf("}")+1));
+        const rows=j.table.rows; if(!rows)return;
+        let html="",sumBal=0,sumP7=0,totalBal=0;
+        for(let i=0;i<rows.length;i++){
+            const row=rows[i];
+            if(!row||!row.c||!row.c[0]||row.c[0].v===null||String(row.c[0].v).toLowerCase()==="acc")continue;
+            const name=row.c[1]&&row.c[1].v!==null?row.c[1].v:"-";
+            const bal=row.c[2]&&row.c[2].v!==null?parseFloat(row.c[2].v):0;
+            const p7=row.c[6]&&row.c[6].v!==null?parseFloat(row.c[6].v):0;
+            const pct=bal>0?(p7/bal*100):0;
+            totalBal+=bal;sumP7+=p7;
+            const cls=pct>=0?"color:#4cd137":"color:#ff3b3b";
+            html+="<tr style='border-bottom:1px solid rgba(255,255,255,0.04)'>";
+            html+="<td style='padding:8px 12px;color:#c8d6e5'>"+name+"</td>";
+            html+="<td style='padding:8px 12px;text-align:right;color:#fff'>$"+bal.toLocaleString()+"</td>";
+            html+="<td style='padding:8px 12px;text-align:right;"+cls+"'>"+(p7>=0?"+":"")+p7.toLocaleString()+"</td>";
+            html+="<td style='padding:8px 12px;text-align:right;"+cls+"'>"+(pct>=0?"+":"")+pct.toFixed(1)+"%</td>";
+            html+="</tr>";
+        }
+        document.getElementById("realtimeBody").innerHTML=html||"<tr><td colspan='4' style='text-align:center;padding:20px;color:#555'>No data</td></tr>";
+        const tpct=totalBal>0?(sumP7/totalBal*100):0;
+        document.getElementById("rtSumBalance").innerHTML="$"+totalBal.toLocaleString();
+        document.getElementById("rtSumPct").innerHTML=(tpct>=0?"+":"")+tpct.toFixed(1)+"%";
+        document.getElementById("rtSumPct").style.color=tpct>=0?"#4cd137":"#ff3b3b";
+        document.getElementById("realtimeFoot").style.display="";
+        document.getElementById("rtUpdateTime").textContent=new Date().toLocaleTimeString("th-TH");
+    }catch(e){}
+}
+fetchRealTimeData();
+setInterval(fetchRealTimeData,5000);
 </script>
 
 </body>
