@@ -334,18 +334,6 @@
         /* กล่องการ์ดหลัก (อัปเดตให้รองรับภาพพื้นหลัง) */
         /* ------------------------------------- */
         
-        @keyframes cardSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        @keyframes badgePulse {
-            0%, 100% { box-shadow: 0 0 6px rgba(13,110,253,0.3); }
-            50% { box-shadow: 0 0 14px rgba(13,110,253,0.6); }
-        }
-        @keyframes donutGlow {
-            0%, 100% { filter: drop-shadow(0 0 2px rgba(255,255,255,0.1)); }
-            50% { filter: drop-shadow(0 0 6px rgba(240,192,64,0.2)); }
-        }
         .ea-card {
             background: linear-gradient(145deg, rgba(21,21,21,0.95), rgba(26,26,35,0.92));
             border-radius: 16px;
@@ -357,28 +345,31 @@
             border: 1px solid rgba(255,255,255,0.06);
             transition: transform 0.3s, box-shadow 0.3s;
         }
-        .ea-card::before {
-            content: "";
-            position: absolute;
-            inset: -2px;
-            border-radius: 17px;
-            padding: 2px;
-            background: conic-gradient(from 0deg, #f0c040, #55bbff, #bb77ee, #f0c040);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            animation: cardSpin 6s linear infinite;
-            opacity: 0.4;
-            z-index: 0;
-        }
         .ea-card > * { position: relative; z-index: 1; }
         .ea-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 40px rgba(240,192,64,0.12), 0 0 60px rgba(85,187,255,0.06);
         }
-        .ea-card:hover::before { opacity: 0.7; }
-        .ea-card{animation:cardAmbient 4s ease-in-out infinite}
-        @keyframes cardAmbient{0%,100%{box-shadow:0 0 20px rgba(240,192,64,0.03)}50%{box-shadow:0 0 35px rgba(85,187,255,0.05)}}
+        /* Data particles */
+        .card-particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            box-shadow: 0 0 6px currentColor, 0 0 12px currentColor;
+        }
+        .card-particle:nth-child(1){animation:pTop 4s linear infinite;color:#f0c040;animation-delay:0s}
+        .card-particle:nth-child(2){animation:pRight 4s linear infinite;color:#55bbff;animation-delay:0.6s}
+        .card-particle:nth-child(3){animation:pBottom 4s linear infinite;color:#bb77ee;animation-delay:1.2s}
+        .card-particle:nth-child(4){animation:pLeft 4s linear infinite;color:#f0c040;animation-delay:1.8s}
+        .card-particle:nth-child(5){animation:pTop 4s linear infinite;color:#55bbff;animation-delay:2.4s}
+        .card-particle:nth-child(6){animation:pRight 4s linear infinite;color:#bb77ee;animation-delay:3.0s}
+        .card-particle:nth-child(7){animation:pBottom 4s linear infinite;color:#f0c040;animation-delay:3.6s}
+        @keyframes pTop{0%{left:5%;top:3px}100%{left:95%;top:3px}}
+        @keyframes pRight{0%{right:3px;top:5%}100%{right:3px;top:95%}}
+        @keyframes pBottom{0%{left:95%;bottom:3px}100%{left:5%;bottom:3px}}
+        @keyframes pLeft{0%{left:3px;top:95%}100%{left:3px;top:5%}}
 
         .ea-card:hover {
             transform: translateY(-5px); 
@@ -936,7 +927,7 @@
             var color = totalProfit >= 0 ? '#00c853' : '#ff1744';
             var sign = totalProfit >= 0 ? '+' : '';
             return '<div class="donut-wrap">'
-                + '<svg width="64" height="64" viewBox="0 0 64 64" class="donut-svg" style="animation:donutGlow 3s ease-in-out infinite">'
+                + '<svg width="64" height="64" viewBox="0 0 64 64" class="donut-svg">'
                 + '<circle cx="32" cy="32" r="26" fill="none" stroke="rgba(249,115,22,0.15)" stroke-width="6"/>'
                 + '<circle cx="32" cy="32" r="26" fill="none" class="donut-arc" '
                 + 'stroke="' + color + '" stroke-width="6" stroke-linecap="round" '
@@ -982,9 +973,10 @@
             html += `
                 <div class="col">
                     <div class="ea-card">
-                        <div class="p-4"> 
+                        <div class="p-4">
+                            <div class="card-particle"></div><div class="card-particle"></div><div class="card-particle"></div><div class="card-particle"></div><div class="card-particle"></div><div class="card-particle"></div><div class="card-particle"></div>
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge rounded-pill bg-primary" style="animation:badgePulse 2.5s ease-in-out infinite">Running</span>
+                                <span class="badge rounded-pill bg-primary">Running</span>
                                 ` + renderDonut(item.balanceNum, item.profit7day, item.lastWeekProfit) + `
                             </div>
                             <h5 class="fw-bold" style="color: #fb923c; text-shadow: 0 0 8px rgba(234,88,12,0.3);">${item.name}</h5>
