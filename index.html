@@ -14,7 +14,7 @@
         
         body { 
             font-family: 'Kanit', sans-serif; 
-            background-color: #121212; 
+            background-color: #080c14; 
             margin: 0;
             padding: 10px; 
             overflow-x: hidden;
@@ -63,84 +63,6 @@
         }
 
         .new-version-link:hover { text-decoration: underline; color: #fff176 !important; }
-
-        /* ── ปุ่มสมัครสมาชิก ── */
-        .register-section {
-            text-align: center;
-            margin: 15px 5px 20px 5px;
-        }
-        .register-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff !important;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 600;
-            padding: 12px 32px;
-            border-radius: 50px;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-            transition: all 0.3s ease;
-            animation: registerPulse 2.5s ease-in-out infinite;
-        }
-        .register-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
-            color: #fff !important;
-        }
-        @keyframes registerPulse {
-            0%, 100% { box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4); }
-            50% { box-shadow: 0 4px 30px rgba(118, 75, 162, 0.7); }
-        }
-
-        /* ── ปุ่ม MyPortfolio ── */
-        .portfolio-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: #fff !important;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 600;
-            padding: 12px 32px;
-            border-radius: 50px;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(17, 153, 142, 0.4);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
-        .portfolio-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(56, 239, 125, 0.6);
-            color: #fff !important;
-        }
-
-        /* ── Portfolio Modal ── */
-        .portfolio-overlay {
-            display: none;
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85); z-index: 9999;
-            overflow-y: auto; padding: 20px;
-        }
-        .portfolio-overlay.active { display: block; }
-        .portfolio-container {
-            max-width: 700px; margin: 30px auto;
-            background: #1a1a2e; border-radius: 20px;
-            padding: 25px; color: #fff;
-        }
-        .portfolio-card-item {
-            background: linear-gradient(145deg, #0a0300 0%, #140800 100%);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 15px; padding: 20px; margin-bottom: 12px;
-        }
-        .portfolio-stat {
-            font-size: 0.85rem; color: #aaa; margin-bottom: 2px;
-        }
-        .portfolio-value {
-            font-size: 1.1rem; font-weight: 600;
-        }
-        .portfolio-value.green { color: #38ef7d; }
-        .portfolio-value.red { color: #ff4757; }
 
         .status-online { 
             color: #4cd137; 
@@ -244,7 +166,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(194, 65, 12, 0.1) 0%, rgba(234, 88, 12, 0.03) 40%, transparent 70%);
+            background: radial-gradient(circle, rgba(76, 209, 55, 0.1) 0%, transparent 60%);
             z-index: 0;
             pointer-events: none;
         }
@@ -273,7 +195,7 @@
 
         .highlight-text {
             color: #4cd137;
-            text-shadow: 0 0 10px rgba(249, 115, 22, 0.4);
+            text-shadow: 0 0 10px rgba(76, 209, 55, 0.4);
         }
 
         .hero-desc {
@@ -327,17 +249,17 @@
             font-weight: 600;
             margin: 0;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 10px rgba(255, 59, 59, 0.4), 0 0 15px rgba(234, 88, 12, 0.08); 
+            text-shadow: 0 0 10px rgba(255, 59, 59, 0.4); 
         }
 
 /* ------------------------------------- */
         /* กล่องการ์ดหลัก (อัปเดตให้รองรับภาพพื้นหลัง) */
         /* ------------------------------------- */
         .ea-card { 
-            background: linear-gradient(145deg, #0a0300 0%, #140800 100%); 
-            border: 1px solid rgba(249, 115, 22, 0.4); 
+            background: linear-gradient(145deg, #151515 0%, #2b2b2b 100%); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
             border-radius: 25px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.7), 0 0 18px rgba(249,115,22,0.3), 0 0 35px rgba(249,115,22,0.1); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
             overflow: hidden; 
             width: 100%;
             height: 100%; 
@@ -349,15 +271,10 @@
 
         .ea-card:hover {
             transform: translateY(-5px); 
-            box-shadow: 0 12px 35px rgba(249,115,22,0.4), 0 0 30px rgba(249,115,22,0.18), 0 0 50px rgba(249,115,22,0.05); 
+            box-shadow: 0 12px 25px rgba(255, 255, 255, 0.15); 
         }
 
         /* 🟢 โค้ดสำหรับใส่ภาพพื้นหลังและปรับความจาง */
-        .ea-card .badge.bg-primary {
-            background: rgba(25, 25, 112, 0.35) !important;
-            border: 1px solid rgba(65, 105, 225, 0.25);
-            box-shadow: 0 0 10px rgba(25, 25, 112, 0.2);
-        }
         .ea-card::before {
             content: '';
             position: absolute;
@@ -370,17 +287,16 @@
         }
 
         .balance-box { 
-            background: rgba(194, 65, 12, 0.1); 
+            background-color: rgba(255,255,255,0.05); 
             border-radius: 20px; 
             padding: 18px; 
             margin-top: 15px; 
-            border: 1px solid rgba(249, 115, 22, 0.4);
-            box-shadow: 0 0 12px rgba(249,115,22,0.1);
+            border: 1px solid rgba(255,255,255,0.1); 
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-        }        }
+            gap: 10px; 
+        }
 
         .ea-card h5.fw-bold { 
             color: #ffeb3b !important; 
@@ -408,9 +324,8 @@
             border-radius: 12px;
             font-size: 0.9rem;
             font-weight: 500;
-            border: 1px solid rgba(255,255,255,0.15);
-            backdrop-filter: blur(4px);
-            text-shadow: 0 0 8px rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             white-space: normal; 
             max-width: 100%;
         }
@@ -420,7 +335,7 @@
             margin-top: 15px;
             font-size: 1.1rem;
             font-weight: 600;
-            color: #f97316; text-shadow: 0 0 6px rgba(234,88,12,0.2); /* 🔵 เปลี่ยนเป็นสีน้ำเงินสว่าง เพื่อให้ดูโดดเด่นบนพื้นดำ */
+            color: #3399ff; /* 🔵 เปลี่ยนเป็นสีน้ำเงินสว่าง เพื่อให้ดูโดดเด่นบนพื้นดำ */
         }
 
         .social-btn {
@@ -488,112 +403,45 @@
         }
         
 
-        /* ── RealTime Performance Table ── */
-        .rt-table-container {
-            background: #1c1f26;
-            border-radius: 12px;
-            border: 1px solid #2d333b;
-            overflow-x: auto;
-            margin: 10px 5px 25px 5px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        .rt-table { width: 100%; border-collapse: collapse; text-align: right; }
-        .rt-table th, .rt-table td { padding: 12px 14px; white-space: nowrap; }
-        .rt-table th:first-child, .rt-table td:first-child { min-width: 130px; text-align: left; }
-        .rt-ea-name { font-weight: bold; color: #ffeb3b; font-size: 14px; }
-        .rt-table th { text-shadow: 0 0 8px rgba(234, 88, 12, 0.3);
-            background-color: rgba(212, 175, 55, 0.1);
-            color: #D4AF37; font-weight: 500; font-size: 15px;
-            border-bottom: 2px solid #D4AF37;
-        }
-        .rt-table td { border-bottom: 1px solid rgba(249, 115, 22, 0.12); font-size: 15px; color: #c9d1d9; }
-        .rt-table tbody tr:nth-child(even) { background: rgba(194, 65, 12, 0.08); }
-        .rt-table tbody tr:nth-child(odd) { background: rgba(0, 0, 0, 0.25); }
-        .rt-table tbody tr:hover { background: rgba(249, 115, 22, 0.12) !important; box-shadow: inset 0 0 20px rgba(249, 115, 22, 0.1); transition: all 0.2s ease; }
-        .rt-table tfoot td { border-top: 2px solid rgba(249, 115, 22, 0.7);
-            background: linear-gradient(90deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
-            border-top: 2px solid #D4AF37; font-weight: 600; font-size: 16px;
-            color: #D4AF37; padding: 14px 20px;
-        }
-        .rt-table tfoot td:first-child { text-align: right; letter-spacing: 1px; }
-        .rt-loader { text-align: center; padding: 40px; color: #D4AF37; font-size: 18px; }
-        .rt-stars { display: inline-block; font-size: 16px; letter-spacing: 2px; margin-top: 2px; }
-        .rt-star-on { color: #D4AF37; } .rt-star-off { color: #3a3f4b; }
-        .rt-recommend { color: #FF8C00; font-size: 12px; font-weight: 300; font-style: italic; margin-left: 6px; text-shadow: 0 0 6px rgba(255,140,0,0.4); }
-        @media (max-width: 600px) {
-            .rt-table th, .rt-table td { padding: 8px 6px; font-size: 11px; }
-            .rt-table th { text-shadow: 0 0 8px rgba(234, 88, 12, 0.3); font-size: 10px; }
-            .rt-table th:first-child, .rt-table td:first-child { min-width: 80px; }
-            .rt-ea-name { font-size: 10px; } .rt-stars { font-size: 11px; letter-spacing: 0; }
-            .rt-table tfoot td { border-top: 2px solid rgba(249, 115, 22, 0.7); font-size: 12px; padding: 8px 6px; }
-        }
-        
-        /* —— Performance Donut —— */
-        .donut-wrap {
-            width: 64px;
-            height: 64px;
-            flex-shrink: 0;
-            animation: donut-pop 0.6s ease-out forwards;
-        }
-        .donut-svg {
-            overflow: visible;
-        }
-        .donut-arc {
-            transition: stroke-dasharray 0.8s ease;
-        }
-        @keyframes donut-pop {
-            0% { transform: scale(0.3); opacity: 0; }
-            60% { transform: scale(1.08); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-    
-        /* ── Promo Popup ── */
-        .promo-overlay {
-            display: none;
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85); z-index: 10000;
-            overflow-y: auto; padding: 20px;
-            animation: promoFadeIn 0.4s ease;
-        }
-        .promo-overlay.active { display: flex; align-items: center; justify-content: center; }
-        @keyframes promoFadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .promo-modal {
-            background: #1a1a2e; border-radius: 20px;
-            max-width: 500px; width: 100%; padding: 24px;
-            border: 2px solid #FF8C00;
-            box-shadow: 0 0 40px rgba(255,140,0,0.3);
-            animation: promoSlideUp 0.5s ease;
-        }
-        @keyframes promoSlideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .promo-modal h3 {
-            color: #FF8C00; font-size: 1.3rem; font-weight: 600;
-            text-align: center; margin-bottom: 6px;
-        }
-        .promo-modal .promo-sub {
-            color: #999; font-size: 0.8rem; text-align: center; margin-bottom: 16px;
-        }
-        .promo-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 16px; margin-bottom: 8px;
-            background: rgba(255,255,255,0.05); border-radius: 12px;
-            border: 1px solid rgba(255,140,0,0.2);
-            transition: all 0.2s;
-        }
-        .promo-item:hover { background: rgba(255,140,0,0.1); border-color: #FF8C00; }
-        .promo-item-name { color: #ffeb3b; font-weight: 600; font-size: 1rem; }
-        .promo-item-label { color: #FF8C00; font-size: 0.85rem; font-style: italic; }
-        .promo-item-profit { color: #4cd137; font-weight: 600; font-size: 0.9rem; }
-        .promo-close {
-            display: block; margin: 20px auto 0;
-            background: linear-gradient(135deg, #FF8C00, #ff6b00);
-            color: #fff; border: none; padding: 10px 40px;
-            border-radius: 50px; font-size: 0.95rem; font-weight: 600;
-            cursor: pointer; transition: all 0.3s;
-        }
-        .promo-close:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,140,0,0.5); }
+        /* ── Portal Hero ── */
+        .portal-hero{position:relative;height:90vh;min-height:600px;overflow:hidden;background:#080c14}
+        .portal-hero #bg-canvas{position:absolute;inset:0;width:100%;height:100%}
+        .portal-hero-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:2rem 1rem}
+        .portal-hero-title{font-size:clamp(2rem,6vw,3.5rem);font-weight:700;color:#fff;margin-bottom:0.3rem}
+        .portal-hero-title span{background:linear-gradient(135deg,#f0c040,#e8a020,#d4af37,#c8961e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .portal-hero-subtitle{font-size:1.3rem;color:#c8d6e5;margin-bottom:0.8rem;font-weight:400}
+        .portal-hero-desc{font-size:0.95rem;color:#8899bb;line-height:1.7;max-width:600px;margin-bottom:1.5rem}
+        .portal-hero-tags{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem}
+        .portal-hero-tags span{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:0.4rem 1rem;border-radius:50px;font-size:0.85rem;color:#c8d6e5}
+        .portal-hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+        .ph-btn{display:inline-block;padding:0.8rem 2rem;font-weight:600;font-size:0.95rem;text-decoration:none;border-radius:8px;transition:all 0.3s}
+        .ph-btn-line{background:linear-gradient(90deg,#10b981,#ef4444);color:#fff;box-shadow:0 4px 15px rgba(16,185,129,0.4)}
+        .ph-btn-line:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.5);color:#fff}
+        .ph-btn-gold{background:linear-gradient(90deg,#D4AF37,#FFDF73);color:#000;box-shadow:0 4px 15px rgba(212,175,55,0.4)}
+        .ph-btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(212,175,55,0.5);color:#000}
+        /* Hide original hero styles that conflict */
+        .hero-section{display:none}
+
     </style>
 </head>
 <body>
+<div class="portal-hero">
+        <canvas id="bg-canvas"></canvas>
+        <div class="portal-hero-content">
+            <h1 class="portal-hero-title">Trade With <span>Harvest Farm</span></h1>
+            <h2 class="portal-hero-subtitle">FOREX บน METATRADE 5</h2>
+            <p class="portal-hero-desc">เทรดคู่ทองและค่าเงินอัจฉริยะด้วยแนวคิด "ฟาร์ม EA"<br>กระจายความเสี่ยงผ่านกองทัพ EA ทำงานตลอด 24 ชม.</p>
+            <div class="portal-hero-tags">
+                <span>🛡️ บริหารความเสี่ยง</span>
+                <span>⚔️ กระจายหลายกลยุทธ์</span>
+                <span>📈 กำไรยั่งยืน</span>
+            </div>
+            <div class="portal-hero-btns">
+                <a href="https://lin.ee/9B1pFmD" target="_blank" class="ph-btn ph-btn-line">🎁 ทดลองฟรี 1 สัปดาห์</a>
+                <a href="RealTime.html" class="ph-btn ph-btn-gold">📊 ดูแบบ Real-Time</a>
+            </div>
+        </div>
+    </div>
 
 <div class="container-fluid">
     <div class="mobile-header">
@@ -609,57 +457,9 @@
         </div>
     </div>
 
-    <!-- 📊 Portfolio Modal -->
-    <div id="portfolioOverlay" class="portfolio-overlay">
-        <div class="portfolio-container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="text-white m-0">📊 MyPortfolio</h4>
-                <button onclick="togglePortfolio()" class="btn btn-sm btn-outline-light rounded-pill px-3">✕ ปิด</button>
-            </div>
-            <div id="portfolioForm" class="mb-3">
-                <div class="input-group">
-                    <input id="portfolioEmail" type="email" class="form-control" placeholder="Gmail ของคุณ" style="background:#2b2b2b;color:#fff;border-color:#444;">
-                </div>
-                <div class="d-flex gap-2 mt-2">
-                    <input id="newMt5Account" type="text" class="form-control" placeholder="MT5 Account" style="background:#2b2b2b;color:#fff;border-color:#444;flex:1;">
-                    <input id="newBroker" type="text" class="form-control" placeholder="Broker" style="background:#2b2b2b;color:#fff;border-color:#444;flex:1;">
-                    <button onclick="addPortfolioAccount()" class="btn btn-sm btn-success rounded-pill px-3">➕ เพิ่ม</button>
-                </div>
-                <div class="d-flex gap-2 mt-2">
-                    <button onclick="fetchPortfolio()" class="btn btn-sm btn-primary rounded-pill px-4">🔍 โหลดพอร์ต</button>
-                    <span id="portfolioMsg" class="text-white-50 small align-self-center"></span>
-                </div>
-            </div>
-            <div id="portfolioList"></div>
-        </div>
+<div class="system-diagram-container">
+        <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
     </div>
-
-<div class="rt-table-container">
-        <table class="rt-table">
-            <thead>
-                <tr>
-                    <th>ชื่อ EA</th>
-                    <th>กำไรปัจจุบัน</th>
-                    <th>เดือนนี้ (%)</th>
-                    <th>เดือนที่แล้ว (%)</th>
-                    <th>ทุนเริ่มต้น</th>
-                </tr>
-            </thead>
-            <tbody id="realtimeBody">
-                <tr><td colspan="5"><div class="rt-loader">⏳ กำลังโหลดข้อมูล...</div></td></tr>
-            </tbody>
-            <tfoot id="realtimeFoot" style="display:none;">
-                <tr>
-                    <td>📊 ผลรวม</td>
-                    <td id="rtSumProfit">-</td>
-                    <td id="rtSumWeek">-</td>
-                    <td id="rtSumLastWeek">-</td>
-                    <td id="rtSumBalance">-</td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-
 
     <div class="video-wrapper">
         <iframe 
@@ -670,42 +470,8 @@
         </iframe>
     </div>
 
-    <!-- 🔐 ปุ่มสมัครสมาชิก / จัดการพอร์ต -->
-    <div class="register-section" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
-        <a href="https://mt5.harvestfarm.site/login?callbackUrl=/dashboard" class="register-btn">
-            🔐 สมัครสมาชิก / จัดการพอร์ต
-        </a>
-        <a href="https://mt5.harvestfarm.site/login?callbackUrl=/portfolio" class="portfolio-btn">
-            📊 MyPortfolio
-        </a>
-    </div>
 
-    <div class="hero-section text-center">
-        <h1 class="hero-title">FOREX บน METATRADE 5</h1>
-        <h2 class="hero-subtitle">เทรดคู่ทองและค่าเงินอัจฉริยะด้วยแนวคิด <span class="highlight-text">"ฟาร์ม EA"</span></h2>
-        <p class="hero-desc">
-            กระจายความเสี่ยงผ่านกองทัพ EA ที่เชี่ยวชาญหลากหลายกลยุทธ์ ทำงานตลอด 24 ชม.<br>
-            ลด Drawdown ชดเชยความเสี่ยง เพื่อการเติบโตของพอร์ตอย่างยั่งยืน โดยไม่ต้องเฝ้ากราฟ
-        </p>
-        
-        <div class="hero-features">
-            <span class="feature-tag">🛡️ บริหารความเสี่ยง</span>
-            <span class="feature-tag">⚔️ กระจายหลายกลยุทธ์</span>
-            <span class="feature-tag">📈 กำไรยั่งยืน</span>
-        </div>
-        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
-            
-            <a href="https://mt5.harvestfarm.site/login" style="background: linear-gradient(90deg, #10b981 0%, #ef4444 100%); color: #ffffff; padding: 12px 30px; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); display: inline-block; transition: 0.3s; border: 2px solid transparent;">
-                🎁 ทดลองฟรี 1 พอร์ต
-            </a>
-            
-            
-        </div>
-    </div>
-
-    <div style="text-align:center; padding: 5px 20px 15px 20px;">
-        <p style="color:#ef4444; font-size:0.8rem; margin:0; opacity:0.85;">*การลงทุนมีความเสี่ยง ผู้ใช้ควรศึกษาข้อมูลก่อนตัดสินใจ เราเป็นเพียงผู้ให้บริการซอฟแวร์เท่านั้น ไม่รับผิดชอบต่อความเสียหายทุกกรณี</p>
-    </div>
+    
 
     <div class="info-box">
         <strong>การฟาร์ม EA</strong> คือการบริหารพอร์ตการลงทุนที่ไม่พึ่งพา EA เพียงตัวเดียว เพื่อกระจายความเสี่ยง แบบเดียวกับการบริหารเงินของสถาบันการเงิน มาดู A vs B อย่างสมดุลกัน:<br><br>
@@ -724,19 +490,14 @@
             <div style="background: linear-gradient(135deg, #1a2a6c, #11998e, #38ef7d); padding: 2px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);">
                 <div style="background-color: #151515; border-radius: 10px; padding: 12px 15px;">
                     <span style="font-size: 1.15rem; color: #fff;">
-                        💻 <strong style="color: #ffeb3b; font-size: 1.25rem;">แนะนำ!</strong> VPS รุ่นพิเศษ ราคาถูกพร้อมติดตั้ง
-                        <span style="color: #4cd137; font-weight: 600;">⚡ รันได้สูงสุด 15 พอร์ต</span>
+                        💻 <strong style="color: #ffeb3b; font-size: 1.25rem;">แนะนำ!</strong> VPS ราคาถูกพร้อมติดตั้ง
+                        <span style="color: #4cd137; font-weight: 600;">⚡ รันได้สูงสุด 9 พอร์ต</span>
                     </span>
                 </div>
             </div>
             
             <h4 class="instruction-text">เลือกรันกลยุทธได้ตามต้องการ</h4>
         </div>
-    </div>
-
-
-<div class="system-diagram-container">
-        <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
     </div>
 
    <div id="ea-container" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 px-2"></div>
@@ -746,7 +507,7 @@
             <svg class="social-icon" viewBox="0 0 24 24">
                 <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.084.922.258 1.057.592.122.303.079.778.039 1.085l-.171 1.027c-.053.303-.242 1.186 1.039.647 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.572-3.843 2.572-5.992zm-15.278 1.954h-3.327v-5.465h1.222v4.306h2.105v1.159zm2.41 0h-1.221v-5.465h1.221v5.465zm5.556-3.805l-2.348 3.805h-1.399v-5.465h1.221v3.251l2.251-3.251h1.496v5.465h-1.221v-3.805zm3.627-1.66h-2.104v1.159h2.104v1.159h-2.104v1.158h2.104v1.159h-3.326v-5.465h3.326v1.16z"/>
             </svg>
-            Line Contact : @harvestfarm
+            Line Contact : @479ufnya
         </a>
 
         <a href="https://www.facebook.com/harvestfarmea" target="_blank" class="social-btn fb-btn">
@@ -807,10 +568,7 @@
                         data.push({
                             name: row.c[2] && row.c[2].v !== null ? row.c[2].v : "-",       // คอลัมน์ C (ชื่อระบบ)
                             comment: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",    // คอลัมน์ B (Model)
-                            balance: row.c[3] && row.c[3].v !== null ? row.c[3].v : "0",    // คอลัมน์ D (ทุน)
-                            balanceNum: row.c[3] && row.c[3].v !== null ? parseFloat(String(row.c[3].v).replace(/[^0-9.-]/g, '')) || 0 : 0,
-                            profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) || 0 : 0,     // คอลัมน์ G (กำไรสัปดาห์นี้)
-                            lastWeekProfit: row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) || 0 : 0,  // คอลัมน์ H (กำไรสัปดาห์ที่แล้ว)
+                            balance: row.c[3] && row.c[3].v !== null ? row.c[3].v : "-",    // คอลัมน์ D (ข้อมูลเบื้องต้น)
                             type: row.c[4] && row.c[4].v !== null ? row.c[4].v : "-"        // คอลัมน์ E (Style ความเสี่ยง)
                         });
                     }
@@ -822,54 +580,11 @@
                 return String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' });
             });
 
-            // Fetch RealTime profit data and merge
-            fetchRealTimeProfit().then(rtData => {
-                // Merge by name
-                data.forEach(item => {
-                    const rt = rtData.find(r => String(r.name).trim() === String(item.name).trim());
-                    if (rt) {
-                        item.profit = rt.profit;
-                        item.profit7day = rt.profit7day;
-                        item.lastWeekProfit = rt.lastWeekProfit;
-                        item.balanceNum = rt.balance; // use RealTime balance (number)
-                    }
-                });
-                renderCards(data);
-            });
+            renderCards(data);
 
         } catch (error) {
             console.error('Error:', error);
             showError('<div class="alert alert-danger mx-3 text-center w-100">เกิดข้อผิดพลาดในการดึงข้อมูล</div>');
-        }
-    }
-
-    // Fetch profit data from RealTime sheet for donut charts
-    async function fetchRealTimeProfit() {
-        const RT_SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
-        const url = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
-        try {
-            const resp = await fetch(url);
-            const text = await resp.text();
-            const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
-            const rows = json.table.rows;
-            if (!rows) return [];
-            const result = [];
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
-                if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
-                    result.push({
-                        name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
-                        balance: row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) || 0 : 0,
-                        profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) || 0 : 0,
-                        profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) || 0 : 0,
-                        lastWeekProfit: row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) || 0 : 0,
-                    });
-                }
-            }
-            return result;
-        } catch(e) {
-            console.error("fetchRealTimeProfit error:", e);
-            return [];
         }
     }
 
@@ -882,27 +597,6 @@
     }
 
     function renderCards(data) {
-        function renderDonut(balanceNum, profit7day, lastWeekProfit) {
-            var totalProfit = profit7day + lastWeekProfit;
-            var circ = 2 * Math.PI * 26;
-            var pct = balanceNum > 0 ? (totalProfit / balanceNum) * 100 : 0;
-            var absPct = Math.min(Math.abs(pct), 100);
-            var arc = (absPct / 100) * circ;
-            var color = totalProfit >= 0 ? '#00c853' : '#ff1744';
-            var sign = totalProfit >= 0 ? '+' : '';
-            return '<div class="donut-wrap">'
-                + '<svg width="64" height="64" viewBox="0 0 64 64" class="donut-svg">'
-                + '<circle cx="32" cy="32" r="26" fill="none" stroke="rgba(249,115,22,0.15)" stroke-width="6"/>'
-                + '<circle cx="32" cy="32" r="26" fill="none" class="donut-arc" '
-                + 'stroke="' + color + '" stroke-width="6" stroke-linecap="round" '
-                + 'stroke-dasharray="' + arc.toFixed(1) + ' ' + (circ - arc).toFixed(1) + '" '
-                + 'stroke-dashoffset="' + (circ * 0.25).toFixed(1) + '" '
-                + 'transform="rotate(-90 32 32)"/>'
-                + '<text x="32" y="36" text-anchor="middle" fill="' + color + '" '
-                + 'font-family="Kanit, sans-serif" font-size="12" font-weight="700">'
-                + sign + pct.toFixed(0) + '%</text>'
-                + '</svg></div>';
-        }
         const container = document.getElementById('ea-container');
         const loader = document.getElementById('loader');
         const contactSection = document.getElementById('contact-section'); 
@@ -921,17 +615,19 @@
 
         data.forEach((item) => {
             let typeText = String(item.type);
-            let styleBgColor = '#4a4a4a'; 
+            let styleBgColor = '#555555'; 
             
-            // color badge by risk level
-            if (typeText.includes('ทดสอบ') || typeText.includes('Testing')) {
-                styleBgColor = '#9a7b0a'; 
-            } else if (typeText.includes('High Risk') || typeText.includes('เสี่ยงสูง')) {
-                styleBgColor = '#a83232'; 
-            } else if (typeText.includes('Medium Risk') || typeText.includes('ค่อนข้างสูง') || typeText.includes('ค่อนข้างต่ำ')) {
-                styleBgColor = '#b85c00'; 
-            } else if (typeText.includes('Low Risk') || typeText.includes('เสี่ยงต่ำ')) {
-                styleBgColor = '#1e8c4a'; 
+            // เช็คคำเพื่อเปลี่ยนสีป้ายกำกับ
+            if (typeText.includes('ทดสอบ')) {
+                styleBgColor = '#DAA520'; 
+            } else if (typeText.includes('ค่อนข้างสูง')) {
+                styleBgColor = '#FF4500'; 
+            } else if (typeText.includes('เสี่ยงสูง')) {
+                styleBgColor = '#ff3b3b'; 
+            } else if (typeText.includes('ค่อนข้างต่ำ')) {
+                styleBgColor = 'darkgreen'; 
+            } else if (typeText.includes('เสี่ยงต่ำ')) {
+                styleBgColor = 'limegreen'; 
             }
 
             html += `
@@ -940,9 +636,8 @@
                         <div class="p-4"> 
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="badge rounded-pill bg-primary">Running</span>
-                                ` + renderDonut(item.balanceNum, item.profit7day, item.lastWeekProfit) + `
                             </div>
-                            <h5 class="fw-bold" style="color: #fb923c; text-shadow: 0 0 8px rgba(234,88,12,0.3);">${item.name}</h5>
+                            <h5 class="fw-bold" style="color: #ffeb3b;">${item.name}</h5>
                             
                             <div class="row g-2 mt-2">
                                 <div class="col-6">
@@ -951,7 +646,7 @@
                                 </div>
                                 <div class="col-6 text-end">
                                     <small class="text-muted d-block mb-1">Style</small>
-                                    <div class="style-badge" style="background: ${styleBgColor}; box-shadow: 0 0 12px ${styleBgColor}44;">${typeText}</div> 
+                                    <div class="style-badge" style="background-color: ${styleBgColor};">${typeText}</div> 
                                 </div>
                             </div>
 
@@ -959,7 +654,7 @@
                                 ข้อมูลเบื้องต้น
                             </div>
 
-                            <div class="balance-box text-center mt-2" style="background: rgba(194,65,12,0.08); border-radius: 12px; padding: 15px; border: 1px solid rgba(249,115,22,0.45); box-shadow: 0 0 12px rgba(249,115,22,0.15);">
+                            <div class="balance-box text-center mt-2" style="background-color: rgba(255,255,255,0.03); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.1);">
                                 <span class="fw-bold text-white mb-0" style="font-size: 0.95rem; line-height: 1.6; display: block; white-space: normal;">
                                     ${item.balance}
                                 </span> 
@@ -973,274 +668,227 @@
         container.innerHTML = html;
         if (contactSection) contactSection.style.display = 'block';
     }
-
-    // ── MyPortfolio ──
-    const API_BASE = "https://mt5-license-manager.vercel.app";
-
-    function togglePortfolio() {
-        const ov = document.getElementById('portfolioOverlay');
-        ov.classList.toggle('active');
-    }
-
-    function showPortfolioMsg(msg, isError) {
-        const el = document.getElementById('portfolioMsg');
-        el.textContent = msg;
-        el.style.color = isError ? '#ff4757' : '#38ef7d';
-        setTimeout(() => { el.textContent = ''; }, 5000);
-    }
-
-    async function fetchPortfolio() {
-        const email = document.getElementById('portfolioEmail').value.trim();
-        if (!email) { showPortfolioMsg('กรุณากรอก Gmail', true); return; }
-        showPortfolioMsg('กำลังโหลด...', false);
-        try {
-            const resp = await fetch(`${API_BASE}/api/portfolio?email=${encodeURIComponent(email)}`);
-            const jsonData = await resp.json();
-            const rows = jsonData.accounts;
-            if (!rows || rows.length === 0) {
-                document.getElementById('portfolioList').innerHTML = '<div class="text-center text-white-50 py-4">ยังไม่มีพอร์ต — เพิ่มพอร์ตแรกของคุณ</div>';
-                showPortfolioMsg('ไม่พบข้อมูล', true);
-                return;
-            }
-
-            renderPortfolioCards(rows);
-            showPortfolioMsg(`พบ ${rows.length} พอร์ต`, false);
-        } catch (e) {
-            console.error(e);
-            document.getElementById('portfolioList').innerHTML = '<div class="text-center text-danger py-3">⚠️ ไม่สามารถโหลดข้อมูลได้ — เช็คว่า API ทำงานอยู่หรือไม่</div>';
-            showPortfolioMsg('โหลดไม่สำเร็จ', true);
-        }
-    }
-
-    function renderPortfolioCards(accounts) {
-        const container = document.getElementById('portfolioList');
-        if (!accounts || accounts.length === 0) {
-            container.innerHTML = '<div class="text-center text-white-50 py-4">ยังไม่มีพอร์ต</div>';
-            return;
-        }
-        let html = '';
-        accounts.forEach(a => {
-            const floatColor = a.floating_pl >= 0 ? 'green' : 'red';
-            const profitColor = a.total_profit >= 0 ? 'green' : 'red';
-            const fmtNum = (n) => (n >= 0 ? '+' : '') + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            html += `
-                <div class="portfolio-card-item">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <span class="text-white fw-bold" style="font-size:1.1rem;">#${a.mt5_account}</span>
-                            ${a.broker ? `<span class="text-white-50 ms-2 small">${a.broker}</span>` : ''}
-                        </div>
-                        <button onclick="deletePortfolioAccount('${a.id}')" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0" style="font-size:0.7rem;">🗑</button>
-                    </div>
-                    <div class="row g-2">
-                        <div class="col-4">
-                            <div class="portfolio-stat">Balance</div>
-                            <div class="portfolio-value text-white">$${a.balance.toLocaleString('en-US', {minimumFractionDigits:2})}</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="portfolio-stat">Float P/L</div>
-                            <div class="portfolio-value ${floatColor}">$${fmtNum(a.floating_pl)}</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="portfolio-stat">Total Profit</div>
-                            <div class="portfolio-value ${profitColor}">$${fmtNum(a.total_profit)}</div>
-                        </div>
-                    </div>
-                    ${a.last_updated ? `<div class="text-end text-white-50 mt-2" style="font-size:0.7rem;">อัปเดต: ${new Date(a.last_updated).toLocaleString('th-TH')}</div>` : ''}
-                </div>`;
-        });
-        container.innerHTML = html;
-    }
-
-    async function addPortfolioAccount() {
-        const email = document.getElementById('portfolioEmail').value.trim();
-        const mt5 = document.getElementById('newMt5Account').value.trim();
-        const broker = document.getElementById('newBroker').value.trim();
-        if (!email || !mt5) { showPortfolioMsg('กรุณากรอก Gmail และ MT5 Account', true); return; }
-        showPortfolioMsg('กำลังเพิ่ม...', false);
-        try {
-            const res = await fetch(`${API_BASE}/api/portfolio`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mt5_account: mt5, broker, email })
-            });
-            const data = await res.json();
-            if (data.success || data.account) {
-                showPortfolioMsg('เพิ่มแล้ว — กด "โหลดพอร์ต" เพื่อดู', false);
-                document.getElementById('newMt5Account').value = '';
-                document.getElementById('newBroker').value = '';
-            } else {
-                showPortfolioMsg(data.error || 'เพิ่มไม่สำเร็จ', true);
-            }
-        } catch (e) {
-            showPortfolioMsg('เชื่อมต่อ API ไม่สำเร็จ', true);
-        }
-    }
-
-    async function deletePortfolioAccount(id) {
-        if (!confirm('ยืนยันการลบพอร์ตนี้?')) return;
-        showPortfolioMsg('กำลังลบ...', false);
-        try {
-            const res = await fetch(`${API_BASE}/api/portfolio?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
-            const data = await res.json();
-            if (data.success) {
-                showPortfolioMsg('ลบแล้ว — กด "โหลดพอร์ต" เพื่อรีเฟรช', false);
-                fetchPortfolio();
-            } else {
-                showPortfolioMsg(data.error || 'ลบไม่สำเร็จ', true);
-            }
-        } catch (e) {
-            showPortfolioMsg('เชื่อมต่อ API ไม่สำเร็จ', true);
-        }
-    }
-
-    // ── RealTime Performance Table ──
-    const RT_SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
-    const RT_GVIZ_URL = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
-
-    function rtFormatNumber(num) {
-        if (isNaN(num)) return "0.00";
-        return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-    function rtFormatInteger(num) {
-        if (isNaN(num)) return "0";
-        return Math.round(num).toLocaleString('en-US', { maximumFractionDigits: 0 });
-    }
-    function rtRenderStars(count) {
-        let html = '<div class="rt-stars">';
-        for (let i = 0; i < 5; i++) {
-            html += i < count ? '<span class="rt-star-on">★</span>' : '<span class="rt-star-off">★</span>';
-        }
-        html += '</div>';
-        return html;
-    }
-    async function fetchRealTimeData() {
-        try {
-            const cacheBuster = "&t=" + new Date().getTime();
-            const response = await fetch(RT_GVIZ_URL + cacheBuster);
-            const text = await response.text();
-            const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-            const jsonData = JSON.parse(jsonString);
-            const tableBody = document.getElementById('realtimeBody');
-            if (!tableBody) return;
-            tableBody.innerHTML = '';
-            const rows = jsonData.table.rows;
-            if (!rows || rows.length <= 1) {
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color:#8b949e;">กำลังรอรับข้อมูลจากระบบ...</td></tr>';
-                return;
-            }
-            let data = [];
-            for (let i = 0; i < rows.length; i++) {
-                let row = rows[i];
-                if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
-                    const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
-                    const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
-                    const lastWeekProfit = row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) : 0;
-                    const stars = row.c[8] && row.c[8].v !== null ? parseInt(row.c[8].v) : 0;
-                    const label = row.c[9] && row.c[9].v !== null ? String(row.c[9].v).trim() : '';
-                    data.push({
-                        name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
-                        balance: balance,
-                        profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0,
-                        profit7day: profit7day,
-                        lastWeekProfit: lastWeekProfit,
-                        stars: stars,
-                        label: label
-                    });
-                }
-            }
-            data.sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
-            let sumProfit = 0, sumWeek = 0, sumLastWeek = 0, sumBalance = 0;
-            data.forEach(row => {
-                sumProfit += row.profit;
-                sumWeek += row.profit7day;
-                sumLastWeek += row.lastWeekProfit;
-                sumBalance += row.balance;
-                let pct7 = row.balance > 0 ? (row.profit7day / row.balance * 100) : 0;
-                let pctLw = row.balance > 0 ? (row.lastWeekProfit / row.balance * 100) : 0;
-                let profitColor = row.profit > 0 ? '#4cd137' : (row.profit < 0 ? '#a83232' : '#ffffff');
-                let p7Color = row.profit7day > 0 ? '#4cd137' : (row.profit7day < 0 ? '#a83232' : '#ffffff');
-                let lwColor = row.lastWeekProfit > 0 ? '#4cd137' : (row.lastWeekProfit < 0 ? '#a83232' : '#ffffff');
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td><span class="rt-ea-name">${row.name}</span>${rtRenderStars(row.stars)}${row.label ? ` <span class="rt-recommend">${row.label}</span>` : ''}</td><td style="color:${profitColor};font-weight:500;">${row.profit > 0 ? '+' : ''}${rtFormatNumber(row.profit)}</td><td style="color:${p7Color};font-weight:500;">${row.profit7day > 0 ? '+' : ''}${pct7.toFixed(1)}%</td><td style="color:${lwColor};font-weight:500;">${pctLw > 0 ? '+' : ''}${pctLw.toFixed(1)}%</td><td>$${rtFormatInteger(row.balance)}</td>`;
-                tableBody.appendChild(tr);
-            });
-            const sumColor = sumProfit > 0 ? '#4cd137' : (sumProfit < 0 ? '#a83232' : '#D4AF37');
-            const weekColor = sumWeek > 0 ? '#4cd137' : (sumWeek < 0 ? '#a83232' : '#D4AF37');
-            const lwColor = sumLastWeek > 0 ? '#4cd137' : (sumLastWeek < 0 ? '#a83232' : '#D4AF37');
-            document.getElementById('rtSumProfit').innerHTML = `<span style="color:${sumColor}">${sumProfit > 0 ? '+' : ''}${rtFormatNumber(sumProfit)}</span>`;
-            let sumPctWeek = sumBalance > 0 ? (sumWeek / sumBalance * 100) : 0; document.getElementById('rtSumWeek').innerHTML = `<span style="color:${weekColor}">${sumPctWeek > 0 ? '+' : ''}${sumPctWeek.toFixed(1)}%</span>`;
-            let sumPctLastWeek = sumBalance > 0 ? (sumLastWeek / sumBalance * 100) : 0; document.getElementById('rtSumLastWeek').innerHTML = `<span style="color:${lwColor}">${sumPctLastWeek > 0 ? '+' : ''}${sumPctLastWeek.toFixed(1)}%</span>`;
-            document.getElementById('rtSumBalance').innerHTML = `$${rtFormatInteger(sumBalance)}`;
-            document.getElementById('realtimeFoot').style.display = '';
-        } catch (error) {
-            console.error("RealTime Fetch Error:", error);
-            const tableBody = document.getElementById('realtimeBody');
-            if (tableBody) { tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ เกิดข้อผิดพลาด หรือไฟล์ Google Sheet ยังไม่เปิดแชร์</td></tr>'; }
-        }
-    }
-    fetchRealTimeData();
-    setInterval(fetchRealTimeData, 3000);
-
-    // ── Promo Popup: show labeled items ──
-    async function showPromoPopup() {
-        try {
-            const RT_SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
-            const url = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
-            const resp = await fetch(url);
-            const text = await resp.text();
-            const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
-            const rows = json.table.rows;
-            if (!rows) return;
-            const labeled = [];
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
-                if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
-                    const label = row.c[9] && row.c[9].v !== null ? String(row.c[9].v).trim() : '';
-                    if (label) {
-                        const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
-                        const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
-                        const pct = balance > 0 ? (profit7day / balance * 100) : 0;
-                        labeled.push({
-                            name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
-                            label: label,
-                            profit7day: profit7day,
-                            pct: pct
-                        });
-                    }
-                }
-            }
-            if (labeled.length === 0) return;
-            // Sort by name numerically (Sys_1, Sys_2...)
-            labeled.sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
-            const promoList = document.getElementById('promoList');
-            if (!promoList) return;
-            let html = '';
-            labeled.forEach(item => {
-                const pf = item.profit7day > 0 ? '+' + item.profit7day.toLocaleString() : item.profit7day.toLocaleString();
-                const pctStr = item.pct.toFixed(1) + '%';
-                const pctColor = item.pct >= 0 ? '#4cd137' : '#a83232';
-                html += `<div class="promo-item">
-                    <div><span class="promo-item-name">${item.name}</span><br><span class="promo-item-label">${item.label}</span></div>
-                    <div style="text-align:right"><span class="promo-item-profit">${pf}</span><br><span style="color:${pctColor};font-size:0.8rem;font-weight:500">${pctStr}</span></div>
-                </div>`;
-            });
-            promoList.innerHTML = html;
-            document.getElementById('promoOverlay').classList.add('active');
-        } catch(e) { /* silent */ }
-    }
-    showPromoPopup();
 </script>
 
+<script>
+var SPEED=0.25;
+(function(){
+var c=document.getElementById("bg-canvas"),x=c.getContext("2d");
+var W,H,mx=0,my=0,t=0;
+function rs(){W=c.width=innerWidth;H=c.height=innerHeight}
+addEventListener("resize",rs);rs();
+addEventListener("mousemove",function(e){mx=e.clientX;my=e.clientY});
+var lerp=function(a,b,t){return a+(b-a)*t};
 
-<!-- Promo Popup -->
-<div class="promo-overlay active" id="promoOverlay">
-    <div class="promo-modal">
-        <h3>🔥 แนะนำ EA ที่น่าสนใจ</h3>
-        <p class="promo-sub">ระบบเทรดที่โดดเด่น — เลือกตามสไตล์ของคุณ</p>
-        <div id="promoList"></div>
-        <button class="promo-close" onclick="document.getElementById('promoOverlay').classList.remove('active')">ดูทั้งหมด</button>
-    </div>
-</div>
+function CS(){this.rst(true)}
+CS.prototype.rst=function(init){
+  if(init){this.x=Math.random()*W;this.y=Math.random()*H}
+  else{var e=Math.random();if(e<0.3){this.x=-80;this.y=Math.random()*H}else if(e<0.6){this.x=W+80;this.y=Math.random()*H}else{this.x=Math.random()*W;this.y=H+80}}
+  this.tx=Math.random()*W;this.ty=Math.random()*H*0.8;
+  this.bw=8+Math.random()*24;this.bh=30+Math.random()*90;this.wh=this.bh*(0.3+Math.random()*0.5);
+  var g=[[240,192,64],[232,180,50],[220,165,45],[200,150,30]],r=[[245,80,100],[230,70,90],[210,60,80]],b=[[80,170,240],[70,150,220],[60,130,200]],p;
+  if(Math.random()<0.5)p=g[0|Math.random()*g.length];else if(this.bull=Math.random()>0.45)p=b[0|Math.random()*b.length];else p=r[0|Math.random()*r.length];
+  this.r=p[0];this.g=p[1];this.bx=p[2];
+  this.sp=0.00004+Math.random()*0.0001;this.al=0.06+Math.random()*0.1;
+  this.pg=init?Math.random():0;this.ph=Math.random()*Math.PI*2;
+  this.sa=8+Math.random()*18;this.sf=0.1+Math.random()*0.2;
+};
+CS.prototype.up=function(dt){
+  this.pg+=this.sp*SPEED*dt;var tt=Math.min(this.pg,1);
+  var sw=Math.sin(tt*Math.PI*3+this.ph)*this.sa*(1-tt);
+  this.dx=lerp(this.x,this.tx,tt)+sw;
+  this.dy=lerp(this.y,this.ty,tt)+Math.sin(t*SPEED*8e-5+this.ph)*6;
+  this.ca=this.al*(1-tt*0.2)*(0.5+0.5*Math.sin(t*SPEED*1.5e-4+this.ph));
+  if(this.pg>=1)this.rst(false);
+};
+CS.prototype.dr=function(x){
+  x.save();x.globalAlpha=Math.max(0,Math.min(1,this.ca));
+  x.strokeStyle="rgba("+this.r+","+this.g+","+this.bx+",0.7)";x.lineWidth=1;
+  x.beginPath();x.moveTo(this.dx,this.dy-this.bh/2-this.wh);x.lineTo(this.dx,this.dy+this.bh/2+this.wh);x.stroke();
+  x.fillStyle="rgba("+this.r+","+this.g+","+this.bx+",0.45)";
+  x.fillRect(this.dx-this.bw/2,this.dy-this.bh/2,this.bw,this.bh);
+  var g=x.createRadialGradient(this.dx,this.dy,this.bw,this.dx,this.dy,this.bh*1.8);
+  g.addColorStop(0,"rgba("+this.r+","+this.g+","+this.bx+",0.15)");g.addColorStop(1,"rgba(0,0,0,0)");
+  x.fillStyle=g;x.fillRect(this.dx-this.bw*2,this.dy-this.bh*2.5,this.bw*4,this.bh*5);x.restore();
+};
+
+function GS(){this.rst(true)}
+GS.prototype.rst=function(init){
+  this.x=init?Math.random()*W:(Math.random()*W*0.3+(Math.random()>0.5?0:W*0.7));
+  this.y=init?Math.random()*H:H+30;this.sz=1+Math.random()*3;
+  this.al=0.1+Math.random()*0.25;this.sp=0.015+Math.random()*0.07;
+  this.ts=0.003+Math.random()*0.008;this.ph=Math.random()*Math.PI*2;
+  this.sa=8+Math.random()*20;this.sf=0.00015+Math.random()*0.0005;
+};
+GS.prototype.up=function(dt){
+  this.y-=this.sp*SPEED*(dt/16);
+  this.x+=Math.sin(t*SPEED*this.sf+this.ph)*this.sa*(dt/1000);
+  if(this.y<-30)this.rst(false);
+};
+GS.prototype.dr=function(x){
+  var a=this.al*(0.5+0.5*Math.sin(t*SPEED*this.ts+this.ph));
+  x.save();x.globalAlpha=Math.max(0,a);
+  x.fillStyle="#f0c840";x.beginPath();x.arc(this.x,this.y,this.sz,0,Math.PI*2);x.fill();
+  var g=x.createRadialGradient(this.x,this.y,0,this.x,this.y,this.sz*7);
+  g.addColorStop(0,"rgba(240,200,64,0.3)");g.addColorStop(0.5,"rgba(240,180,50,0.06)");g.addColorStop(1,"rgba(240,160,30,0)");
+  x.fillStyle=g;x.beginPath();x.arc(this.x,this.y,this.sz*7,0,Math.PI*2);x.fill();x.restore();
+};
+
+var CT=[{s:"XAU",fc:"#f0c840",rc:"#c8961e",ec:"#8a5e10",tc:"#5c3a0a",w:12},{s:"$",fc:"#c8d6c0",rc:"#a0b098",ec:"#6b7d66",tc:"#2d4a1e",w:10},{s:"EUR",fc:"#b8c8e0",rc:"#8a9cc0",ec:"#5a6c90",tc:"#1a2a50",w:10},{s:"JPY",fc:"#e8d8c0",rc:"#c8b090",ec:"#8a7050",tc:"#4a2a1a",w:9},{s:"GBP",fc:"#d8c8d0",rc:"#b098a8",ec:"#7a6070",tc:"#3a1a2a",w:9},{s:"CHF",fc:"#e0d0c0",rc:"#c0a888",ec:"#907050",tc:"#4a2a10",w:8},{s:"THB",fc:"#d8d0e0",rc:"#b0a0c0",ec:"#786090",tc:"#2a1050",w:7},{s:"AUD",fc:"#d8c888",rc:"#b8a868",ec:"#887840",tc:"#3a3010",w:7},{s:"CAD",fc:"#e0c8c0",rc:"#c89890",ec:"#905850",tc:"#3a1810",w:7},{s:"BTC",fc:"#f0b040",rc:"#d09020",ec:"#8a5010",tc:"#3a1800",w:6}];
+function CC(){this.rst(true)}
+CC.prototype.rst=function(init){
+  if(init){this.x=Math.random()*W;this.y=Math.random()*H}
+  else{var e=Math.random();if(e<0.25){this.x=-100;this.y=Math.random()*H}else if(e<0.5){this.x=W+100;this.y=Math.random()*H}else if(e<0.75){this.x=Math.random()*W;this.y=-100}else{this.x=Math.random()*W;this.y=H+100}}
+  var tw=0;for(var i=0;i<CT.length;i++)tw+=CT[i].w;var rl=Math.random()*tw;
+  for(var i=0;i<CT.length;i++){rl-=CT[i].w;if(rl<=0){this.tp=CT[i];break}}if(!this.tp)this.tp=CT[0];
+  this.rd=18+Math.random()*16;this.tx=Math.random()*W;this.ty=Math.random()*H*0.7;
+  this.sp=0.00002+Math.random()*0.00006;this.pg=init?Math.random():0;this.ph=Math.random()*Math.PI*2;
+  this.ss=0.00025+Math.random()*0.001;this.sa=Math.random()*Math.PI*2;
+  this.ba=4+Math.random()*10;this.bf=0.0001+Math.random()*0.00025;this.bp=Math.random()*Math.PI*2;
+  this.wa=6+Math.random()*15;this.wf=0.08+Math.random()*0.18;this.al=0.08+Math.random()*0.16;
+};
+CC.prototype.up=function(dt){
+  this.pg+=this.sp*SPEED*dt;this.sa+=this.ss*SPEED*dt;
+  var tt=Math.min(this.pg,1),sw=Math.sin(tt*Math.PI*2.5+this.ph)*this.wa*(1-tt),bb=Math.sin(t*SPEED*this.bf+this.bp)*this.ba;
+  this.dx=lerp(this.x,this.tx,tt)+sw;this.dy=lerp(this.y,this.ty,tt)+bb;
+  var fi=Math.min(tt/0.3,1),fo=Math.min((1-tt)/0.35,1);this.ca=this.al*fi*fo;
+  if(this.pg>=1)this.rst(false);
+};
+CC.prototype.dr=function(x){
+  var cx=this.dx,cy=this.dy,rd=this.rd,sa=this.sa,ca=this.ca,tp=this.tp;
+  if(ca<0.004)return;var sy=Math.abs(Math.cos(sa)),fv=sy>0.25;
+  x.save();x.globalAlpha=Math.max(0,Math.min(1,ca));
+  var gg=x.createRadialGradient(cx,cy,rd*0.8,cx,cy,rd*2.5);
+  gg.addColorStop(0,tp.fc+"50");gg.addColorStop(1,"rgba(0,0,0,0)");
+  x.fillStyle=gg;x.beginPath();x.arc(cx,cy,rd*2.5,0,Math.PI*2);x.fill();
+  x.save();x.translate(cx,cy);x.scale(1,sy);
+  var rg=x.createLinearGradient(-rd,0,rd,0);
+  rg.addColorStop(0,tp.ec);rg.addColorStop(0.3,tp.rc);rg.addColorStop(0.5,tp.fc);rg.addColorStop(0.7,tp.rc);rg.addColorStop(1,tp.ec);
+  x.fillStyle=rg;x.beginPath();x.arc(0,0,rd,0,Math.PI*2);x.fill();
+  x.strokeStyle=tp.ec;x.lineWidth=1;x.globalAlpha=ca*0.35;x.beginPath();x.arc(0,0,rd*0.84,0,Math.PI*2);x.stroke();x.globalAlpha=ca;
+  var fg=x.createRadialGradient(-rd*0.2,-rd*0.2,rd*0.1,0,0,rd*0.85);
+  fg.addColorStop(0,tp.fc);fg.addColorStop(0.7,tp.rc);fg.addColorStop(1,tp.ec);
+  x.fillStyle=fg;x.beginPath();x.arc(0,0,rd*0.8,0,Math.PI*2);x.fill();
+  if(fv){var sx=Math.cos(sa*2.3)*rd*0.35,syy=Math.sin(sa*1.7)*rd*0.25;
+  var sg=x.createRadialGradient(sx,syy,rd*0.05,sx,syy,rd*0.55);
+  sg.addColorStop(0,"rgba(255,255,255,0.25)");sg.addColorStop(0.4,"rgba(255,255,255,0.05)");sg.addColorStop(1,"rgba(255,255,255,0)");
+  x.fillStyle=sg;x.beginPath();x.arc(0,0,rd*0.8,0,Math.PI*2);x.fill();}
+  if(fv&&sy>0.4){var fs=rd*(tp.s.length>1?0.55:0.85);
+  x.fillStyle=tp.tc;x.globalAlpha=ca*sy*0.7;x.font="bold "+fs+'px "Segoe UI",system-ui,sans-serif';
+  x.textAlign="center";x.textBaseline="middle";x.fillText(tp.s,0,1);x.globalAlpha=ca;}
+  x.restore();
+  if(sy<0.35){var ea=ca*(1-sy)*1.2;x.save();x.globalAlpha=Math.min(1,ea);
+  var eg=x.createLinearGradient(cx-rd,cy,cx+rd,cy);
+  eg.addColorStop(0,tp.ec);eg.addColorStop(0.15,tp.rc);eg.addColorStop(0.5,"rgba(255,255,255,0.2)");eg.addColorStop(0.85,tp.rc);eg.addColorStop(1,tp.ec);
+  x.strokeStyle=eg;x.lineWidth=2;x.beginPath();x.moveTo(cx-rd,cy);x.lineTo(cx+rd,cy);x.stroke();x.restore();}
+  x.restore();
+};
+
+function CW(idx){
+  this.id=idx;this.am=40+idx*25;this.sp=0.003+idx*0.0015;this.ph=idx*1.8;
+  var p=[[240,192,64],[91,156,245],[130,200,160]];this.r=p[idx%3][0];this.g=p[idx%3][1];this.bx=p[idx%3][2];
+  this.al=0.04-idx*0.01;this.pt=[];
+}
+CW.prototype.up=function(){
+  this.by=H*(0.85-this.id*0.15);this.pt=[];
+  for(var i=0;i<=120;i++){var xx=i/120*W,yy=this.by;
+  yy+=Math.sin(i*0.08+t*SPEED*this.sp+this.ph)*this.am;
+  yy+=Math.sin(i*0.23+t*SPEED*this.sp*1.7+this.ph)*this.am*0.4;
+  yy+=Math.sin(i*0.04+t*SPEED*this.sp*0.6+this.ph)*this.am*0.3;
+  if(i%7===3)yy+=Math.sin(i*1.2+t*SPEED*0.0005)*this.am*0.5;this.pt.push({x:xx,y:yy});}
+};
+CW.prototype.dr=function(x){
+  if(this.pt.length<2)return;x.save();x.globalAlpha=this.al;
+  var g=x.createLinearGradient(0,this.by-this.am,0,this.by+this.am);
+  g.addColorStop(0,"rgba("+this.r+","+this.g+","+this.bx+",0.05)");g.addColorStop(1,"rgba(0,0,0,0)");
+  x.beginPath();x.moveTo(this.pt[0].x,H);
+  for(var i=0;i<this.pt.length;i++)x.lineTo(this.pt[i].x,this.pt[i].y);
+  x.lineTo(this.pt[this.pt.length-1].x,H);x.closePath();x.fillStyle=g;x.fill();
+  x.strokeStyle="rgba("+this.r+","+this.g+","+this.bx+",0.12)";x.lineWidth=1;
+  x.beginPath();for(var i=0;i<this.pt.length;i++)i===0?x.moveTo(this.pt[i].x,this.pt[i].y):x.lineTo(this.pt[i].x,this.pt[i].y);x.stroke();x.restore();
+};
+
+function AO(cf){for(var k in cf)this[k]=cf[k];this.ag=Math.random()*Math.PI*2}
+AO.prototype.up=function(){this.ag+=this.os*SPEED;this.x=this.cx+Math.cos(this.ag)*this.or;this.y=this.cy+Math.sin(this.ag*0.7)*this.or*0.6};
+AO.prototype.dr=function(x){
+  var g=x.createRadialGradient(this.x,this.y,0,this.x,this.y,this.rd);
+  g.addColorStop(0,this.cc);g.addColorStop(0.6,this.cm);g.addColorStop(1,"rgba(0,0,0,0)");
+  x.fillStyle=g;x.beginPath();x.arc(this.x,this.y,this.rd,0,Math.PI*2);x.fill();
+};
+
+function PT(){
+  this.cx=W*0.62;this.cy=H*0.42;
+  this.rings=[{r:85,seg:12,gap:0.32,lw:2.8,sp:0.0008,c:"#f0c840",ph:0},{r:135,seg:16,gap:0.25,lw:2.2,sp:-0.0006,c:"#55bbff",ph:1},{r:190,seg:22,gap:0.18,lw:1.6,sp:0.0004,c:"#bb77ee",ph:2}];
+  this.dots=[];for(var i=0;i<12;i++)this.dots.push({a:i/12*Math.PI*2,r:195,z:2.2,sp:0.00035});
+  this.pulses=[];this.cp=0;
+}
+PT.prototype.up=function(dt){
+  this.cx+=(mx*0.04+W*0.62-this.cx)*0.0006*dt;this.cy+=(my*0.04+H*0.42-this.cy)*0.0006*dt;
+  for(var i=0;i<this.rings.length;i++)this.rings[i].ph+=this.rings[i].sp*SPEED*dt;
+  for(var i=0;i<this.dots.length;i++)this.dots[i].a+=this.dots[i].sp*SPEED*dt;
+  if(Math.random()<0.02*SPEED)this.pulses.push({r:195,p:0,sp:0.018});
+  for(var i=this.pulses.length-1;i>=0;i--){var p=this.pulses[i];p.p+=p.sp*SPEED*dt;p.r=195*(1-p.p);if(p.p>=1)this.pulses.splice(i,1);}
+  this.cp+=0.002*SPEED*dt;
+};
+PT.prototype.dr=function(x){
+  x.save();
+  var sg=x.createRadialGradient(this.cx,this.cy,10,this.cx,this.cy,260);
+  sg.addColorStop(0,"rgba(100,150,255,0.06)");sg.addColorStop(0.5,"rgba(30,20,120,0.03)");sg.addColorStop(1,"rgba(0,0,0,0)");
+  x.fillStyle=sg;x.beginPath();x.arc(this.cx,this.cy,260,0,Math.PI*2);x.fill();
+  var ca=0.18+0.10*Math.sin(this.cp);
+  var cg=x.createRadialGradient(this.cx,this.cy,0,this.cx,this.cy,50);
+  cg.addColorStop(0,"rgba(255,255,255,"+ca+")");cg.addColorStop(0.2,"rgba(180,210,255,"+ca*0.8+")");cg.addColorStop(0.6,"rgba(80,60,220,"+ca*0.4+")");cg.addColorStop(1,"rgba(0,0,0,0)");
+  x.fillStyle=cg;x.beginPath();x.arc(this.cx,this.cy,50,0,Math.PI*2);x.fill();
+  for(var i=0;i<this.rings.length;i++){
+    var R=this.rings[i];x.strokeStyle=R.c;x.lineWidth=R.lw;x.lineCap="round";x.globalAlpha=0.06;
+    var sa=Math.PI*2/R.seg,ga=sa*R.gap,da=sa-ga;
+    for(var s=0;s<R.seg;s++){x.beginPath();x.arc(this.cx,this.cy,R.r,s*sa+R.ph,s*sa+R.ph+da);x.stroke();}
+    x.fillStyle=R.c;x.globalAlpha=0.08;
+    for(var s=0;s<R.seg;s++){var an=s*sa+R.ph;x.beginPath();x.arc(this.cx+Math.cos(an)*R.r,this.cy+Math.sin(an)*R.r,R.lw*2,0,Math.PI*2);x.fill();}
+  }
+  x.globalAlpha=1;
+  for(var i=0;i<this.dots.length;i++){
+    var d=this.dots[i],dx=this.cx+Math.cos(d.a)*d.r,dy=this.cy+Math.sin(d.a)*d.r;
+    x.fillStyle="rgba(255,255,255,0.2)";x.beginPath();x.arc(dx,dy,d.z,0,Math.PI*2);x.fill();
+    var tg=x.createRadialGradient(dx,dy,0,dx,dy,8);
+    tg.addColorStop(0,"rgba(255,255,255,0.05)");tg.addColorStop(1,"rgba(0,0,0,0)");
+    x.fillStyle=tg;x.beginPath();x.arc(dx,dy,8,0,Math.PI*2);x.fill();
+  }
+  for(var i=0;i<this.pulses.length;i++){var p=this.pulses[i];x.strokeStyle="rgba(200,220,255,"+(1-p.p)+")";x.lineWidth=3*(1-p.p);x.beginPath();x.arc(this.cx,this.cy,p.r,0,Math.PI*2);x.stroke();}
+  x.restore();
+};
+
+var st=[];for(var i=0;i<22;i++)st.push(new CS());
+var sp=[];for(var i=0;i<35;i++)sp.push(new GS());
+var cn=[];for(var i=0;i<20;i++)cn.push(new CC());
+var wv=[];for(var i=0;i<3;i++)wv.push(new CW(i));
+var portal=new PT();
+var ob=[new AO({cx:W*0.25,cy:H*0.3,rd:450,or:120,os:0.00004,cc:"rgba(240,192,64,0.06)",cm:"rgba(240,180,50,0.015)"}),new AO({cx:W*0.7,cy:H*0.6,rd:500,or:150,os:-0.00003,cc:"rgba(91,156,245,0.05)",cm:"rgba(70,130,220,0.01)"}),new AO({cx:W*0.5,cy:H*0.2,rd:380,or:90,os:0.00005,cc:"rgba(245,91,108,0.03)",cm:"rgba(230,70,90,0.006)"})];
+
+var lt=performance.now();
+function dr(ts){
+  var dt=Math.min(ts-lt,50);lt=ts;t=ts;
+  x.fillStyle="#080c14";x.globalAlpha=1;x.fillRect(0,0,W,H);
+  x.strokeStyle="rgba(255,255,255,0.008)";x.lineWidth=0.3;
+  for(var xx=60;xx<W;xx+=60){x.beginPath();x.moveTo(xx,0);x.lineTo(xx,H);x.stroke()}
+  for(var yy=60;yy<H;yy+=60){x.beginPath();x.moveTo(0,yy);x.lineTo(W,yy);x.stroke()}
+  for(var i=0;i<ob.length;i++){ob[i].up();ob[i].dr(x)}
+  portal.up(dt);portal.dr(x);
+  for(var i=0;i<wv.length;i++){wv[i].up();wv[i].dr(x)}
+  for(var i=0;i<st.length;i++){st[i].up(dt);st[i].dr(x)}
+  for(var i=0;i<cn.length;i++){cn[i].up(dt);cn[i].dr(x)}
+  for(var i=0;i<sp.length;i++){sp[i].up(dt);sp[i].dr(x)}
+  var mg=x.createRadialGradient(mx,my,0,mx,my,220);
+  mg.addColorStop(0,"rgba(240,200,100,0.02)");mg.addColorStop(1,"rgba(0,0,0,0)");
+  x.fillStyle=mg;x.beginPath();x.arc(mx,my,220,0,Math.PI*2);x.fill();
+  var vg=x.createRadialGradient(W/2,H/2,W*0.45,W/2,H/2,W*1.0);
+  vg.addColorStop(0,"rgba(0,0,0,0)");vg.addColorStop(0.7,"rgba(0,0,0,0.25)");vg.addColorStop(1,"rgba(0,0,0,0.65)");
+  x.fillStyle=vg;x.fillRect(0,0,W,H);
+  requestAnimationFrame(dr);
+}
+requestAnimationFrame(dr);
+})();
+</script>
+
 </body>
 </html>
