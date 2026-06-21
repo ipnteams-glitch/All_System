@@ -350,26 +350,24 @@
             transform: translateY(-4px);
             box-shadow: 0 12px 40px rgba(240,192,64,0.12), 0 0 60px rgba(85,187,255,0.06);
         }
-        /* Data particles */
-        .card-particle {
+        /* Data light lines */
+        .card-line {
             position: absolute;
-            width: 4px; height: 4px;
-            border-radius: 50%;
             pointer-events: none;
             z-index: 0;
-            box-shadow: 0 0 6px currentColor, 0 0 12px currentColor;
+            border-radius: 2px;
         }
-        .card-particle:nth-child(1){animation:pTop 4s linear infinite;color:#f0c040;animation-delay:0s}
-        .card-particle:nth-child(2){animation:pRight 4s linear infinite;color:#55bbff;animation-delay:0.6s}
-        .card-particle:nth-child(3){animation:pBottom 4s linear infinite;color:#bb77ee;animation-delay:1.2s}
-        .card-particle:nth-child(4){animation:pLeft 4s linear infinite;color:#f0c040;animation-delay:1.8s}
-        .card-particle:nth-child(5){animation:pTop 4s linear infinite;color:#55bbff;animation-delay:2.4s}
-        .card-particle:nth-child(6){animation:pRight 4s linear infinite;color:#bb77ee;animation-delay:3.0s}
-        .card-particle:nth-child(7){animation:pBottom 4s linear infinite;color:#f0c040;animation-delay:3.6s}
-        @keyframes pTop{0%{left:5%;top:3px}100%{left:95%;top:3px}}
-        @keyframes pRight{0%{right:3px;top:5%}100%{right:3px;top:95%}}
-        @keyframes pBottom{0%{left:95%;bottom:3px}100%{left:5%;bottom:3px}}
-        @keyframes pLeft{0%{left:3px;top:95%}100%{left:3px;top:5%}}
+        .card-line:nth-child(1){top:2px;left:0;width:30%;height:2px;animation:lTop 3s linear infinite;animation-delay:0s;background:linear-gradient(90deg,transparent,#f0c040,transparent)}
+        .card-line:nth-child(2){top:2px;left:0;width:30%;height:2px;animation:lTop 3s linear infinite;animation-delay:1.5s;background:linear-gradient(90deg,transparent,#55bbff,transparent)}
+        .card-line:nth-child(3){right:2px;top:0;width:2px;height:30%;animation:lRight 3s linear infinite;animation-delay:0.5s;background:linear-gradient(180deg,transparent,#bb77ee,transparent)}
+        .card-line:nth-child(4){right:2px;top:0;width:2px;height:30%;animation:lRight 3s linear infinite;animation-delay:2s;background:linear-gradient(180deg,transparent,#f0c040,transparent)}
+        .card-line:nth-child(5){bottom:2px;left:0;width:30%;height:2px;animation:lBottom 3s linear infinite;animation-delay:0.8s;background:linear-gradient(90deg,transparent,#55bbff,transparent)}
+        .card-line:nth-child(6){bottom:2px;left:0;width:30%;height:2px;animation:lBottom 3s linear infinite;animation-delay:2.3s;background:linear-gradient(90deg,transparent,#bb77ee,transparent)}
+        .card-line:nth-child(7){left:2px;top:0;width:2px;height:30%;animation:lLeft 3s linear infinite;animation-delay:1.1s;background:linear-gradient(180deg,transparent,#f0c040,transparent)}
+        @keyframes lTop{0%{left:-30%}100%{left:100%}}
+        @keyframes lRight{0%{top:-30%}100%{top:100%}}
+        @keyframes lBottom{0%{left:100%}100%{left:-30%}}
+        @keyframes lLeft{0%{top:100%}100%{top:-30%}}
 
         .ea-card:hover {
             transform: translateY(-5px); 
@@ -974,7 +972,7 @@
                 <div class="col">
                     <div class="ea-card">
                         <div class="p-4">
-                            <div class="card-particle"></div><div class="card-particle"></div><div class="card-particle"></div><div class="card-particle"></div><div class="card-particle"></div><div class="card-particle"></div><div class="card-particle"></div>
+                            <div class="card-line"></div><div class="card-line"></div><div class="card-line"></div><div class="card-line"></div><div class="card-line"></div><div class="card-line"></div><div class="card-line"></div>
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="badge rounded-pill bg-primary">Running</span>
                                 ` + renderDonut(item.balanceNum, item.profit7day, item.lastWeekProfit) + `
