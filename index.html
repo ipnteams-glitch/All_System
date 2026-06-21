@@ -602,12 +602,12 @@
         .portal-hero-desc{font-size:0.95rem;color:#8899bb;line-height:1.7;max-width:600px;margin-bottom:1.5rem}
         .portal-hero-tags{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem}
         .portal-hero-tags span{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:0.4rem 1rem;border-radius:50px;font-size:0.85rem;color:#c8d6e5}
-        .portal-hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+        .portal-hero-btns{display:flex;justify-content:center}
         .ph-btn{display:inline-block;padding:0.8rem 2rem;font-weight:600;font-size:0.95rem;text-decoration:none;border-radius:8px;transition:all 0.3s}
-        .ph-btn-line{background:linear-gradient(90deg,#10b981,#ef4444);color:#fff;box-shadow:0 4px 15px rgba(16,185,129,0.4)}
-        .ph-btn-line:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.5);color:#fff}
-        .ph-btn-gold{background:linear-gradient(90deg,#D4AF37,#FFDF73);color:#000;box-shadow:0 4px 15px rgba(212,175,55,0.4)}
-        .ph-btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(212,175,55,0.5);color:#000}
+        .ph-btn-trial{display:inline-block;padding:1rem 3rem;font-weight:600;font-size:1.05rem;text-decoration:none;border-radius:8px;transition:all 0.3s ease;letter-spacing:0.03em;position:relative;overflow:hidden;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#f0c040;border:1.5px solid rgba(240,192,64,0.3);box-shadow:0 0 30px rgba(240,192,64,0.08),inset 0 1px 0 rgba(255,255,255,0.03)}
+        .ph-btn-trial::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(240,192,64,0.08),transparent 60%);opacity:0;transition:opacity 0.3s}
+        .ph-btn-trial:hover{transform:translateY(-2px);color:#fff;border-color:rgba(240,192,64,0.6);box-shadow:0 0 50px rgba(240,192,64,0.15),0 8px 25px rgba(0,0,0,0.4);text-decoration:none}
+        .ph-btn-trial:hover::before{opacity:1}
         .hero-section{display:none}
 
     </style>
@@ -625,8 +625,8 @@
                 <span>📈 กำไรยั่งยืน</span>
             </div>
             <div class="portal-hero-btns">
-                <a href="https://lin.ee/9B1pFmD" target="_blank" class="ph-btn ph-btn-line">🎁 ทดลองฟรี 1 พอร์ต</a>
-                <a href="RealTime.html" class="ph-btn ph-btn-gold">📊 ดูแบบ Real-Time</a>
+                <a href="https://lin.ee/9B1pFmD" target="_blank" class="ph-btn-trial">ทดลองฟรี 1 พอร์ต</a>
+                
             </div>
         </div>
     </div>
