@@ -64,6 +64,84 @@
 
         .new-version-link:hover { text-decoration: underline; color: #fff176 !important; }
 
+        /* ── ปุ่มสมัครสมาชิก ── */
+        .register-section {
+            text-align: center;
+            margin: 15px 5px 20px 5px;
+        }
+        .register-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff !important;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 32px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            animation: registerPulse 2.5s ease-in-out infinite;
+        }
+        .register-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+            color: #fff !important;
+        }
+        @keyframes registerPulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 4px 30px rgba(118, 75, 162, 0.7); }
+        }
+
+        /* ── ปุ่ม MyPortfolio ── */
+        .portfolio-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: #fff !important;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 32px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(17, 153, 142, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .portfolio-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(56, 239, 125, 0.6);
+            color: #fff !important;
+        }
+
+        /* ── Portfolio Modal ── */
+        .portfolio-overlay {
+            display: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85); z-index: 9999;
+            overflow-y: auto; padding: 20px;
+        }
+        .portfolio-overlay.active { display: block; }
+        .portfolio-container {
+            max-width: 700px; margin: 30px auto;
+            background: #1a1a2e; border-radius: 20px;
+            padding: 25px; color: #fff;
+        }
+        .portfolio-card-item {
+            background: linear-gradient(145deg, #0a0300 0%, #140800 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 15px; padding: 20px; margin-bottom: 12px;
+        }
+        .portfolio-stat {
+            font-size: 0.85rem; color: #aaa; margin-bottom: 2px;
+        }
+        .portfolio-value {
+            font-size: 1.1rem; font-weight: 600;
+        }
+        .portfolio-value.green { color: #38ef7d; }
+        .portfolio-value.red { color: #ff4757; }
+
         .status-online { 
             color: #4cd137; 
             font-size: 0.9rem; 
@@ -166,7 +244,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(76, 209, 55, 0.1) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(194, 65, 12, 0.1) 0%, rgba(234, 88, 12, 0.03) 40%, transparent 70%);
             z-index: 0;
             pointer-events: none;
         }
@@ -195,7 +273,7 @@
 
         .highlight-text {
             color: #4cd137;
-            text-shadow: 0 0 10px rgba(76, 209, 55, 0.4);
+            text-shadow: 0 0 10px rgba(249, 115, 22, 0.4);
         }
 
         .hero-desc {
@@ -249,17 +327,17 @@
             font-weight: 600;
             margin: 0;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 10px rgba(255, 59, 59, 0.4); 
+            text-shadow: 0 0 10px rgba(255, 59, 59, 0.4), 0 0 15px rgba(234, 88, 12, 0.08); 
         }
 
 /* ------------------------------------- */
         /* กล่องการ์ดหลัก (อัปเดตให้รองรับภาพพื้นหลัง) */
         /* ------------------------------------- */
         .ea-card { 
-            background: linear-gradient(145deg, #151515 0%, #2b2b2b 100%); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
+            background: linear-gradient(145deg, #0a0300 0%, #140800 100%); 
+            border: 1px solid rgba(249, 115, 22, 0.4); 
             border-radius: 25px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.7), 0 0 18px rgba(249,115,22,0.3), 0 0 35px rgba(249,115,22,0.1); 
             overflow: hidden; 
             width: 100%;
             height: 100%; 
@@ -271,10 +349,15 @@
 
         .ea-card:hover {
             transform: translateY(-5px); 
-            box-shadow: 0 12px 25px rgba(255, 255, 255, 0.15); 
+            box-shadow: 0 12px 35px rgba(249,115,22,0.4), 0 0 30px rgba(249,115,22,0.18), 0 0 50px rgba(249,115,22,0.05); 
         }
 
         /* 🟢 โค้ดสำหรับใส่ภาพพื้นหลังและปรับความจาง */
+        .ea-card .badge.bg-primary {
+            background: rgba(25, 25, 112, 0.35) !important;
+            border: 1px solid rgba(65, 105, 225, 0.25);
+            box-shadow: 0 0 10px rgba(25, 25, 112, 0.2);
+        }
         .ea-card::before {
             content: '';
             position: absolute;
@@ -287,16 +370,17 @@
         }
 
         .balance-box { 
-            background-color: rgba(255,255,255,0.05); 
+            background: rgba(194, 65, 12, 0.1); 
             border-radius: 20px; 
             padding: 18px; 
             margin-top: 15px; 
-            border: 1px solid rgba(255,255,255,0.1); 
+            border: 1px solid rgba(249, 115, 22, 0.4);
+            box-shadow: 0 0 12px rgba(249,115,22,0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px; 
-        }
+            gap: 10px;
+        }        }
 
         .ea-card h5.fw-bold { 
             color: #ffeb3b !important; 
@@ -324,8 +408,9 @@
             border-radius: 12px;
             font-size: 0.9rem;
             font-weight: 500;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.15);
+            backdrop-filter: blur(4px);
+            text-shadow: 0 0 8px rgba(255,255,255,0.3);
             white-space: normal; 
             max-width: 100%;
         }
@@ -335,7 +420,7 @@
             margin-top: 15px;
             font-size: 1.1rem;
             font-weight: 600;
-            color: #3399ff; /* 🔵 เปลี่ยนเป็นสีน้ำเงินสว่าง เพื่อให้ดูโดดเด่นบนพื้นดำ */
+            color: #f97316; text-shadow: 0 0 6px rgba(234,88,12,0.2); /* 🔵 เปลี่ยนเป็นสีน้ำเงินสว่าง เพื่อให้ดูโดดเด่นบนพื้นดำ */
         }
 
         .social-btn {
@@ -403,6 +488,110 @@
         }
         
 
+        /* ── RealTime Performance Table ── */
+        .rt-table-container {
+            background: #1c1f26;
+            border-radius: 12px;
+            border: 1px solid #2d333b;
+            overflow-x: auto;
+            margin: 10px 5px 25px 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .rt-table { width: 100%; border-collapse: collapse; text-align: right; }
+        .rt-table th, .rt-table td { padding: 12px 14px; white-space: nowrap; }
+        .rt-table th:first-child, .rt-table td:first-child { min-width: 130px; text-align: left; }
+        .rt-ea-name { font-weight: bold; color: #ffeb3b; font-size: 14px; }
+        .rt-table th { text-shadow: 0 0 8px rgba(234, 88, 12, 0.3);
+            background-color: rgba(212, 175, 55, 0.1);
+            color: #D4AF37; font-weight: 500; font-size: 15px;
+            border-bottom: 2px solid #D4AF37;
+        }
+        .rt-table td { border-bottom: 1px solid rgba(249, 115, 22, 0.12); font-size: 15px; color: #c9d1d9; }
+        .rt-table tbody tr:nth-child(even) { background: rgba(194, 65, 12, 0.08); }
+        .rt-table tbody tr:nth-child(odd) { background: rgba(0, 0, 0, 0.25); }
+        .rt-table tbody tr:hover { background: rgba(249, 115, 22, 0.12) !important; box-shadow: inset 0 0 20px rgba(249, 115, 22, 0.1); transition: all 0.2s ease; }
+        .rt-table tfoot td { border-top: 2px solid rgba(249, 115, 22, 0.7);
+            background: linear-gradient(90deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
+            border-top: 2px solid #D4AF37; font-weight: 600; font-size: 16px;
+            color: #D4AF37; padding: 14px 20px;
+        }
+        .rt-table tfoot td:first-child { text-align: right; letter-spacing: 1px; }
+        .rt-loader { text-align: center; padding: 40px; color: #D4AF37; font-size: 18px; }
+        .rt-stars { display: inline-block; font-size: 16px; letter-spacing: 2px; margin-top: 2px; }
+        .rt-star-on { color: #D4AF37; } .rt-star-off { color: #3a3f4b; }
+        .rt-recommend { color: #FF8C00; font-size: 12px; font-weight: 300; font-style: italic; margin-left: 6px; text-shadow: 0 0 6px rgba(255,140,0,0.4); }
+        @media (max-width: 600px) {
+            .rt-table th, .rt-table td { padding: 8px 6px; font-size: 11px; }
+            .rt-table th { text-shadow: 0 0 8px rgba(234, 88, 12, 0.3); font-size: 10px; }
+            .rt-table th:first-child, .rt-table td:first-child { min-width: 80px; }
+            .rt-ea-name { font-size: 10px; } .rt-stars { font-size: 11px; letter-spacing: 0; }
+            .rt-table tfoot td { border-top: 2px solid rgba(249, 115, 22, 0.7); font-size: 12px; padding: 8px 6px; }
+        }
+        
+        /* —— Performance Donut —— */
+        .donut-wrap {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            animation: donut-pop 0.6s ease-out forwards;
+        }
+        .donut-svg {
+            overflow: visible;
+        }
+        .donut-arc {
+            transition: stroke-dasharray 0.8s ease;
+        }
+        @keyframes donut-pop {
+            0% { transform: scale(0.3); opacity: 0; }
+            60% { transform: scale(1.08); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    
+        /* ── Promo Popup ── */
+        .promo-overlay {
+            display: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85); z-index: 10000;
+            overflow-y: auto; padding: 20px;
+            animation: promoFadeIn 0.4s ease;
+        }
+        .promo-overlay.active { display: flex; align-items: center; justify-content: center; }
+        @keyframes promoFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .promo-modal {
+            background: #1a1a2e; border-radius: 20px;
+            max-width: 500px; width: 100%; padding: 24px;
+            border: 2px solid #FF8C00;
+            box-shadow: 0 0 40px rgba(255,140,0,0.3);
+            animation: promoSlideUp 0.5s ease;
+        }
+        @keyframes promoSlideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .promo-modal h3 {
+            color: #FF8C00; font-size: 1.3rem; font-weight: 600;
+            text-align: center; margin-bottom: 6px;
+        }
+        .promo-modal .promo-sub {
+            color: #999; font-size: 0.8rem; text-align: center; margin-bottom: 16px;
+        }
+        .promo-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 16px; margin-bottom: 8px;
+            background: rgba(255,255,255,0.05); border-radius: 12px;
+            border: 1px solid rgba(255,140,0,0.2);
+            transition: all 0.2s;
+        }
+        .promo-item:hover { background: rgba(255,140,0,0.1); border-color: #FF8C00; }
+        .promo-item-name { color: #ffeb3b; font-weight: 600; font-size: 1rem; }
+        .promo-item-label { color: #FF8C00; font-size: 0.85rem; font-style: italic; }
+        .promo-item-profit { color: #4cd137; font-weight: 600; font-size: 0.9rem; }
+        .promo-close {
+            display: block; margin: 20px auto 0;
+            background: linear-gradient(135deg, #FF8C00, #ff6b00);
+            color: #fff; border: none; padding: 10px 40px;
+            border-radius: 50px; font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .promo-close:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,140,0,0.5); }
+
         /* ── Portal Hero ── */
         .portal-hero{position:relative;height:90vh;min-height:600px;overflow:hidden;background:#080c14}
         .portal-hero #bg-canvas{position:absolute;inset:0;width:100%;height:100%}
@@ -419,13 +608,8 @@
         .ph-btn-line:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(16,185,129,0.5);color:#fff}
         .ph-btn-gold{background:linear-gradient(90deg,#D4AF37,#FFDF73);color:#000;box-shadow:0 4px 15px rgba(212,175,55,0.4)}
         .ph-btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(212,175,55,0.5);color:#000}
-        /* Hide original hero styles that conflict */
         .hero-section{display:none}
 
-
-        .realtime-table th{white-space:nowrap}
-        .realtime-table td{white-space:nowrap}
-        .realtime-table tbody tr:hover{background:rgba(255,255,255,0.02)}
     </style>
 </head>
 <body>
@@ -460,39 +644,57 @@
         </div>
     </div>
 
-
-    <!-- RealTime Summary Table -->
-    <div class="realtime-section" style="margin:10px 5px">
-        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden">
-            <div style="background:linear-gradient(90deg,#1a2a6c,#11998e);padding:10px 16px">
-                <span style="color:#fff;font-weight:600;font-size:0.95rem">📊 Real-Time Portfolio</span>
-                <span id="rtUpdateTime" style="color:rgba(255,255,255,0.6);font-size:0.75rem;float:right"></span>
+    <!-- 📊 Portfolio Modal -->
+    <div id="portfolioOverlay" class="portfolio-overlay">
+        <div class="portfolio-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="text-white m-0">📊 MyPortfolio</h4>
+                <button onclick="togglePortfolio()" class="btn btn-sm btn-outline-light rounded-pill px-3">✕ ปิด</button>
             </div>
-            <div style="overflow-x:auto">
-                <table class="realtime-table" style="width:100%;border-collapse:collapse;font-size:0.85rem">
-                    <thead>
-                        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);color:#8899bb">
-                            <th style="padding:8px 12px;text-align:left;font-weight:500">Account</th>
-                            <th style="padding:8px 12px;text-align:right;font-weight:500">Balance</th>
-                            <th style="padding:8px 12px;text-align:right;font-weight:500">7-Day P/L</th>
-                            <th style="padding:8px 12px;text-align:right;font-weight:500">%</th>
-                        </tr>
-                    </thead>
-                    <tbody id="realtimeBody">
-                        <tr><td colspan="4" style="text-align:center;padding:20px;color:#555">Loading...</td></tr>
-                    </tbody>
-                </table>
+            <div id="portfolioForm" class="mb-3">
+                <div class="input-group">
+                    <input id="portfolioEmail" type="email" class="form-control" placeholder="Gmail ของคุณ" style="background:#2b2b2b;color:#fff;border-color:#444;">
+                </div>
+                <div class="d-flex gap-2 mt-2">
+                    <input id="newMt5Account" type="text" class="form-control" placeholder="MT5 Account" style="background:#2b2b2b;color:#fff;border-color:#444;flex:1;">
+                    <input id="newBroker" type="text" class="form-control" placeholder="Broker" style="background:#2b2b2b;color:#fff;border-color:#444;flex:1;">
+                    <button onclick="addPortfolioAccount()" class="btn btn-sm btn-success rounded-pill px-3">➕ เพิ่ม</button>
+                </div>
+                <div class="d-flex gap-2 mt-2">
+                    <button onclick="fetchPortfolio()" class="btn btn-sm btn-primary rounded-pill px-4">🔍 โหลดพอร์ต</button>
+                    <span id="portfolioMsg" class="text-white-50 small align-self-center"></span>
+                </div>
             </div>
-            <div id="realtimeFoot" style="display:none;padding:10px 16px;border-top:1px solid rgba(255,255,255,0.06);font-size:0.8rem;color:#8899bb">
-                Total Balance: <strong id="rtSumBalance" style="color:#4cd137">$0</strong> &nbsp;|&nbsp;
-                7-Day: <strong id="rtSumPct" style="color:#fff">0%</strong>
-            </div>
+            <div id="portfolioList"></div>
         </div>
     </div>
 
-<div class="system-diagram-container">
-        <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
+<div class="rt-table-container">
+        <table class="rt-table">
+            <thead>
+                <tr>
+                    <th>ชื่อ EA</th>
+                    <th>กำไรปัจจุบัน</th>
+                    <th>เดือนนี้ (%)</th>
+                    <th>เดือนที่แล้ว (%)</th>
+                    <th>ทุนเริ่มต้น</th>
+                </tr>
+            </thead>
+            <tbody id="realtimeBody">
+                <tr><td colspan="5"><div class="rt-loader">⏳ กำลังโหลดข้อมูล...</div></td></tr>
+            </tbody>
+            <tfoot id="realtimeFoot" style="display:none;">
+                <tr>
+                    <td>📊 ผลรวม</td>
+                    <td id="rtSumProfit">-</td>
+                    <td id="rtSumWeek">-</td>
+                    <td id="rtSumLastWeek">-</td>
+                    <td id="rtSumBalance">-</td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
+
 
     <div class="video-wrapper">
         <iframe 
@@ -503,8 +705,21 @@
         </iframe>
     </div>
 
+    <!-- 🔐 ปุ่มสมัครสมาชิก / จัดการพอร์ต -->
+    <div class="register-section" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+        <a href="https://mt5.harvestfarm.site/login?callbackUrl=/dashboard" class="register-btn">
+            🔐 สมัครสมาชิก / จัดการพอร์ต
+        </a>
+        <a href="https://mt5.harvestfarm.site/login?callbackUrl=/portfolio" class="portfolio-btn">
+            📊 MyPortfolio
+        </a>
+    </div>
 
     
+
+    <div style="text-align:center; padding: 5px 20px 15px 20px;">
+        <p style="color:#ef4444; font-size:0.8rem; margin:0; opacity:0.85;">*การลงทุนมีความเสี่ยง ผู้ใช้ควรศึกษาข้อมูลก่อนตัดสินใจ เราเป็นเพียงผู้ให้บริการซอฟแวร์เท่านั้น ไม่รับผิดชอบต่อความเสียหายทุกกรณี</p>
+    </div>
 
     <div class="info-box">
         <strong>การฟาร์ม EA</strong> คือการบริหารพอร์ตการลงทุนที่ไม่พึ่งพา EA เพียงตัวเดียว เพื่อกระจายความเสี่ยง แบบเดียวกับการบริหารเงินของสถาบันการเงิน มาดู A vs B อย่างสมดุลกัน:<br><br>
@@ -523,14 +738,19 @@
             <div style="background: linear-gradient(135deg, #1a2a6c, #11998e, #38ef7d); padding: 2px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);">
                 <div style="background-color: #151515; border-radius: 10px; padding: 12px 15px;">
                     <span style="font-size: 1.15rem; color: #fff;">
-                        💻 <strong style="color: #ffeb3b; font-size: 1.25rem;">แนะนำ!</strong> VPS ราคาถูกพร้อมติดตั้ง
-                        <span style="color: #4cd137; font-weight: 600;">⚡ รันได้สูงสุด 9 พอร์ต</span>
+                        💻 <strong style="color: #ffeb3b; font-size: 1.25rem;">แนะนำ!</strong> VPS รุ่นพิเศษ ราคาถูกพร้อมติดตั้ง
+                        <span style="color: #4cd137; font-weight: 600;">⚡ รันได้สูงสุด 15 พอร์ต</span>
                     </span>
                 </div>
             </div>
             
             <h4 class="instruction-text">เลือกรันกลยุทธได้ตามต้องการ</h4>
         </div>
+    </div>
+
+
+<div class="system-diagram-container">
+        <img src="Allstategy.png" alt="EA Strategies Overview" class="system-diagram-img">
     </div>
 
    <div id="ea-container" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 px-2"></div>
@@ -540,7 +760,7 @@
             <svg class="social-icon" viewBox="0 0 24 24">
                 <path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.084.922.258 1.057.592.122.303.079.778.039 1.085l-.171 1.027c-.053.303-.242 1.186 1.039.647 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.572-3.843 2.572-5.992zm-15.278 1.954h-3.327v-5.465h1.222v4.306h2.105v1.159zm2.41 0h-1.221v-5.465h1.221v5.465zm5.556-3.805l-2.348 3.805h-1.399v-5.465h1.221v3.251l2.251-3.251h1.496v5.465h-1.221v-3.805zm3.627-1.66h-2.104v1.159h2.104v1.159h-2.104v1.158h2.104v1.159h-3.326v-5.465h3.326v1.16z"/>
             </svg>
-            Line Contact : @479ufnya
+            Line Contact : @harvestfarm
         </a>
 
         <a href="https://www.facebook.com/harvestfarmea" target="_blank" class="social-btn fb-btn">
@@ -601,7 +821,10 @@
                         data.push({
                             name: row.c[2] && row.c[2].v !== null ? row.c[2].v : "-",       // คอลัมน์ C (ชื่อระบบ)
                             comment: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",    // คอลัมน์ B (Model)
-                            balance: row.c[3] && row.c[3].v !== null ? row.c[3].v : "-",    // คอลัมน์ D (ข้อมูลเบื้องต้น)
+                            balance: row.c[3] && row.c[3].v !== null ? row.c[3].v : "0",    // คอลัมน์ D (ทุน)
+                            balanceNum: row.c[3] && row.c[3].v !== null ? parseFloat(String(row.c[3].v).replace(/[^0-9.-]/g, '')) || 0 : 0,
+                            profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) || 0 : 0,     // คอลัมน์ G (กำไรสัปดาห์นี้)
+                            lastWeekProfit: row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) || 0 : 0,  // คอลัมน์ H (กำไรสัปดาห์ที่แล้ว)
                             type: row.c[4] && row.c[4].v !== null ? row.c[4].v : "-"        // คอลัมน์ E (Style ความเสี่ยง)
                         });
                     }
@@ -613,11 +836,54 @@
                 return String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' });
             });
 
-            renderCards(data);
+            // Fetch RealTime profit data and merge
+            fetchRealTimeProfit().then(rtData => {
+                // Merge by name
+                data.forEach(item => {
+                    const rt = rtData.find(r => String(r.name).trim() === String(item.name).trim());
+                    if (rt) {
+                        item.profit = rt.profit;
+                        item.profit7day = rt.profit7day;
+                        item.lastWeekProfit = rt.lastWeekProfit;
+                        item.balanceNum = rt.balance; // use RealTime balance (number)
+                    }
+                });
+                renderCards(data);
+            });
 
         } catch (error) {
             console.error('Error:', error);
             showError('<div class="alert alert-danger mx-3 text-center w-100">เกิดข้อผิดพลาดในการดึงข้อมูล</div>');
+        }
+    }
+
+    // Fetch profit data from RealTime sheet for donut charts
+    async function fetchRealTimeProfit() {
+        const RT_SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
+        const url = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+        try {
+            const resp = await fetch(url);
+            const text = await resp.text();
+            const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
+            const rows = json.table.rows;
+            if (!rows) return [];
+            const result = [];
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
+                    result.push({
+                        name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
+                        balance: row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) || 0 : 0,
+                        profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) || 0 : 0,
+                        profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) || 0 : 0,
+                        lastWeekProfit: row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) || 0 : 0,
+                    });
+                }
+            }
+            return result;
+        } catch(e) {
+            console.error("fetchRealTimeProfit error:", e);
+            return [];
         }
     }
 
@@ -630,6 +896,27 @@
     }
 
     function renderCards(data) {
+        function renderDonut(balanceNum, profit7day, lastWeekProfit) {
+            var totalProfit = profit7day + lastWeekProfit;
+            var circ = 2 * Math.PI * 26;
+            var pct = balanceNum > 0 ? (totalProfit / balanceNum) * 100 : 0;
+            var absPct = Math.min(Math.abs(pct), 100);
+            var arc = (absPct / 100) * circ;
+            var color = totalProfit >= 0 ? '#00c853' : '#ff1744';
+            var sign = totalProfit >= 0 ? '+' : '';
+            return '<div class="donut-wrap">'
+                + '<svg width="64" height="64" viewBox="0 0 64 64" class="donut-svg">'
+                + '<circle cx="32" cy="32" r="26" fill="none" stroke="rgba(249,115,22,0.15)" stroke-width="6"/>'
+                + '<circle cx="32" cy="32" r="26" fill="none" class="donut-arc" '
+                + 'stroke="' + color + '" stroke-width="6" stroke-linecap="round" '
+                + 'stroke-dasharray="' + arc.toFixed(1) + ' ' + (circ - arc).toFixed(1) + '" '
+                + 'stroke-dashoffset="' + (circ * 0.25).toFixed(1) + '" '
+                + 'transform="rotate(-90 32 32)"/>'
+                + '<text x="32" y="36" text-anchor="middle" fill="' + color + '" '
+                + 'font-family="Kanit, sans-serif" font-size="12" font-weight="700">'
+                + sign + pct.toFixed(0) + '%</text>'
+                + '</svg></div>';
+        }
         const container = document.getElementById('ea-container');
         const loader = document.getElementById('loader');
         const contactSection = document.getElementById('contact-section'); 
@@ -648,19 +935,17 @@
 
         data.forEach((item) => {
             let typeText = String(item.type);
-            let styleBgColor = '#555555'; 
+            let styleBgColor = '#4a4a4a'; 
             
-            // เช็คคำเพื่อเปลี่ยนสีป้ายกำกับ
-            if (typeText.includes('ทดสอบ')) {
-                styleBgColor = '#DAA520'; 
-            } else if (typeText.includes('ค่อนข้างสูง')) {
-                styleBgColor = '#FF4500'; 
-            } else if (typeText.includes('เสี่ยงสูง')) {
-                styleBgColor = '#ff3b3b'; 
-            } else if (typeText.includes('ค่อนข้างต่ำ')) {
-                styleBgColor = 'darkgreen'; 
-            } else if (typeText.includes('เสี่ยงต่ำ')) {
-                styleBgColor = 'limegreen'; 
+            // color badge by risk level
+            if (typeText.includes('ทดสอบ') || typeText.includes('Testing')) {
+                styleBgColor = '#9a7b0a'; 
+            } else if (typeText.includes('High Risk') || typeText.includes('เสี่ยงสูง')) {
+                styleBgColor = '#a83232'; 
+            } else if (typeText.includes('Medium Risk') || typeText.includes('ค่อนข้างสูง') || typeText.includes('ค่อนข้างต่ำ')) {
+                styleBgColor = '#b85c00'; 
+            } else if (typeText.includes('Low Risk') || typeText.includes('เสี่ยงต่ำ')) {
+                styleBgColor = '#1e8c4a'; 
             }
 
             html += `
@@ -669,8 +954,9 @@
                         <div class="p-4"> 
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="badge rounded-pill bg-primary">Running</span>
+                                ` + renderDonut(item.balanceNum, item.profit7day, item.lastWeekProfit) + `
                             </div>
-                            <h5 class="fw-bold" style="color: #ffeb3b;">${item.name}</h5>
+                            <h5 class="fw-bold" style="color: #fb923c; text-shadow: 0 0 8px rgba(234,88,12,0.3);">${item.name}</h5>
                             
                             <div class="row g-2 mt-2">
                                 <div class="col-6">
@@ -679,7 +965,7 @@
                                 </div>
                                 <div class="col-6 text-end">
                                     <small class="text-muted d-block mb-1">Style</small>
-                                    <div class="style-badge" style="background-color: ${styleBgColor};">${typeText}</div> 
+                                    <div class="style-badge" style="background: ${styleBgColor}; box-shadow: 0 0 12px ${styleBgColor}44;">${typeText}</div> 
                                 </div>
                             </div>
 
@@ -687,7 +973,7 @@
                                 ข้อมูลเบื้องต้น
                             </div>
 
-                            <div class="balance-box text-center mt-2" style="background-color: rgba(255,255,255,0.03); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.1);">
+                            <div class="balance-box text-center mt-2" style="background: rgba(194,65,12,0.08); border-radius: 12px; padding: 15px; border: 1px solid rgba(249,115,22,0.45); box-shadow: 0 0 12px rgba(249,115,22,0.15);">
                                 <span class="fw-bold text-white mb-0" style="font-size: 0.95rem; line-height: 1.6; display: block; white-space: normal;">
                                     ${item.balance}
                                 </span> 
@@ -701,8 +987,275 @@
         container.innerHTML = html;
         if (contactSection) contactSection.style.display = 'block';
     }
+
+    // ── MyPortfolio ──
+    const API_BASE = "https://mt5-license-manager.vercel.app";
+
+    function togglePortfolio() {
+        const ov = document.getElementById('portfolioOverlay');
+        ov.classList.toggle('active');
+    }
+
+    function showPortfolioMsg(msg, isError) {
+        const el = document.getElementById('portfolioMsg');
+        el.textContent = msg;
+        el.style.color = isError ? '#ff4757' : '#38ef7d';
+        setTimeout(() => { el.textContent = ''; }, 5000);
+    }
+
+    async function fetchPortfolio() {
+        const email = document.getElementById('portfolioEmail').value.trim();
+        if (!email) { showPortfolioMsg('กรุณากรอก Gmail', true); return; }
+        showPortfolioMsg('กำลังโหลด...', false);
+        try {
+            const resp = await fetch(`${API_BASE}/api/portfolio?email=${encodeURIComponent(email)}`);
+            const jsonData = await resp.json();
+            const rows = jsonData.accounts;
+            if (!rows || rows.length === 0) {
+                document.getElementById('portfolioList').innerHTML = '<div class="text-center text-white-50 py-4">ยังไม่มีพอร์ต — เพิ่มพอร์ตแรกของคุณ</div>';
+                showPortfolioMsg('ไม่พบข้อมูล', true);
+                return;
+            }
+
+            renderPortfolioCards(rows);
+            showPortfolioMsg(`พบ ${rows.length} พอร์ต`, false);
+        } catch (e) {
+            console.error(e);
+            document.getElementById('portfolioList').innerHTML = '<div class="text-center text-danger py-3">⚠️ ไม่สามารถโหลดข้อมูลได้ — เช็คว่า API ทำงานอยู่หรือไม่</div>';
+            showPortfolioMsg('โหลดไม่สำเร็จ', true);
+        }
+    }
+
+    function renderPortfolioCards(accounts) {
+        const container = document.getElementById('portfolioList');
+        if (!accounts || accounts.length === 0) {
+            container.innerHTML = '<div class="text-center text-white-50 py-4">ยังไม่มีพอร์ต</div>';
+            return;
+        }
+        let html = '';
+        accounts.forEach(a => {
+            const floatColor = a.floating_pl >= 0 ? 'green' : 'red';
+            const profitColor = a.total_profit >= 0 ? 'green' : 'red';
+            const fmtNum = (n) => (n >= 0 ? '+' : '') + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            html += `
+                <div class="portfolio-card-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="text-white fw-bold" style="font-size:1.1rem;">#${a.mt5_account}</span>
+                            ${a.broker ? `<span class="text-white-50 ms-2 small">${a.broker}</span>` : ''}
+                        </div>
+                        <button onclick="deletePortfolioAccount('${a.id}')" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0" style="font-size:0.7rem;">🗑</button>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-4">
+                            <div class="portfolio-stat">Balance</div>
+                            <div class="portfolio-value text-white">$${a.balance.toLocaleString('en-US', {minimumFractionDigits:2})}</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="portfolio-stat">Float P/L</div>
+                            <div class="portfolio-value ${floatColor}">$${fmtNum(a.floating_pl)}</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="portfolio-stat">Total Profit</div>
+                            <div class="portfolio-value ${profitColor}">$${fmtNum(a.total_profit)}</div>
+                        </div>
+                    </div>
+                    ${a.last_updated ? `<div class="text-end text-white-50 mt-2" style="font-size:0.7rem;">อัปเดต: ${new Date(a.last_updated).toLocaleString('th-TH')}</div>` : ''}
+                </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    async function addPortfolioAccount() {
+        const email = document.getElementById('portfolioEmail').value.trim();
+        const mt5 = document.getElementById('newMt5Account').value.trim();
+        const broker = document.getElementById('newBroker').value.trim();
+        if (!email || !mt5) { showPortfolioMsg('กรุณากรอก Gmail และ MT5 Account', true); return; }
+        showPortfolioMsg('กำลังเพิ่ม...', false);
+        try {
+            const res = await fetch(`${API_BASE}/api/portfolio`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mt5_account: mt5, broker, email })
+            });
+            const data = await res.json();
+            if (data.success || data.account) {
+                showPortfolioMsg('เพิ่มแล้ว — กด "โหลดพอร์ต" เพื่อดู', false);
+                document.getElementById('newMt5Account').value = '';
+                document.getElementById('newBroker').value = '';
+            } else {
+                showPortfolioMsg(data.error || 'เพิ่มไม่สำเร็จ', true);
+            }
+        } catch (e) {
+            showPortfolioMsg('เชื่อมต่อ API ไม่สำเร็จ', true);
+        }
+    }
+
+    async function deletePortfolioAccount(id) {
+        if (!confirm('ยืนยันการลบพอร์ตนี้?')) return;
+        showPortfolioMsg('กำลังลบ...', false);
+        try {
+            const res = await fetch(`${API_BASE}/api/portfolio?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+                showPortfolioMsg('ลบแล้ว — กด "โหลดพอร์ต" เพื่อรีเฟรช', false);
+                fetchPortfolio();
+            } else {
+                showPortfolioMsg(data.error || 'ลบไม่สำเร็จ', true);
+            }
+        } catch (e) {
+            showPortfolioMsg('เชื่อมต่อ API ไม่สำเร็จ', true);
+        }
+    }
+
+    // ── RealTime Performance Table ──
+    const RT_SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
+    const RT_GVIZ_URL = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+
+    function rtFormatNumber(num) {
+        if (isNaN(num)) return "0.00";
+        return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function rtFormatInteger(num) {
+        if (isNaN(num)) return "0";
+        return Math.round(num).toLocaleString('en-US', { maximumFractionDigits: 0 });
+    }
+    function rtRenderStars(count) {
+        let html = '<div class="rt-stars">';
+        for (let i = 0; i < 5; i++) {
+            html += i < count ? '<span class="rt-star-on">★</span>' : '<span class="rt-star-off">★</span>';
+        }
+        html += '</div>';
+        return html;
+    }
+    async function fetchRealTimeData() {
+        try {
+            const cacheBuster = "&t=" + new Date().getTime();
+            const response = await fetch(RT_GVIZ_URL + cacheBuster);
+            const text = await response.text();
+            const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+            const jsonData = JSON.parse(jsonString);
+            const tableBody = document.getElementById('realtimeBody');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            const rows = jsonData.table.rows;
+            if (!rows || rows.length <= 1) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color:#8b949e;">กำลังรอรับข้อมูลจากระบบ...</td></tr>';
+                return;
+            }
+            let data = [];
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
+                    const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
+                    const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
+                    const lastWeekProfit = row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) : 0;
+                    const stars = row.c[8] && row.c[8].v !== null ? parseInt(row.c[8].v) : 0;
+                    const label = row.c[9] && row.c[9].v !== null ? String(row.c[9].v).trim() : '';
+                    data.push({
+                        name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
+                        balance: balance,
+                        profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0,
+                        profit7day: profit7day,
+                        lastWeekProfit: lastWeekProfit,
+                        stars: stars,
+                        label: label
+                    });
+                }
+            }
+            data.sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
+            let sumProfit = 0, sumWeek = 0, sumLastWeek = 0, sumBalance = 0;
+            data.forEach(row => {
+                sumProfit += row.profit;
+                sumWeek += row.profit7day;
+                sumLastWeek += row.lastWeekProfit;
+                sumBalance += row.balance;
+                let pct7 = row.balance > 0 ? (row.profit7day / row.balance * 100) : 0;
+                let pctLw = row.balance > 0 ? (row.lastWeekProfit / row.balance * 100) : 0;
+                let profitColor = row.profit > 0 ? '#4cd137' : (row.profit < 0 ? '#a83232' : '#ffffff');
+                let p7Color = row.profit7day > 0 ? '#4cd137' : (row.profit7day < 0 ? '#a83232' : '#ffffff');
+                let lwColor = row.lastWeekProfit > 0 ? '#4cd137' : (row.lastWeekProfit < 0 ? '#a83232' : '#ffffff');
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td><span class="rt-ea-name">${row.name}</span>${rtRenderStars(row.stars)}${row.label ? ` <span class="rt-recommend">${row.label}</span>` : ''}</td><td style="color:${profitColor};font-weight:500;">${row.profit > 0 ? '+' : ''}${rtFormatNumber(row.profit)}</td><td style="color:${p7Color};font-weight:500;">${row.profit7day > 0 ? '+' : ''}${pct7.toFixed(1)}%</td><td style="color:${lwColor};font-weight:500;">${pctLw > 0 ? '+' : ''}${pctLw.toFixed(1)}%</td><td>$${rtFormatInteger(row.balance)}</td>`;
+                tableBody.appendChild(tr);
+            });
+            const sumColor = sumProfit > 0 ? '#4cd137' : (sumProfit < 0 ? '#a83232' : '#D4AF37');
+            const weekColor = sumWeek > 0 ? '#4cd137' : (sumWeek < 0 ? '#a83232' : '#D4AF37');
+            const lwColor = sumLastWeek > 0 ? '#4cd137' : (sumLastWeek < 0 ? '#a83232' : '#D4AF37');
+            document.getElementById('rtSumProfit').innerHTML = `<span style="color:${sumColor}">${sumProfit > 0 ? '+' : ''}${rtFormatNumber(sumProfit)}</span>`;
+            let sumPctWeek = sumBalance > 0 ? (sumWeek / sumBalance * 100) : 0; document.getElementById('rtSumWeek').innerHTML = `<span style="color:${weekColor}">${sumPctWeek > 0 ? '+' : ''}${sumPctWeek.toFixed(1)}%</span>`;
+            let sumPctLastWeek = sumBalance > 0 ? (sumLastWeek / sumBalance * 100) : 0; document.getElementById('rtSumLastWeek').innerHTML = `<span style="color:${lwColor}">${sumPctLastWeek > 0 ? '+' : ''}${sumPctLastWeek.toFixed(1)}%</span>`;
+            document.getElementById('rtSumBalance').innerHTML = `$${rtFormatInteger(sumBalance)}`;
+            document.getElementById('realtimeFoot').style.display = '';
+        } catch (error) {
+            console.error("RealTime Fetch Error:", error);
+            const tableBody = document.getElementById('realtimeBody');
+            if (tableBody) { tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ เกิดข้อผิดพลาด หรือไฟล์ Google Sheet ยังไม่เปิดแชร์</td></tr>'; }
+        }
+    }
+    fetchRealTimeData();
+    setInterval(fetchRealTimeData, 3000);
+
+    // ── Promo Popup: show labeled items ──
+    async function showPromoPopup() {
+        try {
+            const RT_SHEET_ID = "1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
+            const url = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+            const resp = await fetch(url);
+            const text = await resp.text();
+            const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
+            const rows = json.table.rows;
+            if (!rows) return;
+            const labeled = [];
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
+                    const label = row.c[9] && row.c[9].v !== null ? String(row.c[9].v).trim() : '';
+                    if (label) {
+                        const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
+                        const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
+                        const pct = balance > 0 ? (profit7day / balance * 100) : 0;
+                        labeled.push({
+                            name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
+                            label: label,
+                            profit7day: profit7day,
+                            pct: pct
+                        });
+                    }
+                }
+            }
+            if (labeled.length === 0) return;
+            // Sort by name numerically (Sys_1, Sys_2...)
+            labeled.sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
+            const promoList = document.getElementById('promoList');
+            if (!promoList) return;
+            let html = '';
+            labeled.forEach(item => {
+                const pf = item.profit7day > 0 ? '+' + item.profit7day.toLocaleString() : item.profit7day.toLocaleString();
+                const pctStr = item.pct.toFixed(1) + '%';
+                const pctColor = item.pct >= 0 ? '#4cd137' : '#a83232';
+                html += `<div class="promo-item">
+                    <div><span class="promo-item-name">${item.name}</span><br><span class="promo-item-label">${item.label}</span></div>
+                    <div style="text-align:right"><span class="promo-item-profit">${pf}</span><br><span style="color:${pctColor};font-size:0.8rem;font-weight:500">${pctStr}</span></div>
+                </div>`;
+            });
+            promoList.innerHTML = html;
+            document.getElementById('promoOverlay').classList.add('active');
+        } catch(e) { /* silent */ }
+    }
+    showPromoPopup();
 </script>
 
+
+<!-- Promo Popup -->
+<div class="promo-overlay active" id="promoOverlay">
+    <div class="promo-modal">
+        <h3>🔥 แนะนำ EA ที่น่าสนใจ</h3>
+        <p class="promo-sub">ระบบเทรดที่โดดเด่น — เลือกตามสไตล์ของคุณ</p>
+        <div id="promoList"></div>
+        <button class="promo-close" onclick="document.getElementById('promoOverlay').classList.remove('active')">ดูทั้งหมด</button>
+    </div>
+</div>
 <script>
 var SPEED=0.25;
 (function(){
@@ -921,45 +1474,6 @@ function dr(ts){
 }
 requestAnimationFrame(dr);
 })();
-</script>
-
-<script>
-// RealTime Data Fetch
-async function fetchRealTimeData(){
-    try{
-        const RT_ID="1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU";
-        const url="https://docs.google.com/spreadsheets/d/"+RT_ID+"/gviz/tq?tqx=out:json&gid=0";
-        const r=await fetch(url); const t=await r.text();
-        const j=JSON.parse(t.substring(t.indexOf("{"),t.lastIndexOf("}")+1));
-        const rows=j.table.rows; if(!rows)return;
-        let html="",sumBal=0,sumP7=0,totalBal=0;
-        for(let i=0;i<rows.length;i++){
-            const row=rows[i];
-            if(!row||!row.c||!row.c[0]||row.c[0].v===null||String(row.c[0].v).toLowerCase()==="acc")continue;
-            const name=row.c[1]&&row.c[1].v!==null?row.c[1].v:"-";
-            const bal=row.c[2]&&row.c[2].v!==null?parseFloat(row.c[2].v):0;
-            const p7=row.c[6]&&row.c[6].v!==null?parseFloat(row.c[6].v):0;
-            const pct=bal>0?(p7/bal*100):0;
-            totalBal+=bal;sumP7+=p7;
-            const cls=pct>=0?"color:#4cd137":"color:#ff3b3b";
-            html+="<tr style='border-bottom:1px solid rgba(255,255,255,0.04)'>";
-            html+="<td style='padding:8px 12px;color:#c8d6e5'>"+name+"</td>";
-            html+="<td style='padding:8px 12px;text-align:right;color:#fff'>$"+bal.toLocaleString()+"</td>";
-            html+="<td style='padding:8px 12px;text-align:right;"+cls+"'>"+(p7>=0?"+":"")+p7.toLocaleString()+"</td>";
-            html+="<td style='padding:8px 12px;text-align:right;"+cls+"'>"+(pct>=0?"+":"")+pct.toFixed(1)+"%</td>";
-            html+="</tr>";
-        }
-        document.getElementById("realtimeBody").innerHTML=html||"<tr><td colspan='4' style='text-align:center;padding:20px;color:#555'>No data</td></tr>";
-        const tpct=totalBal>0?(sumP7/totalBal*100):0;
-        document.getElementById("rtSumBalance").innerHTML="$"+totalBal.toLocaleString();
-        document.getElementById("rtSumPct").innerHTML=(tpct>=0?"+":"")+tpct.toFixed(1)+"%";
-        document.getElementById("rtSumPct").style.color=tpct>=0?"#4cd137":"#ff3b3b";
-        document.getElementById("realtimeFoot").style.display="";
-        document.getElementById("rtUpdateTime").textContent=new Date().toLocaleTimeString("th-TH");
-    }catch(e){}
-}
-fetchRealTimeData();
-setInterval(fetchRealTimeData,5000);
 </script>
 
 </body>
