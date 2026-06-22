@@ -651,7 +651,43 @@
         .ph-btn-trial:hover::before{opacity:1}
         .hero-section{display:none}
 
-    </style>
+    
+        /* Pulsing dots behind Sys_ names */
+        .sys-dot {
+            position: relative;
+        }
+        .sys-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,140,50,0.3) 0%, rgba(255,100,30,0.08) 40%, transparent 70%);
+            z-index: 0;
+            animation: dotPulse1 2.8s ease-in-out infinite;
+        }
+        .sys-dot::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(100,180,255,0.3) 0%, rgba(80,150,255,0.06) 40%, transparent 70%);
+            z-index: 0;
+            animation: dotPulse2 2.8s ease-in-out infinite;
+            animation-delay: 1.4s;
+        }
+        @keyframes dotPulse1 {
+            0%, 100% { opacity: 0.25; transform: translate(-50%, -50%) scale(0.7); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.0); }
+        }
+        @keyframes dotPulse2 {
+            0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.0); }
+            50% { opacity: 0.2; transform: translate(-50%, -50%) scale(0.6); }
+        }
+</style>
 </head>
 <body>
 <div class="portal-hero">
@@ -996,7 +1032,7 @@
                                 <span class="badge rounded-pill bg-primary">Running</span>
                                 ` + renderDonut(item.balanceNum, item.profit7day, item.lastWeekProfit) + `
                             </div>
-                            <h5 class="fw-bold" style="color: #fb923c; text-shadow: 0 0 8px rgba(234,88,12,0.3);">${item.name}</h5>
+                            <h5 class="fw-bold sys-dot" style="color: #fb923c; text-shadow: 0 0 8px rgba(234,88,12,0.3);">${item.name}</h5>
                             
                             <div class="row g-2 mt-2">
                                 <div class="col-6">
