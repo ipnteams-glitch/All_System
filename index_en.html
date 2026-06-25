@@ -1313,7 +1313,7 @@
                 const row = rows[i];
                 if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
                     const label = row.c[9] && row.c[9].v !== null ? String(row.c[9].v).trim() : '';
-                    if (label === 'Recommended') {
+                    if (label === 'Recommend') {
                         const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
                         const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
                         const pct = balance > 0 ? (profit7day / balance * 100) : 0;
