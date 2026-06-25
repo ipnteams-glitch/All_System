@@ -64,7 +64,7 @@
 
         .new-version-link:hover { text-decoration: underline; color: #fff176 !important; }
 
-        /* ── ปุ่มสมัครสมาชิก ── */
+        /* ── Register Button ── */
         .register-section {
             text-align: center;
             margin: 15px 5px 20px 5px;
@@ -93,7 +93,7 @@
             50% { box-shadow: 0 4px 30px rgba(118, 75, 162, 0.7); }
         }
 
-        /* ── ปุ่ม MyPortfolio ── */
+        /* ── MyPortfolio Button ── */
         .portfolio-btn {
             display: inline-block;
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
@@ -173,34 +173,34 @@
         }
         
         /* ------------------------------------- */
-        /* เอฟเฟกต์ภาพลอยได้แบบล้ำสมัย (Modern Floating) */
+        /* Modern Floating Effect */
         /* ------------------------------------- */
         .system-diagram-img {
             max-width: 100%;
             height: auto;
             border-radius: 15px; 
             border: 1px solid rgba(255, 255, 255, 0.15);
-            /* 🟢 สั่งให้เล่นแอนิเมชันชื่อ floatingModern วนลูปไปเรื่อยๆ */
+            /* Play floatingModern animation in infinite loop */
             animation: floatingModern 4s ease-in-out infinite;
         }
 
-        /* เมื่อเอาเมาส์ไปชี้ ให้ภาพขยายใหญ่ขึ้นนิดนึงและสว่างขึ้น */
+        /* On hover: slightly enlarge and brighten the image */
         .system-diagram-img:hover {
             transform: scale(1.03) translateY(-10px); 
             box-shadow: 0 15px 40px rgba(0, 191, 255, 0.7); 
-            /* หยุดแอนิเมชันชั่วคราวตอนเอาเมาส์ชี้ */
+            /* Pause animation on hover */
             animation-play-state: paused; 
         }
 
-        /* 🟢 โครงสร้างการเคลื่อนไหว: ลอยขึ้นลง + แสงกระพริบช้าๆ */
+        /* Movement structure: float up/down + slow glow pulse */
         @keyframes floatingModern {
             0% {
                 transform: translateY(0px);
                 box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2);
             }
             50% {
-                transform: translateY(-12px); /* ลอยขึ้น 12 พิกเซล */
-                box-shadow: 0 15px 35px rgba(0, 191, 255, 0.5); /* แสงสีฟ้าสว่างขึ้น */
+                transform: translateY(-12px); /* Float up 12 pixels */
+                box-shadow: 0 15px 35px rgba(0, 191, 255, 0.5); /* Bright blue glow intensifies */
             }
             100% {
                 transform: translateY(0px);
@@ -331,7 +331,7 @@
         }
 
 /* ------------------------------------- */
-        /* กล่องการ์ดหลัก (อัปเดตให้รองรับภาพพื้นหลัง) */
+        /* Main card box (updated for background image support) */
         /* ------------------------------------- */
         
         .ea-card {
@@ -393,7 +393,7 @@
             box-shadow: 0 12px 35px rgba(249,115,22,0.4), 0 0 30px rgba(249,115,22,0.18), 0 0 50px rgba(249,115,22,0.05); 
         }
 
-        /* 🟢 โค้ดสำหรับใส่ภาพพื้นหลังและปรับความจาง */
+        /* Code for background image + opacity adjustment */
         .ea-card .badge.bg-primary {
             background: rgba(25, 25, 112, 0.35) !important;
             border: 1px solid rgba(65, 105, 225, 0.25);
@@ -403,11 +403,11 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('block.png'); /* อ้างอิงชื่อไฟล์ภาพของคุณ */
-            background-size: cover; /* จัดภาพให้เต็มกล่อง */
-            background-position: center; /* จัดภาพให้อยู่กึ่งกลาง */
-            opacity: 0.15; /* 🟢 ปรับความจางตรงนี้ (0.15 - 0.30) */
-            z-index: -1; /* 🟢 ซ่อนภาพไว้หลังตัวหนังสือ */
+            background-image: url('block.png'); /* Reference your image file name */
+            background-size: cover; /* Scale image to fill box */
+            background-position: center; /* Center the image */
+            opacity: 0.15; /* Adjust opacity here (0.15 - 0.30) */
+            z-index: -1; /* Hide image behind text */
         }
 
         .balance-box { 
@@ -461,7 +461,7 @@
             margin-top: 15px;
             font-size: 1.1rem;
             font-weight: 600;
-            color: #f97316; text-shadow: 0 0 6px rgba(234,88,12,0.2); /* 🔵 เปลี่ยนเป็นสีน้ำเงินสว่าง เพื่อให้ดูโดดเด่นบนพื้นดำ */
+            color: #f97316; text-shadow: 0 0 6px rgba(234,88,12,0.2); /* Bright blue to stand out on dark background */
         }
 
         .social-btn {
@@ -505,11 +505,11 @@
         .spinner-border { color: #ffffff !important; }
 
 /* ------------------------------------- */
-        /* กรอบวิดีโอ YouTube แบบ Responsive */
+        /* Responsive YouTube video wrapper */
         /* ------------------------------------- */
         .video-wrapper {
             position: relative;
-            padding-bottom: 56.25%; /* สัดส่วน 16:9 */
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
             height: 0;
             overflow: hidden;
             max-width: 100%;
@@ -717,12 +717,12 @@
         <canvas id="bg-canvas"></canvas>
         <div class="portal-hero-content">
             <h1 class="portal-hero-title">Trade With <span>Harvest Farm</span></h1>
-            <h2 class="portal-hero-subtitle">FOREX บน METATRADE 5</h2>
-            <p class="portal-hero-desc">เทรดคู่ทองและค่าเงินอัจฉริยะด้วยแนวคิด "ฟาร์ม EA"<br>กระจายความเสี่ยงผ่านกองทัพ EA ทำงานตลอด 24 ชม.</p>
+            <h2 class="portal-hero-subtitle">FOREX on METATRADER 5</h2>
+            <p class="portal-hero-desc">Trade gold and currency pairs smartly with the "EA Farm" concept<br>Diversify risk across a fleet of EAs running 24/7.</p>
             <div class="portal-hero-tags">
-                <span>🛡️ บริหารความเสี่ยง</span>
-                <span>⚔️ กระจายหลายกลยุทธ์</span>
-                <span>📈 กำไรยั่งยืน</span>
+                <span>🛡️ Risk Management</span>
+                <span>⚔️ Multi-Strategy</span>
+                <span>📈 Sustainable Profits</span>
             </div>
             <div class="portal-hero-btns">
                 <a href="https://mt5.harvestfarm.site/login?callbackUrl=/dashboard" class="ph-btn-trial">GET START FOR FREE</a>
@@ -743,7 +743,7 @@
             <span class="dot"></span>Live Update
         </div>
         <div style="color:#fff; font-size:0.8rem; text-align:center; padding:0 10px 10px 10px;">
-            ติดตามอัปเดตข้อมูลปัจจุบันย้อนหลัง 2 เดือนล่าสุด (เป็นข้อมูลทดสอบเท่านั้น ไม่มีเจตนาอวดอ้าง ชี้นำ ชักชวน ผลการรันจริงอาจแตกต่างได้ ตามสภาพตลาด)
+            Tracking live data for the past 2 months (Test data only. No intention to boast, guide, or solicit. Actual results may vary depending on market conditions.)
         </div>
     </div>
 
@@ -752,19 +752,19 @@
         <div class="portfolio-container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="text-white m-0">📊 MyPortfolio</h4>
-                <button onclick="togglePortfolio()" class="btn btn-sm btn-outline-light rounded-pill px-3">✕ ปิด</button>
+                <button onclick="togglePortfolio()" class="btn btn-sm btn-outline-light rounded-pill px-3">✕ Close</button>
             </div>
             <div id="portfolioForm" class="mb-3">
                 <div class="input-group">
-                    <input id="portfolioEmail" type="email" class="form-control" placeholder="Gmail ของคุณ" style="background:#2b2b2b;color:#fff;border-color:#444;">
+                    <input id="portfolioEmail" type="email" class="form-control" placeholder="Your Gmail" style="background:#2b2b2b;color:#fff;border-color:#444;">
                 </div>
                 <div class="d-flex gap-2 mt-2">
                     <input id="newMt5Account" type="text" class="form-control" placeholder="MT5 Account" style="background:#2b2b2b;color:#fff;border-color:#444;flex:1;">
                     <input id="newBroker" type="text" class="form-control" placeholder="Broker" style="background:#2b2b2b;color:#fff;border-color:#444;flex:1;">
-                    <button onclick="addPortfolioAccount()" class="btn btn-sm btn-success rounded-pill px-3">➕ เพิ่ม</button>
+                    <button onclick="addPortfolioAccount()" class="btn btn-sm btn-success rounded-pill px-3">➕ Add</button>
                 </div>
                 <div class="d-flex gap-2 mt-2">
-                    <button onclick="fetchPortfolio()" class="btn btn-sm btn-primary rounded-pill px-4">🔍 โหลดพอร์ต</button>
+                    <button onclick="fetchPortfolio()" class="btn btn-sm btn-primary rounded-pill px-4">🔍 Load Portfolio</button>
                     <span id="portfolioMsg" class="text-white-50 small align-self-center"></span>
                 </div>
             </div>
@@ -776,19 +776,19 @@
         <table class="rt-table">
             <thead>
                 <tr>
-                    <th>ชื่อ EA</th>
-                    <th>กำไรปัจจุบัน</th>
-                    <th>เดือนนี้ (%)</th>
-                    <th>เดือนที่แล้ว (%)</th>
-                    <th>ทุนเริ่มต้น</th>
+                    <th>EA Name</th>
+                    <th>Current Profit</th>
+                    <th>This Month (%)</th>
+                    <th>Last Month (%)</th>
+                    <th>Starting Capital</th>
                 </tr>
             </thead>
             <tbody id="realtimeBody">
-                <tr><td colspan="5"><div class="rt-loader">⏳ กำลังโหลดข้อมูล...</div></td></tr>
+                <tr><td colspan="5"><div class="rt-loader">⏳ Loading data...</div></td></tr>
             </tbody>
             <tfoot id="realtimeFoot" style="display:none;">
                 <tr>
-                    <td>📊 ผลรวม</td>
+                    <td>📊 Total</td>
                     <td id="rtSumProfit">-</td>
                     <td id="rtSumWeek">-</td>
                     <td id="rtSumLastWeek">-</td>
@@ -808,10 +808,10 @@
         </iframe>
     </div>
 
-    <!-- 🔐 ปุ่มสมัครสมาชิก / จัดการพอร์ต -->
+    <!-- 🔐 Register / Manage Portfolio Button -->
     <div class="register-section" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
         <a href="https://mt5.harvestfarm.site/login?callbackUrl=/dashboard" class="register-btn">
-            🔐 สมัครสมาชิก / จัดการพอร์ต
+            🔐 Register / Manage Portfolio
         </a>
         
     </div>
@@ -819,14 +819,14 @@
     
 
     <div style="text-align:center; padding: 5px 20px 15px 20px;">
-        <p style="color:#ef4444; font-size:0.82rem; margin:0; opacity:0.9; line-height:1.8;">*การลงทุนมีความเสี่ยง ผู้ใช้ควรศึกษาข้อมูลก่อนตัดสินใจ เราเป็นเพียงผู้ให้บริการซอฟต์แวร์เท่านั้น ไม่รับผิดชอบต่อความเสียหายทุกกรณี<br>*การลงทุนมีความเสี่ยง ผู้ใช้ควรศึกษาข้อมูลก่อนตัดสินใจ เราเป็นเพียงผู้ให้บริการซอฟต์แวร์เท่านั้น ไม่รับผิดชอบต่อความเสียหายทุกกรณี<br>*การลงทุนมีความเสี่ยง ผู้ใช้ควรศึกษาข้อมูลก่อนตัดสินใจ เราเป็นเพียงผู้ให้บริการซอฟต์แวร์เท่านั้น ไม่รับผิดชอบต่อความเสียหายทุกกรณี</p>
+        <p style="color:#ef4444; font-size:0.82rem; margin:0; opacity:0.9; line-height:1.8;">*Investment involves risk. Users should study information before making decisions. We are only a software provider and are not responsible for any damages.<br>*Investment involves risk. Users should study information before making decisions. We are only a software provider and are not responsible for any damages.<br>*Investment involves risk. Users should study information before making decisions. We are only a software provider and are not responsible for any damages.</p>
     </div>
 
     <div class="info-box">
-        <strong>การฟาร์ม EA</strong> คือการบริหารพอร์ตการลงทุนที่ไม่พึ่งพา EA เพียงตัวเดียว เพื่อกระจายความเสี่ยง แบบเดียวกับการบริหารเงินของสถาบันการเงิน มาดู A vs B อย่างสมดุลกัน:<br><br>
-        <strong>A:</strong> คือการกระจายพอตด้วยหลาย EA และบริหารเงินในพอร์ตตามความเหมาะสม ข้อดีคือเสถียรและลด drawdown แต่ต้นทุนซับซ้อนเพราะต้องวางหลายพอร์ต<br>
-        <strong>B:</strong> ใช้ EA เดี่ยวที่มี track record ชัดเจน ง่ายต่อการบริหาร แต่เสี่ยงสูงเมื่อตลาดเปลี่ยนเหมือนวางไข่ในตะกร้าเดียว<br><br>
-        <strong>Verdict:</strong> เมื่อตลาดไม่แน่นอน A มักชนะในระยะยาวเพราะการกระจายความเสี่ยงทำได้ดีกว่า แต่หากคุณมีทักษะเลือก EA เดี่ยวที่เข้ากับสภาวะตลาดได้ดี B ก็อาจได้ผลตอบแทนสูงในระยะสั้น วิถีที่ลงตัวคือผสมผสาน: กระจายพอร์ตด้วยหลาย EA พร้อมรีบาลานซ์ความเสี่ยง เพื่อควมยั่งยืนในระยะยาว
+        <strong>EA Farming</strong> is portfolio management that doesn't rely on a single EA — it spreads risk, similar to how financial institutions manage money. Let's look at A vs B:<br><br>
+        <strong>A:</strong> Diversify with multiple EAs and manage capital per portfolio. The advantage is stability and reduced drawdown, but the cost is complexity from running multiple portfolios.<br>
+        <strong>B:</strong> Use a single EA with a clear track record — easy to manage, but high risk when the market changes, like putting all eggs in one basket.<br><br>
+        <strong>Verdict:</strong> When markets are uncertain, A usually wins in the long run because diversification handles risk better. But if you have the skill to pick a single EA that fits market conditions, B can yield high short-term returns. The sweet spot is blending both: diversify with multiple EAs while rebalancing risk for long-term sustainability.
     </div>
 
     <div id="loader">
@@ -839,13 +839,13 @@
             <div style="background: linear-gradient(135deg, #1a2a6c, #11998e, #38ef7d); padding: 2px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);">
                 <div style="background-color: #151515; border-radius: 10px; padding: 12px 15px;">
                     <span style="font-size: 1.15rem; color: #fff;">
-                        💻 <strong style="color: #ffeb3b; font-size: 1.25rem;">แนะนำ!</strong> VPS รุ่นพิเศษ ราคาถูกพร้อมติดตั้ง
-                        <span style="color: #4cd137; font-weight: 600;">⚡ รันได้สูงสุด 15 พอร์ต</span>
+                        💻 <strong style="color: #ffeb3b; font-size: 1.25rem;">Recommended!</strong> Special VPS — affordable, pre-installed
+                        <span style="color: #4cd137; font-weight: 600;">⚡ Run up to 15 portfolios</span>
                     </span>
                 </div>
             </div>
             
-            <h4 class="instruction-text">เลือกรันกลยุทธได้ตามต้องการ</h4>
+            <h4 class="instruction-text">Choose and run strategies as you wish</h4>
         </div>
     </div>
 
@@ -888,10 +888,10 @@
 </div>
 
 <script>
-    // 🔴 1. อัปเดต SHEET_ID ให้ตรงกับลิงก์ของจริง 100% 
+    // 1. Update SHEET_ID to match the actual link 100% 
     const SHEET_ID = "193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ"; 
     
-    // 🟢 2. คงคำสั่ง &headers=1 ไว้ เพื่อบังคับให้ Google ไม่กลืน Sys_1 และ Sys_2 หายไป
+    // 2. Keep &headers=1 to prevent Google from swallowing Sys_1 and Sys_2
     const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0&headers=1`;
     
     document.addEventListener('DOMContentLoaded', fetchIndexData);
@@ -907,32 +907,32 @@
             const rows = jsonData.table.rows;
 
             if (!rows || rows.length === 0) {
-                showError('<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>');
+                showError('<div class="alert alert-warning mx-3 text-center w-100">No data found in the system</div>');
                 return;
             }
 
             let data = [];
             
-            // 🎯 3. ดึงข้อมูล (เริ่มอ่านตั้งแต่ Sys_1 โดยไม่พลาด)
+            // 3. Fetch data (start reading from Sys_1 without missing any)
             rows.forEach(row => {
                 if (row && row.c && row.c[0] && row.c[0].v !== null) {
                     let checkKey = String(row.c[0].v).toLowerCase();
-                    // ข้ามเฉพาะแถวที่เป็นหัวตารางจริงๆ
+                    // Skip only actual header rows
                     if (checkKey !== "original" && checkKey !== "acc_number" && checkKey !== "acc") {
                         data.push({
-                            name: row.c[2] && row.c[2].v !== null ? row.c[2].v : "-",       // คอลัมน์ C (ชื่อระบบ)
-                            comment: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",    // คอลัมน์ B (Model)
-                            balance: row.c[3] && row.c[3].v !== null ? row.c[3].v : "0",    // คอลัมน์ D (ทุน)
+                            name: row.c[2] && row.c[2].v !== null ? row.c[2].v : "-",       // Column C (system name)
+                            comment: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",    // Column B (Model)
+                            balance: row.c[3] && row.c[3].v !== null ? row.c[3].v : "0",    // Column D (capital)
                             balanceNum: row.c[3] && row.c[3].v !== null ? parseFloat(String(row.c[3].v).replace(/[^0-9.-]/g, '')) || 0 : 0,
-                            profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) || 0 : 0,     // คอลัมน์ G (กำไรสัปดาห์นี้)
-                            lastWeekProfit: row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) || 0 : 0,  // คอลัมน์ H (กำไรสัปดาห์ที่แล้ว)
-                            type: row.c[4] && row.c[4].v !== null ? row.c[4].v : "-"        // คอลัมน์ E (Style ความเสี่ยง)
+                            profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) || 0 : 0,     // Column G (this week profit)
+                            lastWeekProfit: row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) || 0 : 0,  // Column H (last week profit)
+                            type: row.c[4] && row.c[4].v !== null ? row.c[4].v : "-"        // Column E (risk style)
                         });
                     }
                 }
             });
 
-            // จัดเรียงชื่อ EA (Sys_1, Sys_2... Sys_10) อย่างถูกต้อง
+            // Sort EA names (Sys_1, Sys_2... Sys_10) correctly
             data.sort((a, b) => {
                 return String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' });
             });
@@ -954,7 +954,7 @@
 
         } catch (error) {
             console.error('Error:', error);
-            showError('<div class="alert alert-danger mx-3 text-center w-100">เกิดข้อผิดพลาดในการดึงข้อมูล</div>');
+            showError('<div class="alert alert-danger mx-3 text-center w-100">Error fetching data</div>');
         }
     }
 
@@ -1026,7 +1026,7 @@
         if (loader) loader.style.display = 'none';
 
         if (!data || data.length === 0) {
-            showError('<div class="alert alert-warning mx-3 text-center w-100">ไม่พบข้อมูลในระบบ</div>');
+            showError('<div class="alert alert-warning mx-3 text-center w-100">No data found in the system</div>');
             return;
         }
 
@@ -1039,13 +1039,13 @@
             let styleBgColor = '#4a4a4a'; 
             
             // color badge by risk level
-            if (typeText.includes('ทดสอบ') || typeText.includes('Testing')) {
+            if (typeText.includes('Testing') || typeText.includes('Testing')) {
                 styleBgColor = '#9a7b0a'; 
-            } else if (typeText.includes('High Risk') || typeText.includes('เสี่ยงสูง')) {
+            } else if (typeText.includes('High Risk') || typeText.includes('High Risk')) {
                 styleBgColor = '#a83232'; 
-            } else if (typeText.includes('Medium Risk') || typeText.includes('ค่อนข้างสูง') || typeText.includes('ค่อนข้างต่ำ')) {
+            } else if (typeText.includes('Medium Risk') || typeText.includes('Moderately High') || typeText.includes('Moderately Low')) {
                 styleBgColor = '#b85c00'; 
-            } else if (typeText.includes('Low Risk') || typeText.includes('เสี่ยงต่ำ')) {
+            } else if (typeText.includes('Low Risk') || typeText.includes('Low Risk')) {
                 styleBgColor = '#1e8c4a'; 
             }
 
@@ -1072,7 +1072,7 @@
                             </div>
 
                             <div class="profit-center-box" style="text-align: center; margin-top: 20px; font-size: 1.1rem; font-weight: 600; color: #3399ff;">
-                                ข้อมูลเบื้องต้น
+                                Overview
                             </div>
 
                             <div class="balance-box text-center mt-2" style="background: rgba(194,65,12,0.08); border-radius: 12px; padding: 15px; border: 1px solid rgba(249,115,22,0.45); box-shadow: 0 0 12px rgba(249,115,22,0.15);">
@@ -1107,31 +1107,31 @@
 
     async function fetchPortfolio() {
         const email = document.getElementById('portfolioEmail').value.trim();
-        if (!email) { showPortfolioMsg('กรุณากรอก Gmail', true); return; }
-        showPortfolioMsg('กำลังโหลด...', false);
+        if (!email) { showPortfolioMsg('Please enter your Gmail', true); return; }
+        showPortfolioMsg('Loading...', false);
         try {
             const resp = await fetch(`${API_BASE}/api/portfolio?email=${encodeURIComponent(email)}`);
             const jsonData = await resp.json();
             const rows = jsonData.accounts;
             if (!rows || rows.length === 0) {
-                document.getElementById('portfolioList').innerHTML = '<div class="text-center text-white-50 py-4">ยังไม่มีพอร์ต — เพิ่มพอร์ตแรกของคุณ</div>';
-                showPortfolioMsg('ไม่พบข้อมูล', true);
+                document.getElementById('portfolioList').innerHTML = '<div class="text-center text-white-50 py-4">No portfolios yet — add your first one</div>';
+                showPortfolioMsg('Not found', true);
                 return;
             }
 
             renderPortfolioCards(rows);
-            showPortfolioMsg(`พบ ${rows.length} พอร์ต`, false);
+            showPortfolioMsg(`Found ${rows.length} portfolio(s)`, false);
         } catch (e) {
             console.error(e);
-            document.getElementById('portfolioList').innerHTML = '<div class="text-center text-danger py-3">⚠️ ไม่สามารถโหลดข้อมูลได้ — เช็คว่า API ทำงานอยู่หรือไม่</div>';
-            showPortfolioMsg('โหลดไม่สำเร็จ', true);
+            document.getElementById('portfolioList').innerHTML = '<div class="text-center text-danger py-3">⚠️ Unable to load data — check if the API is running</div>';
+            showPortfolioMsg('Load failed', true);
         }
     }
 
     function renderPortfolioCards(accounts) {
         const container = document.getElementById('portfolioList');
         if (!accounts || accounts.length === 0) {
-            container.innerHTML = '<div class="text-center text-white-50 py-4">ยังไม่มีพอร์ต</div>';
+            container.innerHTML = '<div class="text-center text-white-50 py-4">No portfolios yet</div>';
             return;
         }
         let html = '';
@@ -1162,7 +1162,7 @@
                             <div class="portfolio-value ${profitColor}">$${fmtNum(a.total_profit)}</div>
                         </div>
                     </div>
-                    ${a.last_updated ? `<div class="text-end text-white-50 mt-2" style="font-size:0.7rem;">อัปเดต: ${new Date(a.last_updated).toLocaleString('th-TH')}</div>` : ''}
+                    ${a.last_updated ? `<div class="text-end text-white-50 mt-2" style="font-size:0.7rem;">Updated: ${new Date(a.last_updated).toLocaleString('th-TH')}</div>` : ''}
                 </div>`;
         });
         container.innerHTML = html;
@@ -1172,8 +1172,8 @@
         const email = document.getElementById('portfolioEmail').value.trim();
         const mt5 = document.getElementById('newMt5Account').value.trim();
         const broker = document.getElementById('newBroker').value.trim();
-        if (!email || !mt5) { showPortfolioMsg('กรุณากรอก Gmail และ MT5 Account', true); return; }
-        showPortfolioMsg('กำลังเพิ่ม...', false);
+        if (!email || !mt5) { showPortfolioMsg('Please enter Gmail and MT5 Account', true); return; }
+        showPortfolioMsg('Adding...', false);
         try {
             const res = await fetch(`${API_BASE}/api/portfolio`, {
                 method: 'POST',
@@ -1182,31 +1182,31 @@
             });
             const data = await res.json();
             if (data.success || data.account) {
-                showPortfolioMsg('เพิ่มแล้ว — กด "โหลดพอร์ต" เพื่อดู', false);
+                showPortfolioMsg('Added — click "Load Portfolio" to view', false);
                 document.getElementById('newMt5Account').value = '';
                 document.getElementById('newBroker').value = '';
             } else {
-                showPortfolioMsg(data.error || 'เพิ่มไม่สำเร็จ', true);
+                showPortfolioMsg(data.error || 'Add failed', true);
             }
         } catch (e) {
-            showPortfolioMsg('เชื่อมต่อ API ไม่สำเร็จ', true);
+            showPortfolioMsg('API connection failed', true);
         }
     }
 
     async function deletePortfolioAccount(id) {
-        if (!confirm('ยืนยันการลบพอร์ตนี้?')) return;
-        showPortfolioMsg('กำลังลบ...', false);
+        if (!confirm('Confirm deletion of this portfolio?')) return;
+        showPortfolioMsg('Deleting...', false);
         try {
             const res = await fetch(`${API_BASE}/api/portfolio?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
             const data = await res.json();
             if (data.success) {
-                showPortfolioMsg('ลบแล้ว — กด "โหลดพอร์ต" เพื่อรีเฟรช', false);
+                showPortfolioMsg('Deleted — click "Load Portfolio" to refresh', false);
                 fetchPortfolio();
             } else {
-                showPortfolioMsg(data.error || 'ลบไม่สำเร็จ', true);
+                showPortfolioMsg(data.error || 'Delete failed', true);
             }
         } catch (e) {
-            showPortfolioMsg('เชื่อมต่อ API ไม่สำเร็จ', true);
+            showPortfolioMsg('API connection failed', true);
         }
     }
 
@@ -1242,7 +1242,7 @@
             tableBody.innerHTML = '';
             const rows = jsonData.table.rows;
             if (!rows || rows.length <= 1) {
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color:#8b949e;">กำลังรอรับข้อมูลจากระบบ...</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color:#8b949e;">Waiting for data from the system...</td></tr>';
                 return;
             }
             let data = [];
@@ -1292,7 +1292,7 @@
         } catch (error) {
             console.error("RealTime Fetch Error:", error);
             const tableBody = document.getElementById('realtimeBody');
-            if (tableBody) { tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ เกิดข้อผิดพลาด หรือไฟล์ Google Sheet ยังไม่เปิดแชร์</td></tr>'; }
+            if (tableBody) { tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #ff3b3b; padding: 20px;">❌ An error occurred or the Google Sheet is not shared publicly</td></tr>'; }
         }
     }
     fetchRealTimeData();
@@ -1313,7 +1313,7 @@
                 const row = rows[i];
                 if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
                     const label = row.c[9] && row.c[9].v !== null ? String(row.c[9].v).trim() : '';
-                    if (label === 'แนะนำ') {
+                    if (label === 'Recommended') {
                         const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
                         const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
                         const pct = balance > 0 ? (profit7day / balance * 100) : 0;
@@ -1352,10 +1352,10 @@
 <!-- Promo Popup -->
 <div class="promo-overlay active" id="promoOverlay">
     <div class="promo-modal">
-        <h3>🔥 แนะนำ EA ที่น่าสนใจ</h3>
-        <p class="promo-sub">ระบบเทรดที่โดดเด่น — เลือกตามสไตล์ของคุณ</p>
+        <h3>🔥 Recommended EAs</h3>
+        <p class="promo-sub">Outstanding trading systems — choose based on your style</p>
         <div id="promoList"></div>
-        <button class="promo-close" onclick="document.getElementById('promoOverlay').classList.remove('active')">ดูทั้งหมด</button>
+        <button class="promo-close" onclick="document.getElementById('promoOverlay').classList.remove('active')">View All</button>
     </div>
 </div>
 <script>
@@ -1579,9 +1579,9 @@ requestAnimationFrame(dr);
 </script>
 
     <div class="risk-warning">
-        *การลงทุนมีความเสี่ยง ผู้ใช้ควรศึกษาข้อมูลก่อนตัดสินใจ เราเป็นเพียงผู้ให้บริการซอฟต์แวร์เท่านั้น ไม่รับผิดชอบต่อความเสียหายทุกกรณี<br>
-        *การลงทุนมีความเสี่ยง ผู้ใช้ควรศึกษาข้อมูลก่อนตัดสินใจ เราเป็นเพียงผู้ให้บริการซอฟต์แวร์เท่านั้น ไม่รับผิดชอบต่อความเสียหายทุกกรณี<br>
-        *การลงทุนมีความเสี่ยง ผู้ใช้ควรศึกษาข้อมูลก่อนตัดสินใจ เราเป็นเพียงผู้ให้บริการซอฟต์แวร์เท่านั้น ไม่รับผิดชอบต่อความเสียหายทุกกรณี
+        *Investment involves risk. Users should study information before making decisions. We are only a software provider and are not responsible for any damages.<br>
+        *Investment involves risk. Users should study information before making decisions. We are only a software provider and are not responsible for any damages.<br>
+        *Investment involves risk. Users should study information before making decisions. We are only a software provider and are not responsible for any damages.
     </div>
 
 </body>
