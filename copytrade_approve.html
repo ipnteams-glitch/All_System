@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CopyTrade - ข้อตกลงความเสี่ยง</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: #080c14;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .approve-container {
+            max-width: 750px;
+            margin: 30px auto;
+            padding: 0 10px;
+        }
+        .approve-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .approve-header h4 {
+            color: #fb923c;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(234,88,12,0.3);
+        }
+        .approve-card {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 20px 24px;
+            border: 1px solid rgba(255,255,255,0.08);
+            max-height: 55vh;
+            overflow-y: auto;
+        }
+        .approve-card::-webkit-scrollbar { width: 6px; }
+        .approve-card::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 3px; }
+        .approve-card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        .approve-text {
+            white-space: pre-line;
+            font-size: 0.85rem;
+            color: #b0b0b0;
+            line-height: 1.8;
+        }
+        .approve-text strong { color: #fb923c; }
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .btn-decline {
+            background: linear-gradient(135deg, #a83232 0%, #c0392b 100%);
+            color: #fff;
+            border: none;
+            padding: 14px 36px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(168,50,50,0.3);
+        }
+        .btn-decline:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(168,50,50,0.5); }
+        .btn-accept {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: #fff;
+            border: none;
+            padding: 14px 36px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(17,153,142,0.3);
+        }
+        .btn-accept:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(56,239,125,0.5); }
+        .btn-row small { width: 100%; text-align: center; color: #888; margin-top: 4px; }
+    </style>
+</head>
+<body>
+    <div class="approve-container">
+        <div class="approve-header">
+            <h4>⚠️ ข้อตกลงและเงื่อนไขความเสี่ยง<br><small style="color:#888;font-size:0.75rem">Risk Disclaimer & Terms of Service</small></h4>
+        </div>
+        <div class="approve-card">
+            <div class="approve-text" id="approveText">Loading...</div>
+        </div>
+        <div class="btn-row">
+            <button class="btn-decline" onclick="decline()">❌ ไม่ยอมรับ / Decline</button>
+            <button class="btn-accept" onclick="accept()">✅ ยอมรับ / Accept</button>
+            <small>การกดยอมรับแสดงว่าท่านได้อ่านและเข้าใจข้อตกลงทั้งหมดแล้ว</small>
+        </div>
+    </div>
+
+    <script>
+        const TEXT_CONTENT = `ข้อตกลงและเงื่อนไขความเสี่ยง (Disclaimer)
+
+การลงทุนมีความเสี่ยง: ผู้ลงทุนควรทำความเข้าใจลักษณะสินค้า เงื่อนไขผลตอบแทน และความเสี่ยง ก่อนตัดสินใจลงทุนด้วยตนเอง
+
+ไม่รับประกันผลตอบแทน: ทางเราไม่มีการการันตีกำไรหรือผลตอบแทนใดๆ ทั้งสิ้น
+
+อดีตไม่การันตีอนาคต: ผลการดำเนินงานหรือกำไรที่เกิดขึ้นในอดีต มิได้เป็นสิ่งยืนยันถึงผลตอบแทนที่จะเกิดขึ้นในอนาคต
+
+อาจสูญเสียเงินลงทุน: การเทรดมีความผันผวนสูง ท่านอาจสูญเสียเงินลงทุนบางส่วนหรือทั้งหมดได้
+
+ความรับผิดชอบ: ผู้ใช้บริการยอมรับความเสี่ยงและรับผิดชอบต่อผลการลงทุนที่เกิดขึ้นจากการใช้บริการ CopyTrade แต่เพียงผู้เดียว
+
+Risk Disclaimer & Terms of Service
+
+
+Investment Risk: Investment involves risk. Investors should fully understand the nature of the service, return conditions, and risks before making their own investment decisions.
+
+No Guaranteed Returns: We do not guarantee any profits or returns whatsoever.
+
+Past Performance is Not a Guarantee: Past performance or historical profits are not indicative of future results.
+
+Potential Loss of Capital: Trading is highly volatile, and you may lose a portion or all of your invested capital.
+
+User Responsibility: The user acknowledges the risks and assumes sole responsibility for any investment outcomes resulting from the use of the CopyTrade service.`;
+
+        document.getElementById('approveText').textContent = TEXT_CONTENT;
+
+        const params = new URLSearchParams(window.location.search);
+        const targetUrl = params.get('url');
+
+        function accept() {
+            if (targetUrl) {
+                try {
+                    const decoded = decodeURIComponent(targetUrl);
+                    window.location.href = decoded;
+                } catch(e) {
+                    window.location.href = targetUrl;
+                }
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function decline() {
+            var ref = document.referrer || '';
+            if (ref.includes('index_en')) {
+                window.location.href = 'index_en.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>
