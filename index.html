@@ -1263,7 +1263,7 @@
                     const lastWeekProfit = row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) : 0;
                     const stars = row.c[8] && row.c[8].v !== null ? parseInt(row.c[8].v) : 0;
                     const label = row.c[9] && row.c[9].v !== null ? String(row.c[9].v).trim() : '';
-                    const link = row.c[5] && row.c[5].v !== null ? String(row.c[5].v).trim() : '';
+                    const link = row.c[10] && row.c[10].v !== null ? String(row.c[10].v).trim() : '';
                     data.push({
                         name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
                         balance: balance,
