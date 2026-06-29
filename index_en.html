@@ -1314,7 +1314,7 @@
                 var pieSvg = document.getElementById('pieSvg');
                 var pieLegend = document.getElementById('pieLegend');
                 if (!pieSection || !pieSvg || !pieLegend) return;
-                var pieData = data.filter(function(d) { return d.profit > 0 && !isNaN(d.profit); });
+                var pieData = data.filter(function(d) { return d.profit7day > 0 && !isNaN(d.profit7day); });
                 if (pieData.length === 0) {
                     // Show message instead of hiding completely
                     pieSvg.innerHTML = '';
@@ -1322,7 +1322,7 @@
                     pieSection.style.display = '';
                     return;
                 }
-                var totalProfit = pieData.reduce(function(s, d) { return s + d.profit; }, 0);
+                var totalProfit = pieData.reduce(function(s, d) { return s + d.profit7day; }, 0);
                 if (totalProfit < 0.001) { pieSection.style.display = 'none'; return; }
                 var colors = ['#fb923c','#fbbf24','#34d399','#60a5fa','#a78bfa','#f472b6','#38bdf8','#4ade80',
                               '#f87171','#facc15','#818cf8','#22d3ee','#e879f9','#86efac','#fda4af'];
@@ -1332,7 +1332,7 @@
                 var startAngle = -Math.PI / 2; // start from top
                 for (var i = 0; i < pieData.length; i++) {
                     var d = pieData[i];
-                    var pct = d.profit / totalProfit;
+                    var pct = d.profit7day / totalProfit;
                     var sliceAngle = pct * 2 * Math.PI;
                     var endAngle = startAngle + sliceAngle;
                     var x1 = cx + r * Math.cos(startAngle);
