@@ -568,14 +568,6 @@
             .rt-ea-name { font-size: 10px; } .rt-stars { font-size: 11px; letter-spacing: 0; }
             .rt-table tfoot td { border-top: 2px solid rgba(249, 115, 22, 0.7); font-size: 12px; padding: 8px 6px; }
         }
-        /* ── Pie Chart ── */
-        .pie-section { margin: 30px 5px 20px 5px; text-align: center; }
-        .pie-title { color: #D4AF37; font-size: 1.1rem; font-weight: 500; margin-bottom: 20px; }
-        .pie-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
-        .pie-svg { width: 220px; height: 220px; filter: drop-shadow(0 0 20px rgba(249,115,22,0.12)); }
-        .pie-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; color: #c9d1d9; font-size: 0.82rem; max-width: 550px; }
-        .legend-item { display: flex; align-items: center; gap: 6px; }
-        .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
         
         /* —— Performance Donut —— */
         .donut-wrap {
@@ -808,13 +800,8 @@
             </tfoot>
         </table>
     </div>
-    <div id="pieSection" class="pie-section" style="display:none;">
-        <div class="pie-title">📊 Profit Share by System</div>
-        <div class="pie-wrap">
-            <svg id="pieSvg" class="pie-svg" viewBox="0 0 200 200"></svg>
-            <div id="pieLegend" class="pie-legend"></div>
-        </div>
-    </div>
+
+
     <div class="video-wrapper">
         <iframe 
             src="https://www.youtube.com/embed/FpkwMBMO4nU?loop=1&playlist=FpkwMBMO4nU&controls=1&rel=0" 
@@ -1307,45 +1294,6 @@
             let sumPctLastWeek = sumBalance > 0 ? (sumLastWeek / sumBalance * 100) : 0; document.getElementById('rtSumLastWeek').innerHTML = `<span style="color:${lwColor}">${sumPctLastWeek > 0 ? '+' : ''}${sumPctLastWeek.toFixed(1)}%</span>`;
             document.getElementById('rtSumBalance').innerHTML = `$${rtFormatInteger(sumBalance)}`;
             document.getElementById('realtimeFoot').style.display = '';
-
-            // Pie Chart
-            (function() {
-                var pieSection = document.getElementById('pieSection');
-                var pieSvg = document.getElementById('pieSvg');
-                var pieLegend = document.getElementById('pieLegend');
-                if (!pieSection || !pieSvg || !pieLegend) return;
-                var pieData = data.filter(function(d) { return d.profit !== 0 && !isNaN(d.profit); });
-                if (pieData.length === 0) { pieSection.style.display = 'none'; return; }
-                var totalAbs = pieData.reduce(function(s, d) { return s + Math.abs(d.profit); }, 0);
-                if (totalAbs < 0.001) { pieSection.style.display = 'none'; return; }
-                var colors = ['#fb923c','#fbbf24','#34d399','#60a5fa','#a78bfa','#f472b6','#38bdf8','#4ade80',
-                              '#f87171','#facc15','#818cf8','#22d3ee','#e879f9','#86efac','#fda4af'];
-                var cx = 100, cy = 100, r = 68, sw = 28;
-                var circ = 2 * Math.PI * r;
-                var svgInner = '';
-                var legendInner = '';
-                var cumOffset = 0;
-                for (var i = 0; i < pieData.length; i++) {
-                    var d = pieData[i];
-                    var pct = Math.abs(d.profit) / totalAbs;
-                    var dashLen = pct * circ;
-                    var color = d.profit > 0 ? colors[i % colors.length] : '#ef4444';
-                    svgInner += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" ' +
-                        'stroke="' + color + '" stroke-width="' + sw + '" stroke-linecap="butt" ' +
-                        'stroke-dasharray="' + dashLen.toFixed(2) + ' ' + circ.toFixed(2) + '" ' +
-                        'stroke-dashoffset="' + (-cumOffset).toFixed(2) + '" ' +
-                        'style="transition: stroke-dasharray 0.8s ease, stroke-dashoffset 0.8s ease;"/>';
-                    var degPct = (pct * 100).toFixed(1);
-                    legendInner += '<div class="legend-item"><span class="legend-dot" style="background:' + color + ';"></span>' +
-                        (d.name + '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') +
-                        ' ' + degPct + '%</div>';
-                    cumOffset += dashLen;
-                }
-                pieSvg.innerHTML = svgInner;
-                pieLegend.innerHTML = legendInner;
-                pieSection.style.display = '';
-            })();
-
         } catch (error) {
             console.error("RealTime Fetch Error:", error);
             const tableBody = document.getElementById('realtimeBody');

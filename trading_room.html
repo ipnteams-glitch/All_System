@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EA Farm — Auto Trading Room</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { overflow: hidden; background: #080c14; }
+  canvas { display: block; position: fixed; top: 0; left: 0; z-index: 0; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+(function() {
+  const c = document.getElementById('c');
+  const ctx = c.getContext('2d');
+  let W, H, t = 0;
+
+  function resize() {
+    W = c.width = innerWidth;
+    H = c.height = innerHeight;
+  }
+  addEventListener('resize', resize);
+  resize();
+
+  const TAU = Math.PI * 2;
+  const rand = (min, max) => min + Math.random() * (max - min);
+
+  // ============ FLOATING $ ============
+  const dollars = [];
+  function spawnDollars() {
+    dollars.length = 0;
+    // We'll spawn dynamically per monitor
+  }
+
+  // ============ MONITORS ============
+  const monitors = [];
+  function layoutMonitors() {
+    monitors.length = 0;
+    const count = 10;
+    // top row: 5, bottom row: 5
+    const topY = H * 0.28;
+    const botY = H * 0.54;
+    const gap = W / 6;
+    const startX = gap * 0.5;
+    for (let i = 0; i < 5; i++) {
+      monitors.push({
+        x: startX + i * gap,
+        y: topY,
+        w: gap * 0.7,
+        h: gap * 0.45,
+        sysNum: i + 1,
+        row: 0,
+        phase: rand(0, TAU),
+        profitGlow: rand(0, TAU)
+      });
+    }
+    for (let i = 0; i < 5; i++) {
+      monitors.push({
+        x: startX + i * gap,
+        y: botY,
+        w: gap * 0.7,
+        h: gap * 0.45,
+        sysNum: i + 6,
+        row: 1,
+        phase: rand(0, TAU),
+        profitGlow: rand(0, TAU)
+      });
+    }
+  }
+
+  function drawMonitor(m) {
+    ctx.save();
+    ctx.translate(m.x, m.y);
+
+    // stand
+    ctx.fillStyle = '#2a2a3a';
+    ctx.beginPath();
+    ctx.moveTo(-8, m.h * 0.55);
+    ctx.lineTo(0, m.h * 0.75);
+    ctx.lineTo(8, m.h * 0.55);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#3a3a4a';
+    ctx.beginPath();
+    ctx.roundRect(-14, m.h * 0.68, 28, 6, 3);
+    ctx.fill();
+
+    // monitor body
+    const bodyGrad = ctx.createLinearGradient(0, -m.h * 0.55, 0, m.h * 0.55);
+    bodyGrad.addColorStop(0, '#1a1a2e');
+    bodyGrad.addColorStop(0.5, '#151520');
+    bodyGrad.addColorStop(1, '#1a1a2e');
+    ctx.fillStyle = bodyGrad;
+    ctx.beginPath();
+    ctx.roundRect(-m.w / 2, -m.h * 0.55, m.w, m.h * 0.55, 4);
+    ctx.fill();
+
+    // monitor border
+    ctx.strokeStyle = '#3a3a5a';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(-m.w / 2, -m.h * 0.55, m.w, m.h * 0.55, 4);
+    ctx.stroke();
+
+    // screen (inner)
+    const screenX = -m.w / 2 + 6;
+    const screenY = -m.h * 0.55 + 8;
+    const screenW = m.w - 12;
+    const screenH = m.h * 0.55 - 16;
+
+    // screen background - dark green tint (trading terminal feel)
+    const scrGrad = ctx.createLinearGradient(0, screenY, 0, screenY + screenH);
+    scrGrad.addColorStop(0, '#0a1a0a');
+    scrGrad.addColorStop(0.5, '#0d220d');
+    scrGrad.addColorStop(1, '#081408');
+    ctx.fillStyle = scrGrad;
+    ctx.beginPath();
+    ctx.roundRect(screenX, screenY, screenW, screenH, 2);
+    ctx.fill();
+
+    // screen border inner
+    ctx.strokeStyle = '#1a4a1a';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(screenX, screenY, screenW, screenH, 2);
+    ctx.stroke();
+
+    // candlestick mini-chart on screen
+    const chartLeft = screenX + 6;
+    const chartRight = screenX + screenW - 16;
+    const chartTop = screenY + 8;
+    const chartBot = screenY + screenH - 14;
+    const chartW = chartRight - chartLeft;
+    const chartH = chartBot - chartTop;
+
+    // price line
+    ctx.strokeStyle = '#2ecc71';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    let prevY = chartBot;
+    for (let x = 0; x < chartW; x += 3) {
+      const wave = Math.sin(x * 0.08 + m.phase + t * 0.0003) * 0.3 +
+                   Math.sin(x * 0.15 + m.phase * 1.7) * 0.2 +
+                   0.5;
+      const y = chartTop + chartH * (1 - wave);
+      if (x === 0) ctx.moveTo(chartLeft + x, y);
+      else ctx.lineTo(chartLeft + x, y);
+    }
+    ctx.stroke();
+
+    // fill under line
+    ctx.lineTo(chartRight, chartBot);
+    ctx.lineTo(chartLeft, chartBot);
+    ctx.closePath();
+    const fillGrad = ctx.createLinearGradient(0, chartTop, 0, chartBot);
+    fillGrad.addColorStop(0, 'rgba(46,204,113,0.15)');
+    fillGrad.addColorStop(1, 'rgba(46,204,113,0.0)');
+    ctx.fillStyle = fillGrad;
+    ctx.fill();
+
+    // Sys_N text on screen
+    ctx.fillStyle = '#2ecc71';
+    ctx.font = 'bold 11px "Consolas", monospace';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText('Sys_' + m.sysNum, screenX + 8, screenY + 4);
+
+    // small profit indicator
+    m.profitGlow += 0.002;
+    const profitAlpha = 0.4 + 0.3 * Math.sin(m.profitGlow);
+    ctx.fillStyle = 'rgba(46,204,113,' + profitAlpha + ')';
+    ctx.font = '8px "Consolas", monospace';
+    ctx.textAlign = 'right';
+    const profitVal = (0.3 + Math.sin(m.profitGlow * 0.7) * 0.4).toFixed(2);
+    ctx.fillText('+' + profitVal + '%', screenX + screenW - 8, screenY + 4);
+
+    // green dot (status)
+    ctx.fillStyle = '#2ecc71';
+    ctx.beginPath();
+    ctx.arc(screenX + screenW - 6, screenY + screenH - 6, 2.5, 0, TAU);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  // ============ DOLLAR PARTICLES ============
+  const dollarParticles = [];
+  const MAX_DOLLARS = 80;
+
+  function trySpawnDollar() {
+    if (dollarParticles.length >= MAX_DOLLARS) return;
+    const m = monitors[Math.floor(Math.random() * monitors.length)];
+    dollarParticles.push({
+      x: m.x + rand(-m.w * 0.25, m.w * 0.25),
+      y: m.y - m.h * 0.55,
+      vy: rand(-0.25, -0.1),
+      vx: rand(-0.08, 0.08),
+      size: rand(10, 18),
+      alpha: rand(0.6, 0.9),
+      life: 1,
+      rot: rand(-0.2, 0.2),
+      rotSp: rand(-0.003, 0.003)
+    });
+  }
+
+  function updateDollars(dt) {
+    // spawn rate
+    if (Math.random() < 0.12) trySpawnDollar();
+
+    for (let i = dollarParticles.length - 1; i >= 0; i--) {
+      const d = dollarParticles[i];
+      d.y += d.vy;
+      d.x += d.vx;
+      d.rot += d.rotSp;
+      d.life -= 0.003;
+      d.alpha -= 0.003;
+      if (d.life <= 0 || d.alpha <= 0 || d.y < -50) {
+        dollarParticles.splice(i, 1);
+      }
+    }
+  }
+
+  function drawDollars() {
+    dollarParticles.forEach(d => {
+      ctx.save();
+      ctx.translate(d.x, d.y);
+      ctx.rotate(d.rot);
+      ctx.globalAlpha = d.alpha;
+      // glow behind
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, d.size * 1.2);
+      g.addColorStop(0, 'rgba(46,204,113,0.3)');
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(0, 0, d.size * 1.2, 0, TAU); ctx.fill();
+      // $
+      ctx.fillStyle = '#f0c040';
+      ctx.font = 'bold ' + d.size + 'px "Segoe UI", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('$', 0, 0);
+      ctx.restore();
+    });
+  }
+
+  // ============ TRADER (relaxed in chair) ============
+  let traderX = 0, traderY = 0;
+  
+  function layoutTrader() {
+    traderX = W * 0.07;
+    traderY = H * 0.62;
+  }
+
+  function drawTrader() {
+    ctx.save();
+    ctx.translate(traderX, traderY);
+
+    // ---- CHAIR ----
+    // backrest
+    ctx.fillStyle = '#2c2c3e';
+    ctx.beginPath();
+    ctx.roundRect(-24, -70, 20, 72, 8);
+    ctx.fill();
+    // seat
+    ctx.fillStyle = '#3a3a50';
+    ctx.beginPath();
+    ctx.roundRect(-30, 0, 50, 10, 6);
+    ctx.fill();
+    // armrests
+    ctx.fillStyle = '#2c2c3e';
+    ctx.beginPath();
+    ctx.roundRect(-32, -15, 8, 25, 3);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.roundRect(12, -15, 8, 25, 3);
+    ctx.fill();
+    // wheels
+    for (let wx of [-20, -8, 4, 16]) {
+      ctx.fillStyle = '#555';
+      ctx.beginPath();
+      ctx.arc(wx, 12, 4, 0, TAU);
+      ctx.fill();
+    }
+    // base bar
+    ctx.fillStyle = '#444';
+    ctx.beginPath();
+    ctx.roundRect(-26, 6, 54, 4, 2);
+    ctx.fill();
+
+    // ---- BODY ----
+    // torso (hoodie/shirt)
+    ctx.fillStyle = '#1e3a5f';
+    ctx.beginPath();
+    ctx.roundRect(-16, -52, 32, 48, 10);
+    ctx.fill();
+    // collar
+    ctx.fillStyle = '#2a4a7a';
+    ctx.beginPath();
+    ctx.moveTo(-8, -50);
+    ctx.lineTo(0, -42);
+    ctx.lineTo(8, -50);
+    ctx.closePath();
+    ctx.fill();
+
+    // ---- LEGS (up on desk/relaxed) ----
+    const legBob = Math.sin(t * 0.003) * 3; // gentle foot tapping
+    // left leg
+    ctx.fillStyle = '#1e3a5f';
+    ctx.beginPath();
+    ctx.roundRect(-10, -8, 10, 18, 5);
+    ctx.fill();
+    // left foot
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.roundRect(-12, 6 + legBob, 14, 7, 4);
+    ctx.fill();
+    // right leg
+    ctx.fillStyle = '#1e3a5f';
+    ctx.beginPath();
+    ctx.roundRect(2, -8, 10, 18, 5);
+    ctx.fill();
+    // right foot
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.roundRect(0, 6 - legBob, 14, 7, 4);
+    ctx.fill();
+
+    // ---- HEAD ----
+    const headY = -62;
+    ctx.fillStyle = '#fcd9b6';
+    ctx.beginPath();
+    ctx.arc(2, headY, 13, 0, TAU);
+    ctx.fill();
+
+    // hair
+    ctx.fillStyle = '#2c1810';
+    ctx.beginPath();
+    ctx.arc(2, headY - 4, 14, Math.PI, TAU);
+    ctx.fill();
+
+    // sunglasses
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.roundRect(-10, headY - 4, 10, 7, 3);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.roundRect(2, headY - 4, 10, 7, 3);
+    ctx.fill();
+    // bridge
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(0, headY - 1);
+    ctx.lineTo(2, headY - 1);
+    ctx.stroke();
+
+    // smile (confident smirk)
+    ctx.strokeStyle = '#c4956b';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(3, headY + 6, 5, 0.2, Math.PI - 0.2);
+    ctx.stroke();
+
+    // coffee cup in right hand (on armrest)
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.roundRect(18, -18, 10, 12, 3);
+    ctx.fill();
+    ctx.fillStyle = '#3a2010';
+    ctx.beginPath();
+    ctx.ellipse(23, -18, 5, 2, 0, 0, TAU);
+    ctx.fill();
+    // steam
+    for (let i = 0; i < 3; i++) {
+      const sx = 23 + i * 3;
+      const sy = -22 - i * 3 + Math.sin(t * 0.004 + i) * 2;
+      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.quadraticCurveTo(sx + 2, sy - 5, sx, sy - 10);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  // ============ AMBIENT ============
+  function drawAmbient() {
+    // subtle grid on floor
+    const floorY = H * 0.78;
+    ctx.strokeStyle = 'rgba(255,255,255,0.015)';
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x < W; x += 80) {
+      ctx.beginPath();
+      ctx.moveTo(x, floorY);
+      ctx.lineTo(x, H);
+      ctx.stroke();
+    }
+    for (let y = floorY; y < H; y += 40) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
+  }
+
+  // ============ MAIN ============
+  function init() {
+    layoutMonitors();
+    layoutTrader();
+    dollarParticles.length = 0;
+  }
+
+  let last = performance.now();
+  function loop(now) {
+    const dt = Math.min(now - last, 50);
+    last = now;
+    t += dt;
+
+    // bg
+    ctx.fillStyle = '#080c14';
+    ctx.fillRect(0, 0, W, H);
+
+    drawAmbient();
+
+    // monitors
+    monitors.forEach(m => drawMonitor(m));
+
+    // dollars
+    updateDollars(dt);
+    drawDollars();
+
+    // trader
+    drawTrader();
+
+    // vignette
+    const vig = ctx.createRadialGradient(W / 2, H / 2, W * 0.35, W / 2, H / 2, W * 0.78);
+    vig.addColorStop(0, 'rgba(0,0,0,0)');
+    vig.addColorStop(1, 'rgba(8,12,20,0.55)');
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, W, H);
+
+    requestAnimationFrame(loop);
+  }
+
+  addEventListener('resize', () => { resize(); init(); });
+  init();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
