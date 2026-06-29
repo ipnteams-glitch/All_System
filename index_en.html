@@ -1308,38 +1308,42 @@
             document.getElementById('rtSumBalance').innerHTML = `$${rtFormatInteger(sumBalance)}`;
             document.getElementById('realtimeFoot').style.display = '';
 
-            // Pie Chart
+            // Pie Chart: filled wedges, positive profit only
             (function() {
                 var pieSection = document.getElementById('pieSection');
                 var pieSvg = document.getElementById('pieSvg');
                 var pieLegend = document.getElementById('pieLegend');
                 if (!pieSection || !pieSvg || !pieLegend) return;
-                var pieData = data.filter(function(d) { return d.profit !== 0 && !isNaN(d.profit); });
+                var pieData = data.filter(function(d) { return d.profit > 0 && !isNaN(d.profit); });
                 if (pieData.length === 0) { pieSection.style.display = 'none'; return; }
-                var totalAbs = pieData.reduce(function(s, d) { return s + Math.abs(d.profit); }, 0);
-                if (totalAbs < 0.001) { pieSection.style.display = 'none'; return; }
+                var totalProfit = pieData.reduce(function(s, d) { return s + d.profit; }, 0);
+                if (totalProfit < 0.001) { pieSection.style.display = 'none'; return; }
                 var colors = ['#fb923c','#fbbf24','#34d399','#60a5fa','#a78bfa','#f472b6','#38bdf8','#4ade80',
                               '#f87171','#facc15','#818cf8','#22d3ee','#e879f9','#86efac','#fda4af'];
-                var cx = 100, cy = 100, r = 68, sw = 28;
-                var circ = 2 * Math.PI * r;
+                var cx = 100, cy = 100, r = 80;
                 var svgInner = '';
                 var legendInner = '';
-                var cumOffset = 0;
+                var startAngle = -Math.PI / 2; // start from top
                 for (var i = 0; i < pieData.length; i++) {
                     var d = pieData[i];
-                    var pct = Math.abs(d.profit) / totalAbs;
-                    var dashLen = pct * circ;
-                    var color = d.profit > 0 ? colors[i % colors.length] : '#ef4444';
-                    svgInner += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" ' +
-                        'stroke="' + color + '" stroke-width="' + sw + '" stroke-linecap="butt" ' +
-                        'stroke-dasharray="' + dashLen.toFixed(2) + ' ' + circ.toFixed(2) + '" ' +
-                        'stroke-dashoffset="' + (-cumOffset).toFixed(2) + '" ' +
-                        'style="transition: stroke-dasharray 0.8s ease, stroke-dashoffset 0.8s ease;"/>';
+                    var pct = d.profit / totalProfit;
+                    var sliceAngle = pct * 2 * Math.PI;
+                    var endAngle = startAngle + sliceAngle;
+                    var x1 = cx + r * Math.cos(startAngle);
+                    var y1 = cy + r * Math.sin(startAngle);
+                    var x2 = cx + r * Math.cos(endAngle);
+                    var y2 = cy + r * Math.sin(endAngle);
+                    var large = sliceAngle > Math.PI ? 1 : 0;
+                    var color = colors[i % colors.length];
+                    svgInner += '<path d="M' + cx + ' ' + cy + ' L' + x1.toFixed(2) + ' ' + y1.toFixed(2) +
+                        ' A' + r + ' ' + r + ' 0 ' + large + ' 1 ' + x2.toFixed(2) + ' ' + y2.toFixed(2) + ' Z" ' +
+                        'fill="' + color + '" stroke="#0f1115" stroke-width="1.5" ' +
+                        'style="transition: opacity 0.5s ease;"/>';
                     var degPct = (pct * 100).toFixed(1);
                     legendInner += '<div class="legend-item"><span class="legend-dot" style="background:' + color + ';"></span>' +
                         (d.name + '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') +
                         ' ' + degPct + '%</div>';
-                    cumOffset += dashLen;
+                    startAngle = endAngle;
                 }
                 pieSvg.innerHTML = svgInner;
                 pieLegend.innerHTML = legendInner;
