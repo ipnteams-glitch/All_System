@@ -103,6 +103,13 @@
         }
 
         /* ── ปุ่ม MyPortfolio ── */
+
+        @keyframes newServicePulse {
+            0%, 100% { text-shadow: 0 0 8px rgba(255,215,0,0.3); opacity: 0.85; }
+            50% { text-shadow: 0 0 20px rgba(255,215,0,0.7); opacity: 1; }
+        }
+
+        /* ── ปุ่ม MyPortfolio ── */
         .portfolio-btn {
             display: inline-block;
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
@@ -762,8 +769,8 @@
         <div style="color:#fff; font-size:0.8rem; text-align:center; padding:0 10px 10px 10px;">
             ติดตามอัปเดตข้อมูลปัจจุบันย้อนหลัง 2 เดือนล่าสุด (เป็นข้อมูลทดสอบเท่านั้น ไม่มีเจตนาอวดอ้าง ชี้นำ ชักชวน ผลการรันจริงอาจแตกต่างได้ ตามสภาพตลาด)
         </div>
-        <div style="color:#4da6ff; font-style:italic; font-size:0.75rem; text-align:center; padding:0 10px 15px 10px;">
-            ตรวจสอบรายชื่อ Copy Trade จาก ชื่อEA ในตาราง
+        <div style="color:#ffd700; font-weight:700; font-size:0.95rem; text-align:center; padding:8px 10px 15px 10px; text-shadow:0 0 12px rgba(255,215,0,0.5); animation:newServicePulse 1.8s ease-in-out infinite; letter-spacing:0.5px;">
+            !!ใหม่ เพิ่มบริการ CopyTrade ไม่ต้องวาง EA ไม่ต้องเช่า VPS
         </div>
     </div>
 
