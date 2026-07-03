@@ -656,6 +656,11 @@
         .portal-hero-title span{background:linear-gradient(135deg,#f0c040,#e8a020,#d4af37,#c8961e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         .portal-hero-subtitle{font-size:1.3rem;color:#c8d6e5;margin-bottom:0.8rem;font-weight:400}
         .portal-hero-desc{font-size:0.95rem;color:#8899bb;line-height:1.7;max-width:600px;margin-bottom:1.5rem}
+        @keyframes heroGlow {
+            0%, 100% { opacity: 0.7; text-shadow: 0 0 6px rgba(255,214,0,0.35); }
+            50% { opacity: 1; text-shadow: 0 0 18px rgba(255,214,0,0.85), 0 0 34px rgba(255,180,0,0.5); }
+        }
+        .hero-glow { color: #ffd600 !important; animation: heroGlow 2.2s ease-in-out infinite; }
         .portal-hero-tags{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem}
         .portal-hero-tags span{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:0.4rem 1rem;border-radius:50px;font-size:0.85rem;color:#c8d6e5}
         .portal-hero-btns{display:flex;justify-content:center}
@@ -730,8 +735,8 @@
         <canvas id="bg-canvas"></canvas>
         <div class="portal-hero-content">
             <h1 class="portal-hero-title">Trade With <span>Harvest Farm</span></h1>
-            <h2 class="portal-hero-subtitle">FOREX on METATRADER 5</h2>
-            <p class="portal-hero-desc">Trade gold and currency pairs smartly with the "EA Farm" concept<br>Diversify risk across a fleet of EAs running 24/7.</p>
+            <h2 class="portal-hero-subtitle hero-glow">FOREX on METATRADER 5</h2>
+            <p class="portal-hero-desc hero-glow">Automated trading system with the "EA Farm" concept<br>Diversify risk across a fleet of EAs running 24/7.</p>
             <div class="portal-hero-tags">
                 <span>🛡️ Risk Management</span>
                 <span>⚔️ Multi-Strategy</span>
