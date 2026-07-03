@@ -21,15 +21,27 @@
             margin: 30px auto;
             padding: 0 10px;
         }
+        @keyframes newServicePulse {
+            0%, 100% { text-shadow: 0 0 8px rgba(0,229,255,0.3), 0 0 16px rgba(0,180,255,0.15); opacity: 0.85; }
+            50% { text-shadow: 0 0 22px rgba(0,229,255,0.8), 0 0 40px rgba(0,180,255,0.5); opacity: 1; }
+        }
         .approve-header {
             text-align: center;
             margin-bottom: 20px;
         }
         .approve-header h4 {
-            color: #fb923c;
+            color: #00e5ff;
             font-size: 1.3rem;
-            font-weight: 600;
-            text-shadow: 0 0 10px rgba(234,88,12,0.3);
+            font-weight: 700;
+            text-shadow: 0 0 14px rgba(0,229,255,0.7), 0 0 28px rgba(0,180,255,0.4);
+            animation: newServicePulse 1.8s ease-in-out infinite;
+            letter-spacing: 0.5px;
+        }
+        .approve-header small {
+            color: #888 !important;
+            font-size: 0.75rem;
+            animation: none;
+            text-shadow: none;
         }
         .approve-card {
             background: rgba(255,255,255,0.04);
@@ -48,7 +60,7 @@
             color: #b0b0b0;
             line-height: 1.8;
         }
-        .approve-text strong { color: #fb923c; }
+        .approve-text strong { color: #00e5ff; }
         .btn-row {
             display: flex;
             justify-content: center;
@@ -88,14 +100,14 @@
 <body>
     <div class="approve-container">
         <div class="approve-header">
-            <h4>⚠️ ข้อตกลงและเงื่อนไขความเสี่ยง<br><small style="color:#888;font-size:0.75rem">Risk Disclaimer & Terms of Service</small></h4>
+            <h4>ข้อตกลงและเงื่อนไขการใช้งาน CopyTrade<br><small>Risk Disclaimer & Terms of Service</small></h4>
         </div>
         <div class="approve-card">
             <div class="approve-text" id="approveText">Loading...</div>
         </div>
         <div class="btn-row">
-            <button class="btn-decline" onclick="decline()">❌ ไม่ยอมรับ / Decline</button>
-            <button class="btn-accept" onclick="accept()">✅ ยอมรับ / Accept</button>
+            <button class="btn-decline" onclick="decline()">ไม่ยอมรับ / Decline</button>
+            <button class="btn-accept" onclick="accept()">ยอมรับ / Accept</button>
             <small>การกดยอมรับแสดงว่าท่านได้อ่านและเข้าใจข้อตกลงทั้งหมดแล้ว</small>
         </div>
     </div>
