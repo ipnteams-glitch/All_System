@@ -806,6 +806,64 @@
         </div>
     </div>
 
+<!-- ===== Vibemaster Farm Section (เพิ่มใหม่ ไม่แตะตาราง/โค้ดเดิม) ===== -->
+<section id="vm-farm">
+  <style>
+    #vm-farm{max-width:1000px;margin:12px auto 22px;padding:0 6px;}
+    #vm-farm *{box-sizing:border-box;}
+    #vm-farm .vm-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 4px 12px;}
+    #vm-farm .vm-heading{color:#D4AF37;font-weight:600;font-size:1.05rem;text-shadow:0 0 10px rgba(212,175,55,.3);}
+    #vm-farm .vm-sub{color:#8b949e;font-size:.8rem;font-weight:400;margin-left:6px;}
+    #vm-farm .vm-right{display:flex;align-items:center;gap:8px;}
+    #vm-farm .vm-demo{background:#b45309;color:#fff;font-size:.7rem;padding:2px 8px;border-radius:10px;}
+    #vm-farm .vm-themes{display:inline-flex;background:#1c1f26;border:1px solid #2d333b;border-radius:20px;overflow:hidden;}
+    #vm-farm .vm-theme-btn{background:transparent;border:0;color:#c9d1d9;padding:6px 13px;font-size:.82rem;cursor:pointer;font-family:inherit;}
+    #vm-farm .vm-theme-btn.active{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;}
+    #vm-farm .vm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+    #vm-farm .vm-loading{grid-column:1/-1;text-align:center;color:#8b949e;padding:24px;}
+    #vm-farm .vm-card{position:relative;background:linear-gradient(180deg,#1c1f26,#15181e);border:1px solid #2d333b;border-radius:14px;padding:10px 10px 12px;text-align:center;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.4);}
+    #vm-farm .vm-card.rec{border-color:#D4AF37;box-shadow:0 0 16px rgba(212,175,55,.25);}
+    #vm-farm .vm-lvl{position:absolute;top:8px;left:8px;background:#0d1117;border:1px solid #D4AF37;color:#ffd23b;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:10px;z-index:2;}
+    #vm-farm .vm-recbadge{position:absolute;top:6px;right:8px;font-size:.9rem;z-index:2;}
+    #vm-farm canvas.vm-canvas{display:block;margin:2px auto 0;width:150px;height:140px;}
+    #vm-farm .vm-name{color:#ffeb3b;font-weight:700;font-size:.95rem;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    #vm-farm .vm-title{color:#c9d1d9;font-size:.78rem;margin-bottom:6px;}
+    #vm-farm .vm-xpbar{position:relative;height:13px;background:#0d1117;border-radius:8px;overflow:hidden;border:1px solid #2d333b;}
+    #vm-farm .vm-xpfill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#38ef7d,#11998e);border-radius:8px;transition:width .8s ease;}
+    #vm-farm .vm-xptext{position:relative;font-size:.62rem;color:#e6edf3;line-height:13px;text-shadow:0 1px 2px #000;}
+    #vm-farm .vm-meta{display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:.8rem;}
+    #vm-farm .vm-gold{color:#ffd23b;font-weight:600;}
+    #vm-farm .vm-stars{letter-spacing:1px;font-size:.8rem;}
+    #vm-farm .vm-star-on{color:#ffd23b;}
+    #vm-farm .vm-star-off{color:#3a4048;}
+    #vm-farm .vm-trend{margin-top:5px;font-size:.76rem;}
+    #vm-farm .vm-trend.up{color:#4cd137;}
+    #vm-farm .vm-trend.down{color:#ff6b6b;}
+    #vm-farm .vm-trend.flat{color:#8b949e;}
+    #vm-farm .vm-lvlup{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;font-weight:800;color:#ffd23b;text-shadow:0 0 12px #ff8c00;font-size:1.05rem;line-height:1.2;opacity:0;}
+    #vm-farm .vm-card.levelup .vm-lvlup{animation:vmLvlUp 1.6s ease forwards;}
+    @keyframes vmLvlUp{0%{opacity:0;transform:scale(.4)}20%{opacity:1;transform:scale(1.12)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.2) translateY(-12px)}}
+    @media (max-width:480px){#vm-farm .vm-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}#vm-farm canvas.vm-canvas{width:130px;height:122px;}}
+  </style>
+  <div class="vm-toolbar">
+    <div class="vm-heading">🎮 สนามพลังระบบ <span class="vm-sub">เลเวลอัปจากผลงานจริง</span></div>
+    <div class="vm-right">
+      <span id="vm-demo" class="vm-demo" style="display:none;">เดโม</span>
+      <div class="vm-themes">
+        <button class="vm-theme-btn active" data-theme="farm">🌾 ฟาร์ม</button>
+        <button class="vm-theme-btn" data-theme="dev">🧙 นักพัฒนา</button>
+      </div>
+    </div>
+  </div>
+  <div id="vm-farm-grid" class="vm-grid">
+    <div class="vm-loading">⏳ กำลังปลุกเหล่านักรบระบบ...</div>
+  </div>
+</section>
+<script src="assets/farm/farm-levels.js"></script>
+<script src="assets/farm/farm-avatar.js"></script>
+<script src="assets/farm/farm-cards.js"></script>
+<!-- ===== /Vibemaster Farm Section ===== -->
+
 <div class="rt-table-container">
         <table class="rt-table">
             <thead>
