@@ -116,7 +116,7 @@
       `<div class="vm-title">💵 ทุนขั้นต่ำ $${fmtInt(row.balance)}</div>` +
       `<div class="vm-xpbar"><div class="vm-xpfill" style="width:0%"></div>` +
       `<span class="vm-xptext">${fmtInt(stats.inLevel)}/${fmtInt(stats.toNext)} XP</span></div>` +
-      `<div class="vm-meta"><span class="vm-gold">🪙 ${fmtInt(row.profit)}</span>` +
+      `<div class="vm-meta"><span class="vm-gold" style="color:${row.profit < 0 ? '#ff6b6b' : row.profit > 0 ? '#4cd137' : '#ffffff'}">🪙 ${fmtInt(row.profit)}</span>` +
       `<span class="vm-stars">${starStr(stats.stars)}</span></div>` +
       trendHtml(row) +
       `<div class="vm-lvlup">LEVEL UP!<br>Lv ${stats.level}</div>`;
