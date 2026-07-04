@@ -17,12 +17,12 @@
 
   // ── ข้อมูลตัวอย่าง (แสดงเมื่อดึงชีตไม่ได้ เช่น เปิดแบบ offline) ──
   const DEMO_ROWS = [
-    { name: 'Sys_1', balance: 10000, profit: 2450, month: 8.2, lastMonth: 5.1, stars: 5, recommend: true, link: '' },
-    { name: 'Sys_2', balance: 5000, profit: 640, month: 3.4, lastMonth: -1.2, stars: 3, recommend: false, link: '' },
-    { name: 'Sys_3', balance: 20000, profit: -320, month: -1.1, lastMonth: 2.0, stars: 2, recommend: false, link: '' },
-    { name: 'Sys_4', balance: 8000, profit: 5200, month: 24.5, lastMonth: 18.0, stars: 5, recommend: true, link: '' },
-    { name: 'Sys_5', balance: 3000, profit: 120, month: 1.2, lastMonth: 0.5, stars: 1, recommend: false, link: '' },
-    { name: 'Sys_6', balance: 12000, profit: 3600, month: 12.0, lastMonth: 9.4, stars: 4, recommend: false, link: '' },
+    { name: 'Sys_1', balance: 10000, profit: 2450, month: 8.2, lastMonth: 5.1, stars: 5, recommend: true, badge: 'recommend', link: '' },
+    { name: 'Sys_2', balance: 5000, profit: 640, month: 3.4, lastMonth: -1.2, stars: 3, recommend: false, badge: 'good', link: '' },
+    { name: 'Sys_3', balance: 20000, profit: -320, month: -1.1, lastMonth: 2.0, stars: 2, recommend: false, badge: '', link: '' },
+    { name: 'Sys_4', balance: 8000, profit: 5200, month: 24.5, lastMonth: 18.0, stars: 5, recommend: true, badge: 'recommend', link: '' },
+    { name: 'Sys_5', balance: 3000, profit: 120, month: 1.2, lastMonth: 0.5, stars: 1, recommend: false, badge: '', link: '' },
+    { name: 'Sys_6', balance: 12000, profit: 3600, month: 12.0, lastMonth: 9.4, stars: 4, recommend: false, badge: 'good', link: '' },
   ];
 
   let THEME = 'farm';
@@ -63,6 +63,7 @@
         stars: cell(8) !== null ? parseInt(cell(8), 10) : 0,
         label: label,
         recommend: label.toLowerCase() === 'recommend',
+        badge: label.toLowerCase() === 'recommend' ? 'recommend' : label.toLowerCase() === 'good' ? 'good' : '',
         link: cell(10) !== null ? String(cell(10)).trim() : '',
       });
     }
@@ -99,13 +100,13 @@
 
   function buildCard(row, stats, leveledUp) {
     const card = document.createElement('div');
-    card.className = 'vm-card' + (row.recommend ? ' rec' : '') + (leveledUp ? ' levelup' : '');
+    card.className = 'vm-card' + (row.badge === 'recommend' ? ' rec' : row.badge === 'good' ? ' good' : '') + (leveledUp ? ' levelup' : '');
     const nameHtml = row.link
       ? `<a href="${esc(row.link)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${esc(row.name)}</a>`
       : esc(row.name);
     card.innerHTML =
       `<div class="vm-lvl">Lv ${stats.level}</div>` +
-      (row.recommend ? '<div class="vm-recbadge">👑</div>' : '') +
+      (row.badge === 'recommend' ? '<div class="vm-recbadge">👑</div>' : row.badge === 'good' ? '<div class="vm-recbadge">🧢</div>' : '') +
       `<canvas class="vm-canvas" width="1" height="1"></canvas>` +
       `<div class="vm-name">${nameHtml}</div>` +
       `<div class="vm-title">${stats.titleEmoji} ${esc(stats.title)}</div>` +
@@ -182,7 +183,7 @@
       VMFarm.drawCreature(c.ctx, {
         theme: THEME, cx: c.baseX, cy: c.baseY, unit: c.unit, t: t,
         level: c.stats.level, stars: c.stats.stars, mood: c.mood,
-        cfg: c.cfg, recommend: c.row.recommend, pop: pop,
+        cfg: c.cfg, recommend: c.row.recommend, badge: c.row.badge, pop: pop,
       });
     }
     requestAnimationFrame(tick);

@@ -172,21 +172,32 @@
       ctx.lineTo(br * 0.16, my);
     }
     ctx.stroke();
-    // มงกุฎถ้า Recommend
-    if (o.recommend) {
+    // หมวกตาม label: Recommend = มงกุฎ, Good = หมวกปีกธรรมดา
+    const badge = o.badge || (o.recommend ? 'recommend' : '');
+    if (badge === 'recommend' || badge === 'good') {
       const cy = bulbY - br * (level >= 15 ? 1.9 : 1.05);
-      ctx.fillStyle = '#ffd43b';
-      const cw = br * 1.3;
-      ctx.beginPath();
-      ctx.moveTo(-cw / 2, cy + br * 0.35);
-      ctx.lineTo(-cw / 2, cy - br * 0.1);
-      ctx.lineTo(-cw / 4, cy + br * 0.12);
-      ctx.lineTo(0, cy - br * 0.25);
-      ctx.lineTo(cw / 4, cy + br * 0.12);
-      ctx.lineTo(cw / 2, cy - br * 0.1);
-      ctx.lineTo(cw / 2, cy + br * 0.35);
-      ctx.closePath();
-      ctx.fill();
+      if (badge === 'recommend') {
+        ctx.fillStyle = '#ffd43b';
+        const cw = br * 1.3;
+        ctx.beginPath();
+        ctx.moveTo(-cw / 2, cy + br * 0.35);
+        ctx.lineTo(-cw / 2, cy - br * 0.1);
+        ctx.lineTo(-cw / 4, cy + br * 0.12);
+        ctx.lineTo(0, cy - br * 0.25);
+        ctx.lineTo(cw / 4, cy + br * 0.12);
+        ctx.lineTo(cw / 2, cy - br * 0.1);
+        ctx.lineTo(cw / 2, cy + br * 0.35);
+        ctx.closePath();
+        ctx.fill();
+      } else {
+        // หมวกปีกธรรมดา (Good)
+        ctx.fillStyle = '#3aa0ff';
+        ctx.beginPath();
+        ctx.arc(0, cy + br * 0.12, br * 0.62, Math.PI, 2 * Math.PI);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillRect(-br * 0.95, cy + br * 0.12, br * 1.9, br * 0.2);
+      }
     }
     ctx.restore();
   }
@@ -225,6 +236,11 @@
       case 'headphones':
         rect(-4.6, 21, 9.2, 1.2, '#2b2b2b');
         rect(-5.2, 15.5, 1.6, 3.5, '#3aa0ff'); rect(3.6, 15.5, 1.6, 3.5, '#3aa0ff');
+        break;
+      case 'cap':
+        rect(-4.5, 20.5, 9, 1.8, '#e0563a');
+        rect(-4.5, 20.5, 6, 0.8, '#1f1f1f'); // ปีกหมวก
+        rect(-1, 21.8, 2, 1, '#e0563a');
         break;
       case 'wizard_hat':
         rect(-5, 20.5, 10, 1.5, '#5b2c9e'); rect(-3.5, 22, 7, 1.5, '#5b2c9e');
@@ -294,9 +310,10 @@
     } else {
       rect(-1, 14.2, 2, 0.7, '#9a4a3a');
     }
-    // ผม + accessory (เลือกตามเลเวล/Recommend)
+    // ผม + accessory: Recommend = มงกุฎ, Good = หมวกปีก, ที่เหลือเลือกตามเลเวล
     drawHair(rect, cfg);
-    const acc = o.recommend ? 'crown' : level >= 25 ? 'wizard_hat' : level >= 8 ? 'headphones' : level >= 4 ? 'glasses' : 'none';
+    const badge = o.badge || (o.recommend ? 'recommend' : '');
+    const acc = badge === 'recommend' ? 'crown' : badge === 'good' ? 'cap' : level >= 25 ? 'wizard_hat' : level >= 8 ? 'headphones' : level >= 4 ? 'glasses' : 'none';
     drawAccessory(rect, cfg, acc);
 
     ctx.restore();
