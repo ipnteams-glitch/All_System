@@ -158,7 +158,6 @@ User Responsibility: The user acknowledges the risks and assumes sole responsibi
 
         function decline() {
             // ปิดแท็บนี้ (หน้า approve เปิดในแท็บใหม่จากปุ่ม Copy/ชื่อโมเดล)
-            try { window.open('', '_self'); } catch (e) {}
             window.close();
             // เผื่อเบราว์เซอร์ไม่ยอมปิด (เช่นเปิดหน้านี้ตรงๆ) → กลับหน้าแรก
             setTimeout(function () {

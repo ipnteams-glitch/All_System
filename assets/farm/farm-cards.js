@@ -226,6 +226,11 @@
   function init() {
     if (!window.VMFarm || !document.getElementById('vm-farm-grid')) return;
     wireThemeButtons();
+    // เปิดหน้า approve ด้วย window.open() (script-opened) เพื่อให้หน้านั้นปิดแท็บตัวเองได้
+    document.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('#vm-farm a[href*="copytrade_approve.html"]') : null;
+      if (a) { e.preventDefault(); window.open(a.href, '_blank'); }
+    }, false);
     fetchData();
     setInterval(fetchData, REFRESH_MS);
   }
