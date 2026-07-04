@@ -118,13 +118,13 @@
     card.className = 'vm-card' + (row.badge === 'recommend' ? ' rec' : row.badge === 'good' ? ' good' : '') + (leveledUp ? ' levelup' : '');
     // ชื่อโมเดล: ถ้ามีลิงก์ให้ลิงก์ไปหน้า approve ก่อน (เหมือนปุ่ม Copy) เปิดแท็บใหม่
     const nameHtml = row.link
-      ? `<a href="copytrade_approve.html?url=${encodeURIComponent(row.link)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${esc(row.name)}</a>`
+      ? `<a href="copytrade_approve.html?url=${encodeURIComponent(row.link)}" target="_blank" style="color:inherit;text-decoration:none;">${esc(row.name)}</a>`
       : esc(row.name);
     // กำไร 2 เดือน (%) — ใช้เป็นความยาวแถบ + ตัวเลขในแถบ + สีตามบวก/ลบ
     const p2 = row.balance > 0 ? ((row.month + row.lastMonth) / row.balance) * 100 : 0;
     const p2col = p2 < 0 ? '#ff6b6b' : p2 > 0 ? '#8be9a0' : '#e6edf3';
     card.innerHTML =
-      (row.link ? `<a class="vm-copy" href="copytrade_approve.html?url=${encodeURIComponent(row.link)}" target="_blank" rel="noopener">Copy</a>` : '') +
+      (row.link ? `<a class="vm-copy" href="copytrade_approve.html?url=${encodeURIComponent(row.link)}" target="_blank">Copy</a>` : '') +
       (row.badge === 'recommend' ? '<div class="vm-recbadge">👑</div>' : row.badge === 'good' ? '<div class="vm-recbadge">🧢</div>' : '') +
       `<canvas class="vm-canvas" width="1" height="1"></canvas>` +
       `<div class="vm-name">${nameHtml}</div>` +

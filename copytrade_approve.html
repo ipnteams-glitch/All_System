@@ -157,12 +157,14 @@ User Responsibility: The user acknowledges the risks and assumes sole responsibi
         }
 
         function decline() {
-            var ref = document.referrer || '';
-            if (ref.includes('index_en')) {
-                window.location.href = 'index_en.html';
-            } else {
-                window.location.href = 'index.html';
-            }
+            // ปิดแท็บนี้ (หน้า approve เปิดในแท็บใหม่จากปุ่ม Copy/ชื่อโมเดล)
+            try { window.open('', '_self'); } catch (e) {}
+            window.close();
+            // เผื่อเบราว์เซอร์ไม่ยอมปิด (เช่นเปิดหน้านี้ตรงๆ) → กลับหน้าแรก
+            setTimeout(function () {
+                var ref = document.referrer || '';
+                window.location.href = ref.includes('index_en') ? 'index_en.html' : 'index.html';
+            }, 200);
         }
     </script>
 </body>
