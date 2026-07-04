@@ -44,33 +44,7 @@
     return s;
   }
 
-  // คัดลอกลิงก์ไปคลิปบอร์ด (มี fallback สำหรับ file:// / เบราว์เซอร์เก่า)
-  function fallbackCopy(text, cb) {
-    try {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      cb();
-    } catch (e) { /* เงียบ */ }
-  }
-  function copyLink(link, btn) {
-    const done = () => {
-      btn.textContent = 'คัดลอก!';
-      btn.classList.add('done');
-      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1200);
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(link).then(done).catch(() => fallbackCopy(link, done));
-    } else {
-      fallbackCopy(link, done);
-    }
-  }
+  // (ปุ่ม Copy เป็นลิงก์ไปหน้า copytrade_approve.html เหมือนตาราง — ไม่ใช้คลิปบอร์ดแล้ว)
 
   // ── parse GViz rows → snapshot objects (คอลัมน์เดียวกับตาราง RealTime) ──
   function parseRows(json) {
@@ -133,7 +107,7 @@
       ? `<a href="${esc(row.link)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${esc(row.name)}</a>`
       : esc(row.name);
     card.innerHTML =
-      (row.link ? '<button class="vm-copy" type="button">Copy</button>' : '') +
+      (row.link ? `<a class="vm-copy" href="copytrade_approve.html?url=${encodeURIComponent(row.link)}">Copy</a>` : '') +
       (row.badge === 'recommend' ? '<div class="vm-recbadge">👑</div>' : row.badge === 'good' ? '<div class="vm-recbadge">🧢</div>' : '') +
       `<canvas class="vm-canvas" width="1" height="1"></canvas>` +
       `<div class="vm-name">${nameHtml}</div>` +
@@ -144,10 +118,6 @@
       `<span class="vm-stars">${starStr(stats.stars)}</span></div>` +
       trendHtml(row.month) +
       `<div class="vm-lvlup">LEVEL UP!<br>Lv ${stats.level}</div>`;
-    if (row.link) {
-      const btn = card.querySelector('.vm-copy');
-      if (btn) btn.addEventListener('click', function (e) { e.preventDefault(); copyLink(row.link, btn); });
-    }
     return card;
   }
 
