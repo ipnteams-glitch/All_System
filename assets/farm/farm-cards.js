@@ -22,6 +22,9 @@
   // ── ขนาด canvas การ์ด ──
   const CV = { W: 150, H: 140, baseX: 75, baseY: 126, unit: 4.4 };
 
+  // เพดาน % กำไร 2 เดือน ที่ทำให้แถบประสิทธิภาพเต็ม (จูนได้)
+  const PERF_CEILING = 30;
+
   // ── ข้อมูลตัวอย่าง (แสดงเมื่อดึงชีตไม่ได้ เช่น เปิดแบบ offline) ──
   const DEMO_ROWS = [
     { name: 'Sys_1', balance: 10000, profit: 2450, month: 8.2, lastMonth: 5.1, stars: 5, recommend: true, badge: 'recommend', link: 'https://www.harvestfarm.site/?sys=1' },
@@ -117,6 +120,9 @@
     const nameHtml = row.link
       ? `<a href="copytrade_approve.html?url=${encodeURIComponent(row.link)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${esc(row.name)}</a>`
       : esc(row.name);
+    // กำไร 2 เดือน (%) — ใช้เป็นตัวเลขในแถบ + ความยาวแถบ + สีตามบวก/ลบ
+    const p2 = row.balance > 0 ? ((row.month + row.lastMonth) / row.balance) * 100 : 0;
+    const p2col = p2 < 0 ? '#ff6b6b' : p2 > 0 ? '#8be9a0' : '#e6edf3';
     card.innerHTML =
       (row.link ? `<a class="vm-copy" href="copytrade_approve.html?url=${encodeURIComponent(row.link)}" target="_blank" rel="noopener">Copy</a>` : '') +
       (row.badge === 'recommend' ? '<div class="vm-recbadge">👑</div>' : row.badge === 'good' ? '<div class="vm-recbadge">🧢</div>' : '') +
@@ -124,10 +130,9 @@
       `<div class="vm-name">${nameHtml}</div>` +
       `<div class="vm-title">💵 ${T.minCap} $${fmtInt(row.balance)}</div>` +
       `<div class="vm-xpbar"><div class="vm-xpfill" style="width:0%"></div>` +
-      `<span class="vm-xptext">${fmtInt(stats.inLevel)}/${fmtInt(stats.toNext)} XP</span></div>` +
+      `<span class="vm-xptext" style="color:${p2col}">${p2 > 0 ? '+' : ''}${p2.toFixed(1)}%</span></div>` +
       `<div class="vm-meta"><span class="vm-gold" style="color:${row.profit < 0 ? '#ff6b6b' : row.profit > 0 ? '#4cd137' : '#ffffff'}">🪙 ${fmtInt(row.profit)}</span>` +
       `<span class="vm-stars">${starStr(stats.stars)}</span></div>` +
-      trendHtml(row) +
       `<div class="vm-lvlup">LEVEL UP!<br>Lv ${stats.level}</div>`;
     return card;
   }
@@ -173,9 +178,10 @@
         pop: leveledUp ? 1 : 0, popStart: now,
       });
 
-      // แถบ XP เด้ง (transition)
+      // แถบประสิทธิภาพเด้ง — ยาวตาม % กำไร 2 เดือน สเกลเทียบเพดาน PERF_CEILING (ลบ = ว่าง)
+      const perfW = Math.max(0, Math.min(100, (moodPct / PERF_CEILING) * 100));
       const fill = card.querySelector('.vm-xpfill');
-      requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = stats.pct + '%'; }));
+      requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = perfW + '%'; }));
       if (leveledUp) setTimeout(() => card.classList.remove('levelup'), 1700);
     });
 
