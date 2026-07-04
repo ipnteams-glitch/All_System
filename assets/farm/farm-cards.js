@@ -95,10 +95,11 @@
   }
 
   function trendHtml(row) {
-    // กำไร (คอลัมน์ H = c[7]) คิดเป็น % ของทุน (คอลัมน์ C = c[2]) — สูตรเดียวกับตารางเดิม
-    const pct = Number(row.balance) > 0 ? (Number(row.lastMonth) / Number(row.balance)) * 100 : 0;
-    if (pct > 0) return `<div class="vm-trend up">📈 +${pct.toFixed(1)}% กำไร</div>`;
-    if (pct < 0) return `<div class="vm-trend down">📉 ${pct.toFixed(1)}% กำไร</div>`;
+    // กำไรย้อนหลัง 2 เดือน (คอลัมน์ G + H) คิดเป็น % ของทุน (คอลัมน์ C)
+    const profit2m = (Number(row.month) || 0) + (Number(row.lastMonth) || 0);
+    const pct = Number(row.balance) > 0 ? (profit2m / Number(row.balance)) * 100 : 0;
+    if (pct > 0) return `<div class="vm-trend up">📈 +${pct.toFixed(1)}% กำไร 2 เดือน</div>`;
+    if (pct < 0) return `<div class="vm-trend down">📉 ${pct.toFixed(1)}% กำไร 2 เดือน</div>`;
     return `<div class="vm-trend flat">➖ ทรงตัว</div>`;
   }
 
@@ -147,8 +148,8 @@
     rows.forEach((row) => {
       const stats = VMFarm.statsFor(row, THEME);
       const cfg = VMFarm.paletteFor(row.name);
-      // สีหน้าอิง % กำไรที่โชว์บนการ์ด (คอลัมน์ H ÷ ทุนคอลัมน์ C)
-      const moodPct = row.balance > 0 ? (row.lastMonth / row.balance) * 100 : 0;
+      // สีหน้าอิง % กำไรที่โชว์บนการ์ด (คอลัมน์ G + H ÷ ทุนคอลัมน์ C)
+      const moodPct = row.balance > 0 ? ((row.month + row.lastMonth) / row.balance) * 100 : 0;
       const mood = moodPct > 0 ? 1 : moodPct < 0 ? -1 : 0;
       const prev = prevLevels[row.name];
       const leveledUp = !!detectLevelUp && prev != null && stats.level > prev;
