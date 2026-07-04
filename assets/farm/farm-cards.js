@@ -94,9 +94,11 @@
     }
   }
 
-  function trendHtml(month) {
-    if (month > 0) return `<div class="vm-trend up">📈 +${month.toFixed(1)}% เดือนนี้</div>`;
-    if (month < 0) return `<div class="vm-trend down">📉 ${month.toFixed(1)}% เดือนนี้</div>`;
+  function trendHtml(row) {
+    // กำไร (คอลัมน์ H = c[7]) คิดเป็น % ของทุน (คอลัมน์ C = c[2]) — สูตรเดียวกับตารางเดิม
+    const pct = Number(row.balance) > 0 ? (Number(row.lastMonth) / Number(row.balance)) * 100 : 0;
+    if (pct > 0) return `<div class="vm-trend up">📈 +${pct.toFixed(1)}% กำไร</div>`;
+    if (pct < 0) return `<div class="vm-trend down">📉 ${pct.toFixed(1)}% กำไร</div>`;
     return `<div class="vm-trend flat">➖ ทรงตัว</div>`;
   }
 
@@ -116,7 +118,7 @@
       `<span class="vm-xptext">${fmtInt(stats.inLevel)}/${fmtInt(stats.toNext)} XP</span></div>` +
       `<div class="vm-meta"><span class="vm-gold">🪙 ${fmtInt(row.profit)}</span>` +
       `<span class="vm-stars">${starStr(stats.stars)}</span></div>` +
-      trendHtml(row.month) +
+      trendHtml(row) +
       `<div class="vm-lvlup">LEVEL UP!<br>Lv ${stats.level}</div>`;
     return card;
   }
