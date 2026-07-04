@@ -147,7 +147,9 @@
     rows.forEach((row) => {
       const stats = VMFarm.statsFor(row, THEME);
       const cfg = VMFarm.paletteFor(row.name);
-      const mood = row.month > 0 ? 1 : row.month < 0 ? -1 : 0;
+      // สีหน้าอิง % กำไรที่โชว์บนการ์ด (คอลัมน์ H ÷ ทุนคอลัมน์ C)
+      const moodPct = row.balance > 0 ? (row.lastMonth / row.balance) * 100 : 0;
+      const mood = moodPct > 0 ? 1 : moodPct < 0 ? -1 : 0;
       const prev = prevLevels[row.name];
       const leveledUp = !!detectLevelUp && prev != null && stats.level > prev;
       prevLevels[row.name] = stats.level;
