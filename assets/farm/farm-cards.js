@@ -20,7 +20,7 @@
   const REFRESH_MS = 30000;
 
   // เพดาน % กำไร 2 เดือน ที่ทำให้แถบเต็ม (จูนได้)
-  const PERF_CEILING = 30;
+  const PERF_CEILING = 100;
 
   // ── ขนาด canvas การ์ด ──
   const CV = { W: 150, H: 140, baseX: 75, baseY: 126, unit: 4.4 };
