@@ -113,9 +113,8 @@
   function buildCard(row, stats, leveledUp) {
     const card = document.createElement('div');
     card.className = 'vm-card' + (row.badge === 'recommend' ? ' rec' : row.badge === 'good' ? ' good' : '') + (leveledUp ? ' levelup' : '');
-    const nameHtml = row.link
-      ? `<a href="${esc(row.link)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${esc(row.name)}</a>`
-      : esc(row.name);
+    // ชื่อโมเดลเป็นข้อความธรรมดา (ไม่ทำเป็นลิงก์) — เข้าลิงก์ผ่านปุ่ม Copy เท่านั้น
+    const nameHtml = esc(row.name);
     card.innerHTML =
       (row.link ? `<a class="vm-copy" href="copytrade_approve.html?url=${encodeURIComponent(row.link)}" target="_blank" rel="noopener">Copy</a>` : '') +
       (row.badge === 'recommend' ? '<div class="vm-recbadge">👑</div>' : row.badge === 'good' ? '<div class="vm-recbadge">🧢</div>' : '') +
