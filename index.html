@@ -1738,10 +1738,10 @@ requestAnimationFrame(dr);
 <script>
 (function(){
   var a=document.getElementById('vm-bgm'); if(!a) return;
-  var TARGET=0.2, started=false;
+  var TARGET=1, started=false;
   var EVTS=['pointerdown','click','keydown','touchstart','scroll'];
   a.volume=0;
-  function fadeIn(){var v=0;var iv=setInterval(function(){v+=0.02;if(v>=TARGET){v=TARGET;clearInterval(iv);}try{a.volume=v;}catch(e){}},120);}
+  function fadeIn(){var v=0;var iv=setInterval(function(){v+=0.06;if(v>=TARGET){v=TARGET;clearInterval(iv);}try{a.volume=v;}catch(e){}},50);}
   function cleanup(){EVTS.forEach(function(e){document.removeEventListener(e,onFirst,true);});}
   function start(){ if(started) return; var p=a.play(); if(p&&p.then){ p.then(function(){started=true;fadeIn();cleanup();}).catch(function(){}); } }
   function onFirst(){ start(); }
