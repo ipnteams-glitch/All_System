@@ -1733,5 +1733,21 @@ requestAnimationFrame(dr);
         ** เราไม่ชักชวน ไม่ระดมทุน ไม่ชี้นำการลงทุนใดๆทั้งสิ้น ซอฟต์แวร์อัตโนมัติถูกพัฒนาจากข้อมูลย้อนหลังในอดีตเท่านั้น มิอาจการันตีอนาคตและผลตอบแทนใดๆ การตัดสินใจใช้งานซอฟต์แวร์และการดำเนินการต่างๆ เป็นการตัดสินใจของตัวท่านเองแบบ 100%
     </div>
 
+<!-- ===== เพลงคลอพื้นหลัง (วนลูป, เล่นตอนแตะครั้งแรกแบบเนียน) ===== -->
+<audio id="vm-bgm" src="morroc.mp3" loop preload="auto"></audio>
+<script>
+(function(){
+  var a=document.getElementById('vm-bgm'); if(!a) return;
+  var TARGET=0.2, started=false;
+  var EVTS=['pointerdown','click','keydown','touchstart','scroll'];
+  a.volume=0;
+  function fadeIn(){var v=0;var iv=setInterval(function(){v+=0.02;if(v>=TARGET){v=TARGET;clearInterval(iv);}try{a.volume=v;}catch(e){}},120);}
+  function cleanup(){EVTS.forEach(function(e){document.removeEventListener(e,onFirst,true);});}
+  function start(){ if(started) return; var p=a.play(); if(p&&p.then){ p.then(function(){started=true;fadeIn();cleanup();}).catch(function(){}); } }
+  function onFirst(){ start(); }
+  start();
+  EVTS.forEach(function(e){document.addEventListener(e,onFirst,true);});
+})();
+</script>
 </body>
 </html>
