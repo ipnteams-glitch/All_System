@@ -94,8 +94,8 @@
         }
 
         @keyframes newServicePulse {
-            0%, 100% { text-shadow: 0 0 8px rgba(0,229,255,0.3), 0 0 16px rgba(0,180,255,0.15); opacity: 0.85; }
-            50% { text-shadow: 0 0 22px rgba(0,229,255,0.8), 0 0 40px rgba(0,180,255,0.5); opacity: 1; }
+            0%, 100% { text-shadow: 0 0 8px rgba(76,209,55,0.35), 0 0 16px rgba(56,239,125,0.18); opacity: 0.5; }
+            50% { text-shadow: 0 0 22px rgba(76,209,55,0.85), 0 0 40px rgba(56,239,125,0.5); opacity: 1; }
         }
 
         /* ── MyPortfolio Button ── */
@@ -763,9 +763,9 @@
             <span class="dot"></span>Live Update
         </div>
         <div style="color:#fff; font-size:0.8rem; text-align:center; padding:0 10px 10px 10px;">
-            The data in the table below is from private testing of the program for personal use. No intention to guide or solicit. Performance may change depending on market conditions.
+            The data in the table below is from private testing of the program for personal use over the last 2 months. No intention to guide or solicit. Performance may change depending on market conditions.
         </div>
-        <div style="color:#00e5ff; font-weight:700; font-size:0.95rem; text-align:center; padding:8px 10px 15px 10px; text-shadow:0 0 14px rgba(0,229,255,0.7), 0 0 28px rgba(0,180,255,0.4); animation:newServicePulse 1.8s ease-in-out infinite; letter-spacing:0.5px;">
+        <div style="color:#4cd137; font-weight:700; font-size:0.95rem; text-align:center; padding:8px 10px 15px 10px; text-shadow:0 0 14px rgba(76,209,55,0.7), 0 0 28px rgba(56,239,125,0.4); animation:newServicePulse 1.8s ease-in-out infinite; letter-spacing:0.5px;">
             !!New CopyTrade service — No EA installation needed, No VPS required, No package subscription needed
         </div>
     </div>
@@ -795,7 +795,62 @@
         </div>
     </div>
 
-<div class="rt-table-container">
+<!-- ===== Vibemaster Farm Section (EN) ===== -->
+<section id="vm-farm">
+  <style>
+    #vm-farm{max-width:1000px;margin:12px auto 22px;padding:0 6px;}
+    #vm-farm *{box-sizing:border-box;}
+    #vm-farm .vm-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 4px 12px;}
+    #vm-farm .vm-heading{color:#D4AF37;font-weight:600;font-size:1.05rem;text-shadow:0 0 10px rgba(212,175,55,.3);}
+    #vm-farm .vm-sub{color:#8b949e;font-size:.8rem;font-weight:400;margin-left:6px;}
+    #vm-farm .vm-right{display:flex;align-items:center;gap:8px;}
+    #vm-farm .vm-demo{background:#b45309;color:#fff;font-size:.7rem;padding:2px 8px;border-radius:10px;}
+    #vm-farm .vm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+    #vm-farm .vm-loading{grid-column:1/-1;text-align:center;color:#8b949e;padding:24px;}
+    #vm-farm .vm-card{position:relative;background:linear-gradient(180deg,#1c1f26,#15181e);border:1px solid #2d333b;border-radius:14px;padding:10px 10px 12px;text-align:center;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.4);}
+    #vm-farm .vm-card.rec{border-color:#D4AF37;box-shadow:0 0 16px rgba(212,175,55,.25);}
+    #vm-farm .vm-card.good{border-color:#38bdf8;box-shadow:0 0 14px rgba(56,189,248,.2);}
+    #vm-farm .vm-copy{position:absolute;top:8px;left:8px;background:linear-gradient(135deg,#11998e,#38ef7d);border:0;color:#06231c;font-size:.72rem;font-weight:700;padding:3px 12px;border-radius:12px;cursor:pointer;z-index:3;font-family:inherit;text-decoration:none;display:inline-block;line-height:1.5;box-shadow:0 2px 8px rgba(56,239,125,.3);}
+    #vm-farm .vm-copy:hover{filter:brightness(1.08);}
+    #vm-farm .vm-copy:active{transform:scale(.96);}
+    #vm-farm .vm-recbadge{position:absolute;top:6px;right:8px;font-size:.9rem;z-index:2;}
+    #vm-farm canvas.vm-canvas{display:block;margin:2px auto 0;width:150px;height:140px;}
+    #vm-farm .vm-name{color:#ffeb3b;font-weight:700;font-size:.95rem;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    #vm-farm .vm-title{color:#c9d1d9;font-size:.78rem;margin-bottom:6px;}
+    #vm-farm .vm-xpbar{position:relative;height:13px;background:#0d1117;border-radius:8px;overflow:hidden;border:1px solid #2d333b;}
+    #vm-farm .vm-xpfill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#38ef7d,#11998e);border-radius:8px;transition:width .8s ease;}
+    #vm-farm .vm-xptext{position:relative;font-size:.62rem;color:#e6edf3;line-height:13px;text-shadow:0 1px 2px #000;}
+    #vm-farm .vm-meta{display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:.8rem;}
+    #vm-farm .vm-gold{color:#ffd23b;font-weight:600;}
+    #vm-farm .vm-stars{letter-spacing:1px;font-size:.8rem;}
+    #vm-farm .vm-star-on{color:#ffd23b;}
+    #vm-farm .vm-star-off{color:#3a4048;}
+    #vm-farm .vm-trend{margin-top:5px;font-size:.76rem;}
+    #vm-farm .vm-trend.up{color:#4cd137;}
+    #vm-farm .vm-trend.down{color:#ff6b6b;}
+    #vm-farm .vm-trend.flat{color:#8b949e;}
+    #vm-farm .vm-lvlup{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;font-weight:800;color:#ffd23b;text-shadow:0 0 12px #ff8c00;font-size:1.05rem;line-height:1.2;opacity:0;}
+    #vm-farm .vm-card.levelup .vm-lvlup{animation:vmLvlUp 1.6s ease forwards;}
+    @keyframes vmLvlUp{0%{opacity:0;transform:scale(.4)}20%{opacity:1;transform:scale(1.12)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.2) translateY(-12px)}}
+    @media (max-width:480px){#vm-farm .vm-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}#vm-farm canvas.vm-canvas{width:130px;height:122px;}}
+  </style>
+  <div class="vm-toolbar">
+    <div class="vm-heading">🎮 Performance <span class="vm-sub">Test-run results</span></div>
+    <div class="vm-right">
+      <span id="vm-demo" class="vm-demo" style="display:none;">DEMO</span>
+    </div>
+  </div>
+  <div id="vm-farm-grid" class="vm-grid">
+    <div class="vm-loading">⏳ Summoning the system champions...</div>
+  </div>
+</section>
+<script>window.VM_LANG='en';</script>
+<script src="assets/farm/farm-levels.js"></script>
+<script src="assets/farm/farm-avatar.js"></script>
+<script src="assets/farm/farm-cards.js"></script>
+<!-- ===== /Vibemaster Farm Section ===== -->
+
+<div class="rt-table-container" style="display:none;"><!-- RealTime table hidden for now (kept in code for future use) -->
         <table class="rt-table">
             <thead>
                 <tr>

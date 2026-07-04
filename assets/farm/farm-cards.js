@@ -7,6 +7,13 @@
   'use strict';
   const VMFarm = window.VMFarm;
 
+  // i18n — index.html = ไทย (ดีฟอลต์), index_en.html ตั้ง window.VM_LANG='en' ก่อนโหลดสคริปต์
+  const LANG = window.VM_LANG === 'en' ? 'en' : 'th';
+  const T = {
+    th: { minCap: 'ทุนขั้นต่ำ', profit2m: 'กำไร 2 เดือน', flat: 'ทรงตัว' },
+    en: { minCap: 'Min. capital', profit2m: '2-mo. profit', flat: 'Flat' },
+  }[LANG];
+
   // ── แหล่งข้อมูล (เหมือนตาราง RealTime เดิม) ──
   const RT_SHEET_ID = '1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU';
   const RT_URL = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
@@ -98,9 +105,9 @@
     // กำไรย้อนหลัง 2 เดือน (คอลัมน์ G + H) คิดเป็น % ของทุน (คอลัมน์ C)
     const profit2m = (Number(row.month) || 0) + (Number(row.lastMonth) || 0);
     const pct = Number(row.balance) > 0 ? (profit2m / Number(row.balance)) * 100 : 0;
-    if (pct > 0) return `<div class="vm-trend up">📈 +${pct.toFixed(1)}% กำไร 2 เดือน</div>`;
-    if (pct < 0) return `<div class="vm-trend down">📉 ${pct.toFixed(1)}% กำไร 2 เดือน</div>`;
-    return `<div class="vm-trend flat">➖ ทรงตัว</div>`;
+    if (pct > 0) return `<div class="vm-trend up">📈 +${pct.toFixed(1)}% ${T.profit2m}</div>`;
+    if (pct < 0) return `<div class="vm-trend down">📉 ${pct.toFixed(1)}% ${T.profit2m}</div>`;
+    return `<div class="vm-trend flat">➖ ${T.flat}</div>`;
   }
 
   function buildCard(row, stats, leveledUp) {
@@ -114,7 +121,7 @@
       (row.badge === 'recommend' ? '<div class="vm-recbadge">👑</div>' : row.badge === 'good' ? '<div class="vm-recbadge">🧢</div>' : '') +
       `<canvas class="vm-canvas" width="1" height="1"></canvas>` +
       `<div class="vm-name">${nameHtml}</div>` +
-      `<div class="vm-title">💵 ทุนขั้นต่ำ $${fmtInt(row.balance)}</div>` +
+      `<div class="vm-title">💵 ${T.minCap} $${fmtInt(row.balance)}</div>` +
       `<div class="vm-xpbar"><div class="vm-xpfill" style="width:0%"></div>` +
       `<span class="vm-xptext">${fmtInt(stats.inLevel)}/${fmtInt(stats.toNext)} XP</span></div>` +
       `<div class="vm-meta"><span class="vm-gold" style="color:${row.profit < 0 ? '#ff6b6b' : row.profit > 0 ? '#4cd137' : '#ffffff'}">🪙 ${fmtInt(row.profit)}</span>` +
