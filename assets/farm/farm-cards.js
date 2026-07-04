@@ -111,7 +111,7 @@
       (row.badge === 'recommend' ? '<div class="vm-recbadge">👑</div>' : row.badge === 'good' ? '<div class="vm-recbadge">🧢</div>' : '') +
       `<canvas class="vm-canvas" width="1" height="1"></canvas>` +
       `<div class="vm-name">${nameHtml}</div>` +
-      `<div class="vm-title">${stats.titleEmoji} ${esc(stats.title)}</div>` +
+      `<div class="vm-title">💵 ทุนขั้นต่ำ $${fmtInt(row.balance)}</div>` +
       `<div class="vm-xpbar"><div class="vm-xpfill" style="width:0%"></div>` +
       `<span class="vm-xptext">${fmtInt(stats.inLevel)}/${fmtInt(stats.toNext)} XP</span></div>` +
       `<div class="vm-meta"><span class="vm-gold">🪙 ${fmtInt(row.profit)}</span>` +
