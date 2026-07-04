@@ -105,8 +105,8 @@
         /* ── ปุ่ม MyPortfolio ── */
 
         @keyframes newServicePulse {
-            0%, 100% { text-shadow: 0 0 8px rgba(0,229,255,0.3), 0 0 16px rgba(0,180,255,0.15); opacity: 0.85; }
-            50% { text-shadow: 0 0 22px rgba(0,229,255,0.8), 0 0 40px rgba(0,180,255,0.5); opacity: 1; }
+            0%, 100% { text-shadow: 0 0 8px rgba(76,209,55,0.35), 0 0 16px rgba(56,239,125,0.18); opacity: 0.5; }
+            50% { text-shadow: 0 0 22px rgba(76,209,55,0.85), 0 0 40px rgba(56,239,125,0.5); opacity: 1; }
         }
 
         /* ── ปุ่ม MyPortfolio ── */
@@ -776,7 +776,7 @@
         <div style="color:#fff; font-size:0.8rem; text-align:center; padding:0 10px 10px 10px;">
             ข้อมูลในตารางด้านล่างเป็นข้อมูลการทดสอบใช้งานโปรแกรมส่วนตัว ไม่มีเจตนาชี้นำ ชักชวน ผลการทำงานอาจเปลี่ยนแปลงตามสภาพตลาด
         </div>
-        <div style="color:#00e5ff; font-weight:700; font-size:0.95rem; text-align:center; padding:8px 10px 15px 10px; text-shadow:0 0 14px rgba(0,229,255,0.7), 0 0 28px rgba(0,180,255,0.4); animation:newServicePulse 1.8s ease-in-out infinite; letter-spacing:0.5px;">
+        <div style="color:#4cd137; font-weight:700; font-size:0.95rem; text-align:center; padding:8px 10px 15px 10px; text-shadow:0 0 14px rgba(76,209,55,0.7), 0 0 28px rgba(56,239,125,0.4); animation:newServicePulse 1.8s ease-in-out infinite; letter-spacing:0.5px;">
             !!ใหม่ เพิ่มบริการ CopyTrade ไม่ต้องวาง EA ไม่ต้องเช่า VPS ไม่ต้องสมัครแพคเกจ
         </div>
     </div>
@@ -854,10 +854,6 @@
     <div class="vm-heading">🎮 สนามพลังระบบ <span class="vm-sub">เลเวลอัปจากผลงานจริง</span></div>
     <div class="vm-right">
       <span id="vm-demo" class="vm-demo" style="display:none;">เดโม</span>
-      <div class="vm-themes">
-        <button class="vm-theme-btn active" data-theme="farm">🌾 ฟาร์ม</button>
-        <button class="vm-theme-btn" data-theme="dev">🧙 นักพัฒนา</button>
-      </div>
     </div>
   </div>
   <div id="vm-farm-grid" class="vm-grid">
@@ -869,7 +865,7 @@
 <script src="assets/farm/farm-cards.js"></script>
 <!-- ===== /Vibemaster Farm Section ===== -->
 
-<div class="rt-table-container">
+<div class="rt-table-container" style="display:none;"><!-- ซ่อนตาราง RealTime ไว้ก่อน (เก็บโค้ดไว้เผื่อใช้ในอนาคต) -->
         <table class="rt-table">
             <thead>
                 <tr>
