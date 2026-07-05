@@ -1728,5 +1728,21 @@ requestAnimationFrame(dr);
         ** We do not solicit, raise funds, or provide any investment advice whatsoever. The automated software is developed only from historical past data. We cannot guarantee any future results or returns. The decision to use the software and any actions taken are 100% your own.
     </div>
 
+<!-- ===== Background music (looping, starts on first user interaction) ===== -->
+<audio id="vm-bgm" src="morroc.mp3" loop preload="auto"></audio>
+<script>
+(function(){
+  var a=document.getElementById('vm-bgm'); if(!a) return;
+  var TARGET=1, started=false;
+  var EVTS=['pointerdown','click','keydown','touchstart','scroll'];
+  a.volume=0;
+  function fadeIn(){var v=0;var iv=setInterval(function(){v+=0.06;if(v>=TARGET){v=TARGET;clearInterval(iv);}try{a.volume=v;}catch(e){}},50);}
+  function cleanup(){EVTS.forEach(function(e){document.removeEventListener(e,onFirst,true);});}
+  function start(){ if(started) return; var p=a.play(); if(p&&p.then){ p.then(function(){started=true;fadeIn();cleanup();}).catch(function(){}); } }
+  function onFirst(){ start(); }
+  start();
+  EVTS.forEach(function(e){document.addEventListener(e,onFirst,true);});
+})();
+</script>
 </body>
 </html>
