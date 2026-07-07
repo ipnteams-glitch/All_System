@@ -1,7 +1,8 @@
 /* farm-avatar.js — ตัวละคร procedural วาดด้วย Canvas 2D (พอร์ตแนวคิดจาก vibemaster web/src/avatar.js)
- * 2 ธีม:
- *   'farm' — พืชมาสคอตที่ "โตตามเลเวลจริง" (เมล็ด → ต้นกล้า → ดอกบาน → รวงทอง)
- *   'dev'  — ชิบิพิกเซล (palette swap สี/ผม/หมวก) พอร์ตตรงจาก avatar.js
+ * 3 ธีม:
+ *   'robot' — หุ่นยนต์ AI ฟ้านีออน โตตามเลเวล (ค่าเริ่มต้น)
+ *   'farm'  — พืชมาสคอตที่ "โตตามเลเวลจริง" (เมล็ด → ต้นกล้า → ดอกบาน → รวงทอง)
+ *   'dev'   — ชิบิพิกเซล (palette swap สี/ผม/หมวก) พอร์ตตรงจาก avatar.js
  * ไม่มีไฟล์ภาพ — วาดจาก rect/arc ล้วน. ออร่าตามดาว (tier 0–4).
  * พิกัดใช้ระบบ "ฐานเท้าที่ (cx,cy), แกน y ชี้ขึ้น" เหมือน avatar.js เดิม
  */
@@ -10,6 +11,26 @@
   const VMFarm = (global.VMFarm = global.VMFarm || {});
   const DARK = '#15161f';
   const AURA_COL = ['#8899aa', '#4fd1ff', '#a78bfa', '#ffb020', '#ffd23b'];
+
+  // roundRect polyfill (เผื่อเบราว์เซอร์รุ่นเก่า)
+  if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+      if (typeof r === 'number') r = [r, r, r, r];
+      const tl = r[0], tr = r[1], br = r[2], bl = r[3];
+      this.beginPath();
+      this.moveTo(x + tl, y);
+      this.lineTo(x + w - tr, y);
+      this.arcTo(x + w, y, x + w, y + tr, tr);
+      this.lineTo(x + w, y + h - br);
+      this.arcTo(x + w, y + h, x + w - br, y + h, br);
+      this.lineTo(x + bl, y + h);
+      this.arcTo(x, y + h, x, y + h - bl, bl);
+      this.lineTo(x, y + tl);
+      this.arcTo(x, y, x + tl, y, tl);
+      this.closePath();
+      return this;
+    };
+  }
 
   function hashHue(s) {
     s = String(s);
@@ -319,6 +340,229 @@
     ctx.restore();
   }
 
+  // ===== ธีม robot: หุ่นยนต์ AI เรืองแสง (โตตามเลเวล) =====
+  function drawRobot(ctx, p, o) {
+    const t = o.t || 0;
+    const level = o.level || 1;
+    const mood = o.mood || 0;
+    const pop = o.pop || 0;
+    const g = Math.min(1, level / 25);
+    const golden = level >= 25;
+    const bob = Math.sin(t * 2) * 0.45 + pop * 2.5;
+    const shake = mood < 0 ? Math.sin(t * 22) * 0.04 : 0;
+
+    // นีออนตามอารมณ์ (ฟ้า=ทรงตัว / เขียว=กำไร / แดง=ขาดทุน)
+    const neon = mood > 0 ? '#3bf5a3' : mood < 0 ? '#ff5b5b' : '#35d0ff';
+    const neonRGB = mood > 0 ? '59,245,163' : mood < 0 ? '255,91,91' : '53,208,255';
+    const neonA = (a) => 'rgba(' + neonRGB + ',' + a + ')';
+    const bodyHi = golden ? '#ffe38a' : '#42597a';
+    const bodyMd = golden ? '#e6b73e' : '#243247';
+    const bodyLo = golden ? '#a9791f' : '#121a28';
+    const edge = golden ? '#fff3cc' : '#7fe9ff';
+
+    const rect = (ux, uy, uw, uh, c) => { ctx.fillStyle = c; ctx.fillRect(ux * p, -(uy + uh) * p, uw * p, uh * p); };
+    const rr = (ux, uy, uw, uh, r, c) => {
+      ctx.fillStyle = c; ctx.beginPath();
+      ctx.roundRect(ux * p, -(uy + uh) * p, uw * p, uh * p, r * p); ctx.fill();
+    };
+    const glow = (ux, uy, rad, a) => {
+      const gx = ux * p, gy = -uy * p, gR = rad * p;
+      const gr = ctx.createRadialGradient(gx, gy, 0, gx, gy, gR);
+      gr.addColorStop(0, neonA(a));
+      gr.addColorStop(1, neonA(0));
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(gx, gy, gR, 0, Math.PI * 2); ctx.fill();
+    };
+
+    // เงาที่พื้น
+    ctx.fillStyle = 'rgba(0,0,0,0.30)';
+    ctx.beginPath();
+    ctx.ellipse(0, 0, (5.5 + g) * p, 1.8 * p, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // ไอพ่นลอยตัว (thruster)
+    const jet = 0.55 + 0.45 * Math.sin(t * 9);
+    const jg = ctx.createLinearGradient(0, 0, 0, -3.2 * p);
+    jg.addColorStop(0, neonA(0));
+    jg.addColorStop(1, neonA(0.5 * jet));
+    ctx.fillStyle = jg;
+    ctx.beginPath();
+    ctx.moveTo(-1.9 * p, 0);
+    ctx.lineTo(1.9 * p, 0);
+    ctx.lineTo(1.0 * p, -3.2 * p);
+    ctx.lineTo(-1.0 * p, -3.2 * p);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.save();
+    ctx.translate(0, -bob * p);
+    if (shake) ctx.rotate(shake);
+
+    // ปีกพลังงานด้านหลัง (Lv >= 15)
+    if (level >= 15) {
+      ctx.save();
+      ctx.globalAlpha = 0.85;
+      ctx.fillStyle = golden ? '#ffd23b' : edge;
+      [-1, 1].forEach((s) => {
+        ctx.beginPath();
+        ctx.moveTo(s * 3.6 * p, -9 * p);
+        ctx.lineTo(s * (7.5 + g * 1.5) * p, -12.5 * p);
+        ctx.lineTo(s * (7.0 + g * 1.5) * p, -8.5 * p);
+        ctx.lineTo(s * (6.2 + g) * p, -6.0 * p);
+        ctx.lineTo(s * 3.6 * p, -7 * p);
+        ctx.closePath();
+        ctx.fill();
+      });
+      ctx.restore();
+    }
+
+    // แขน (Lv >= 4)
+    if (level >= 4) {
+      [-1, 1].forEach((s) => {
+        rr(s > 0 ? 4.1 : -5.3, 6.5, 1.2, 5.2, 0.5, bodyMd);
+        rr(s > 0 ? 4.2 : -5.4, 5.5, 1.4, 1.6, 0.5, bodyHi);
+        rect(s > 0 ? 4.35 : -5.15, 6.3, 1.1, 0.35, neon);
+      });
+    }
+
+    // ไหล่/เกราะบ่า (Lv >= 8)
+    if (level >= 8) {
+      rr(3.4, 10.8, 1.8, 1.9, 0.6, bodyHi);
+      rr(-5.2, 10.8, 1.8, 1.9, 0.6, bodyHi);
+    }
+
+    // ฐานเรียวใต้ลำตัว
+    ctx.fillStyle = bodyLo;
+    ctx.beginPath();
+    ctx.moveTo(-1.6 * p, -3.0 * p);
+    ctx.lineTo(1.6 * p, -3.0 * p);
+    ctx.lineTo(3.2 * p, -5.5 * p);
+    ctx.lineTo(-3.2 * p, -5.5 * p);
+    ctx.closePath();
+    ctx.fill();
+
+    // ลำตัวหลัก + ไล่เฉดโลหะ
+    rr(-4, 5, 8, 7.3, 1.6, '#05070c');
+    const tGrad = ctx.createLinearGradient(-4 * p, 0, 4 * p, 0);
+    tGrad.addColorStop(0, bodyLo);
+    tGrad.addColorStop(0.5, bodyHi);
+    tGrad.addColorStop(1, bodyMd);
+    ctx.fillStyle = tGrad;
+    ctx.beginPath();
+    ctx.roundRect(-3.7 * p, -12.1 * p, 7.4 * p, 6.9 * p, 1.4 * p);
+    ctx.fill();
+    rect(-0.12, 5.4, 0.24, 6.4, neonA(0.5));
+
+    // แกนพลังงานกลางอก (โตตามเลเวล + เต้นตามจังหวะ)
+    const coreY = 8.6;
+    const pulse = 0.5 + 0.5 * Math.sin(t * 4);
+    const coreR = 1.0 + g * 0.7;
+    glow(0, coreY, (2.4 + g) * (0.9 + 0.25 * pulse), 0.45 + 0.15 * pulse);
+    ctx.fillStyle = neon;
+    ctx.beginPath();
+    ctx.arc(0, -coreY * p, coreR * p, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 0.85;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(0, -coreY * p, coreR * 0.45 * p, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    if (level >= 15) {
+      ctx.strokeStyle = neon;
+      ctx.lineWidth = 0.28 * p;
+      ctx.globalAlpha = 0.7;
+      ctx.beginPath();
+      ctx.arc(0, -coreY * p, (coreR + 0.9) * p, t * 1.5, t * 1.5 + Math.PI * 1.4);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    // คอ
+    rect(-1.1, 12.0, 2.2, 0.9, bodyMd);
+
+    // หัว
+    rr(-3, 12.7, 6, 5.3, 1.3, '#05070c');
+    const hGrad = ctx.createLinearGradient(0, -18 * p, 0, -12.7 * p);
+    hGrad.addColorStop(0, bodyHi);
+    hGrad.addColorStop(1, bodyMd);
+    ctx.fillStyle = hGrad;
+    ctx.beginPath();
+    ctx.roundRect(-2.75 * p, -17.85 * p, 5.5 * p, 4.85 * p, 1.1 * p);
+    ctx.fill();
+
+    // ไวเซอร์/ตาเรืองแสง + จุดสแกนวิ่ง
+    glow(0, 15.1, 3.2, 0.4);
+    const eyeW = mood < 0 ? 3.4 : 4.0;
+    rr(-eyeW / 2, 14.5, eyeW, 1.3, 0.5, '#0a0f16');
+    ctx.fillStyle = neon;
+    ctx.fillRect(-(eyeW / 2 - 0.25) * p, -15.15 * p, (eyeW - 0.5) * p, 0.7 * p);
+    const scan = ((Math.sin(t * 2) + 1) / 2) * (eyeW - 1.2) - (eyeW - 1.2) / 2;
+    ctx.globalAlpha = 0.9;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect((scan - 0.25) * p, -15.2 * p, 0.5 * p, 0.8 * p);
+    ctx.globalAlpha = 1;
+
+    // เสาอากาศ (Lv >= 8)
+    if (level >= 8) {
+      ctx.strokeStyle = bodyHi;
+      ctx.lineWidth = 0.3 * p;
+      ctx.beginPath();
+      ctx.moveTo(-1.6 * p, -17.8 * p);
+      ctx.lineTo(-2.4 * p, -20.2 * p);
+      ctx.stroke();
+      const bl = 0.5 + 0.5 * Math.sin(t * 6);
+      glow(-2.4, 20.2, 1.2, 0.5 * bl + 0.2);
+      ctx.fillStyle = neon;
+      ctx.beginPath();
+      ctx.arc(-2.4 * p, -20.2 * p, 0.45 * p, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // วงแหวนโฮโลแกรมเหนือหัว (Lv >= 15)
+    if (level >= 15) {
+      ctx.strokeStyle = golden ? '#ffd23b' : neon;
+      ctx.lineWidth = 0.35 * p;
+      ctx.globalAlpha = 0.8;
+      ctx.beginPath();
+      ctx.ellipse(0, -19.2 * p, 3.2 * p, 0.9 * p, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    // ป้ายยศ: Recommend = มงกุฎ, Good = เชฟรอน
+    const badge = o.badge || (o.recommend ? 'recommend' : '');
+    if (badge === 'recommend') {
+      const cy = level >= 15 ? 21.2 : 18.6;
+      const cw = 3.0;
+      ctx.fillStyle = '#ffd23b';
+      ctx.beginPath();
+      ctx.moveTo((-cw / 2) * p, -cy * p);
+      ctx.lineTo((-cw / 2) * p, -(cy + 1.1) * p);
+      ctx.lineTo((-cw / 4) * p, -(cy + 0.4) * p);
+      ctx.lineTo(0, -(cy + 1.4) * p);
+      ctx.lineTo((cw / 4) * p, -(cy + 0.4) * p);
+      ctx.lineTo((cw / 2) * p, -(cy + 1.1) * p);
+      ctx.lineTo((cw / 2) * p, -cy * p);
+      ctx.closePath();
+      ctx.fill();
+    } else if (badge === 'good') {
+      ctx.fillStyle = '#3ad1ff';
+      [0, 0.9].forEach((dy) => {
+        ctx.beginPath();
+        ctx.moveTo(-1.3 * p, -(7.2 + dy) * p);
+        ctx.lineTo(0, -(6.4 + dy) * p);
+        ctx.lineTo(1.3 * p, -(7.2 + dy) * p);
+        ctx.lineTo(1.3 * p, -(7.55 + dy) * p);
+        ctx.lineTo(0, -(6.75 + dy) * p);
+        ctx.lineTo(-1.3 * p, -(7.55 + dy) * p);
+        ctx.closePath();
+        ctx.fill();
+      });
+    }
+
+    ctx.restore();
+  }
+
   // ===== entry: วาดตัวละคร 1 ตัว =====
   function drawCreature(ctx, o) {
     const p = o.unit || 4;
@@ -327,6 +571,7 @@
     const tier = Math.min(4, Math.max(0, o.stars || 0));
     drawAura(ctx, p, tier, AURA_COL[tier], o.t || 0);
     if (o.theme === 'dev') drawDev(ctx, p, o);
+    else if (o.theme === 'robot') drawRobot(ctx, p, o);
     else drawFarm(ctx, p, o);
     ctx.restore();
   }

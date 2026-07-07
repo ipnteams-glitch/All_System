@@ -35,7 +35,7 @@
     { name: 'Sys_6', balance: 12000, profit: 3600, month: 12.0, lastMonth: 9.4, stars: 4, recommend: false, badge: 'good', link: '' },
   ];
 
-  let THEME = 'farm';
+  let THEME = 'robot';
   let lastRows = null;
   let DEMO = false;
   let cards = []; // { ctx, W,H, baseX,baseY,unit, stats, cfg, mood, row, pop, popStart }
