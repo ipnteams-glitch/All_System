@@ -68,7 +68,12 @@
     { name: 'Sys_6', balance: 12000, profit: 3600, month: 12.0, lastMonth: 9.4, stars: 4, recommend: false, badge: 'good', link: '' },
   ];
 
-  let THEME = 'robot';
+  // จำธีมที่ผู้ใช้เลือกไว้ (localStorage) — เปิดเว็บครั้งถัดไปใช้ธีมเดิม
+  const THEME_KEY = 'vmFarmTheme';
+  const THEMES = ['robot', 'farm', 'dev'];
+  let savedTheme = null;
+  try { savedTheme = localStorage.getItem(THEME_KEY); } catch (e) {}
+  let THEME = THEMES.indexOf(savedTheme) >= 0 ? savedTheme : 'robot';
   let lastRows = null;
   let DEMO = false;
   let cards = []; // { ctx, W,H, baseX,baseY,unit, stats, cfg, mood, risk, row, pop, popStart }
@@ -246,11 +251,14 @@
 
   function wireThemeButtons() {
     const btns = document.querySelectorAll('#vm-farm .vm-theme-btn');
+    // ตั้งปุ่ม active ให้ตรงกับธีมที่จำไว้ (จาก localStorage)
+    btns.forEach((x) => x.classList.toggle('active', x.getAttribute('data-theme') === THEME));
     btns.forEach((b) => {
       b.addEventListener('click', () => {
         const th = b.getAttribute('data-theme');
         if (th === THEME) return;
         THEME = th;
+        try { localStorage.setItem(THEME_KEY, THEME); } catch (e) {} // จำธีมที่เลือก
         btns.forEach((x) => x.classList.toggle('active', x === b));
         if (lastRows) renderGrid(lastRows, false); // สลับธีมไม่นับเป็น level-up
       });
