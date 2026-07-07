@@ -62,6 +62,13 @@
     ctx.beginPath();
     ctx.ellipse(0, 0, (8 + tier * 1.6) * p, (2.2 + tier * 0.5) * p, 0, 0, Math.PI * 2);
     ctx.fill();
+    // วงแหวน risk คมชัด (ให้เห็นสีชัดทุกธีม/ทุกโทน โดยเฉพาะฟ้า Medium)
+    ctx.globalAlpha = 0.55 + 0.25 * pulse;
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 0.7 * p;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, (8 + tier * 1.6) * p, (2.2 + tier * 0.5) * p, 0, 0, Math.PI * 2);
+    ctx.stroke();
     if (tier >= 2) {
       ctx.globalAlpha = 0.05 + 0.035 * pulse;
       ctx.beginPath();
