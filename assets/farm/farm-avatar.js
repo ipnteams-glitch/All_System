@@ -570,7 +570,9 @@
     ctx.save();
     ctx.translate(o.cx || 0, o.cy || 0);
     const tier = Math.min(4, Math.max(0, o.stars || 0));
-    drawAura(ctx, p, tier, AURA_COL[tier], o.t || 0);
+    // ออร่า/วงแหวนใต้ตัวเปลี่ยนสีตาม risk ทุกธีม (High=แดง/Medium=ฟ้า/Low=เขียว); ขนาด/ความเข้มยังอิงจำนวนดาว
+    const riskAura = o.risk === 'high' ? '#ff5b5b' : o.risk === 'low' ? '#3bf5a3' : o.risk === 'medium' ? '#35d0ff' : AURA_COL[tier];
+    drawAura(ctx, p, tier, riskAura, o.t || 0);
     if (o.theme === 'dev') drawDev(ctx, p, o);
     else if (o.theme === 'robot') drawRobot(ctx, p, o);
     else drawFarm(ctx, p, o);
