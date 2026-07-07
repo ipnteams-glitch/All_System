@@ -19,6 +19,39 @@
   const RT_URL = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
   const REFRESH_MS = 30000;
 
+  // ── ชีต EA (คอลัมน์ E = ระดับความเสี่ยง) แยกจากชีต RT — join ด้วยชื่อ Sys_N ──
+  const EA_SHEET_ID = '193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ';
+  const EA_URL = `https://docs.google.com/spreadsheets/d/${EA_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+  let riskByName = {}; // { 'Sys_1': 'high' | 'medium' | 'low' }
+
+  function normRisk(s) {
+    const v = String(s || '').toLowerCase();
+    if (v.indexOf('high') >= 0 || v.indexOf('เสี่ยงสูง') >= 0) return 'high';
+    if (v.indexOf('low') >= 0 || v.indexOf('เสี่ยงต่ำ') >= 0) return 'low';
+    if (v.indexOf('medium') >= 0 || v.indexOf('ค่อนข้าง') >= 0 || v.indexOf('กลาง') >= 0) return 'medium';
+    return null;
+  }
+
+  async function fetchRisk() {
+    try {
+      const res = await fetch(EA_URL + '&t=' + Date.now());
+      const text = await res.text();
+      const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
+      const rows = json && json.table && json.table.rows;
+      if (!rows) return;
+      const map = {};
+      for (let i = 0; i < rows.length; i++) {
+        const r = rows[i];
+        if (!(r && r.c)) continue;
+        const nm = r.c[2] && r.c[2].v !== null ? String(r.c[2].v).trim() : ''; // คอลัมน์ C = Sys_N
+        const rk = normRisk(r.c[4] && r.c[4].v !== null ? r.c[4].v : '');       // คอลัมน์ E = risk
+        if (nm && rk) map[nm] = rk;
+      }
+      riskByName = map;
+      if (lastRows) renderGrid(lastRows, false); // ได้ risk แล้ว → รีเฟรชสี
+    } catch (e) { /* ดึงไม่ได้ → ใช้สีดีฟอลต์ (medium/ฟ้า) */ }
+  }
+
   // เพดาน % กำไร 2 เดือน ที่ทำให้แถบเต็ม (จูนได้)
   const PERF_CEILING = 100;
 
@@ -38,7 +71,7 @@
   let THEME = 'robot';
   let lastRows = null;
   let DEMO = false;
-  let cards = []; // { ctx, W,H, baseX,baseY,unit, stats, cfg, mood, row, pop, popStart }
+  let cards = []; // { ctx, W,H, baseX,baseY,unit, stats, cfg, mood, risk, row, pop, popStart }
   const prevLevels = {};
   let rafOn = false;
 
@@ -165,6 +198,7 @@
       // สีหน้าอิง % กำไรที่โชว์บนการ์ด (คอลัมน์ G + H ÷ ทุนคอลัมน์ C)
       const moodPct = row.balance > 0 ? ((row.month + row.lastMonth) / row.balance) * 100 : 0;
       const mood = moodPct > 0 ? 1 : moodPct < 0 ? -1 : 0;
+      const risk = riskByName[row.name] || null; // สีตัว: High=แดง Medium=ฟ้า Low=เขียว (null→medium)
       const prev = prevLevels[row.name];
       const leveledUp = !!detectLevelUp && prev != null && stats.level > prev;
       prevLevels[row.name] = stats.level;
@@ -175,7 +209,7 @@
 
       cards.push({
         ctx: ctx, W: CV.W, H: CV.H, baseX: CV.baseX, baseY: CV.baseY, unit: CV.unit,
-        stats: stats, cfg: cfg, mood: mood, row: row,
+        stats: stats, cfg: cfg, mood: mood, risk: risk, row: row,
         pop: leveledUp ? 1 : 0, popStart: now,
       });
 
@@ -203,7 +237,7 @@
       }
       VMFarm.drawCreature(c.ctx, {
         theme: THEME, cx: c.baseX, cy: c.baseY, unit: c.unit, t: t,
-        level: c.stats.level, stars: c.stats.stars, mood: c.mood,
+        level: c.stats.level, stars: c.stats.stars, mood: c.mood, risk: c.risk,
         cfg: c.cfg, recommend: c.row.recommend, badge: c.row.badge, pop: pop,
       });
     }
@@ -231,8 +265,9 @@
       var a = e.target && e.target.closest ? e.target.closest('#vm-farm a[href*="copytrade_approve.html"]') : null;
       if (a) { e.preventDefault(); window.open(a.href, '_blank'); }
     }, false);
+    fetchRisk();
     fetchData();
-    setInterval(fetchData, REFRESH_MS);
+    setInterval(function () { fetchRisk(); fetchData(); }, REFRESH_MS);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

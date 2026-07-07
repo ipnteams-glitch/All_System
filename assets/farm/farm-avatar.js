@@ -351,9 +351,10 @@
     const bob = Math.sin(t * 2) * 0.45 + pop * 2.5;
     const shake = mood < 0 ? Math.sin(t * 22) * 0.04 : 0;
 
-    // นีออนตามอารมณ์ (ฟ้า=ทรงตัว / เขียว=กำไร / แดง=ขาดทุน)
-    const neon = mood > 0 ? '#3bf5a3' : mood < 0 ? '#ff5b5b' : '#35d0ff';
-    const neonRGB = mood > 0 ? '59,245,163' : mood < 0 ? '255,91,91' : '53,208,255';
+    // สีตัว = ระดับความเสี่ยง (High=แดง / Medium=ฟ้า / Low=เขียว); กำไร/ขาดทุนแสดงที่หน้า+การสั่น
+    const risk = o.risk || 'medium';
+    const neon = risk === 'high' ? '#ff5b5b' : risk === 'low' ? '#3bf5a3' : '#35d0ff';
+    const neonRGB = risk === 'high' ? '255,91,91' : risk === 'low' ? '59,245,163' : '53,208,255';
     const neonA = (a) => 'rgba(' + neonRGB + ',' + a + ')';
     const bodyHi = golden ? '#ffe38a' : '#42597a';
     const bodyMd = golden ? '#e6b73e' : '#243247';
