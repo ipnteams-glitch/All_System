@@ -286,6 +286,8 @@
     const t = o.t || 0;
     const mood = o.mood || 0;
     const cfg = o.cfg || paletteFor('x');
+    // เสื้ออิงระดับความเสี่ยง (High=แดง/Medium=ฟ้า/Low=เขียว); ไม่มีค่า risk ใช้สีตามชื่อระบบเดิม
+    if (o.risk) cfg.shirt = o.risk === 'high' ? '#ff5b5b' : o.risk === 'low' ? '#3bf5a3' : '#35d0ff';
     const level = o.level || 1;
     const pop = o.pop || 0;
     const happy = mood > 0, sad = mood < 0;
