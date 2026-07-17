@@ -1069,7 +1069,8 @@
                             balance: row.c[3] && row.c[3].v !== null ? row.c[3].v : "0",    // คอลัมน์ D (ทุน)
                             balanceNum: row.c[3] && row.c[3].v !== null ? parseFloat(String(row.c[3].v).replace(/[^0-9.-]/g, '')) || 0 : 0,
                             profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) || 0 : 0,     // คอลัมน์ G (กำไรสัปดาห์นี้)
-                            lastWeekProfit: row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) || 0 : 0,  // คอลัมน์ H (กำไรสัปดาห์ที่แล้ว)
+                            lastWeekProfit: row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) || 0 : 0,
+                        myfxbook: row.c[11] && row.c[11].v !== null ? String(row.c[11].v).trim() : "",  // คอลัมน์ H (กำไรสัปดาห์ที่แล้ว)
                             type: row.c[4] && row.c[4].v !== null ? row.c[4].v : "-"        // คอลัมน์ E (Style ความเสี่ยง)
                         });
                     }
@@ -1090,10 +1091,12 @@
                         item.profit = rt.profit;
                         item.profit7day = rt.profit7day;
                         item.lastWeekProfit = rt.lastWeekProfit;
-                        item.balanceNum = rt.balance; // use RealTime balance (number)
+                        item.balanceNum = rt.balance;
+                        item.myfxbook = rt.myfxbook || ""; // use RealTime balance (number)
                     }
                 });
                 renderCards(data);
+                renderEnergyCores(data);
             });
 
         } catch (error) {
@@ -1122,6 +1125,7 @@
                         profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) || 0 : 0,
                         profit7day: row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) || 0 : 0,
                         lastWeekProfit: row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) || 0 : 0,
+                        myfxbook: row.c[11] && row.c[11].v !== null ? String(row.c[11].v).trim() : "",
                     });
                 }
             }
