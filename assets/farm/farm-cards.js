@@ -60,10 +60,10 @@
 
   // ── ข้อมูลตัวอย่าง (แสดงเมื่อดึงชีตไม่ได้ เช่น เปิดแบบ offline) ──
   const DEMO_ROWS = [
-    { name: 'Sys_1', balance: 10000, profit: 2450, month: 8.2, lastMonth: 5.1, stars: 5, recommend: true, badge: 'recommend', link: 'https://www.harvestfarm.site/?sys=1' },
-    { name: 'Sys_2', balance: 5000, profit: 640, month: 3.4, lastMonth: -1.2, stars: 3, recommend: false, badge: 'good', link: 'https://www.harvestfarm.site/?sys=2' },
+    { name: 'Sys_1', balance: 10000, profit: 2450, month: 8.2, lastMonth: 5.1, stars: 5, recommend: true, badge: 'recommend', link: 'https://www.forexcool.com/?sys=1' },
+    { name: 'Sys_2', balance: 5000, profit: 640, month: 3.4, lastMonth: -1.2, stars: 3, recommend: false, badge: 'good', link: 'https://www.forexcool.com/?sys=2' },
     { name: 'Sys_3', balance: 20000, profit: -320, month: -1.1, lastMonth: 2.0, stars: 2, recommend: false, badge: '', link: '' },
-    { name: 'Sys_4', balance: 8000, profit: 5200, month: 24.5, lastMonth: 18.0, stars: 5, recommend: true, badge: 'recommend', link: 'https://www.harvestfarm.site/?sys=4' },
+    { name: 'Sys_4', balance: 8000, profit: 5200, month: 24.5, lastMonth: 18.0, stars: 5, recommend: true, badge: 'recommend', link: 'https://www.forexcool.com/?sys=4' },
     { name: 'Sys_5', balance: 3000, profit: 120, month: 1.2, lastMonth: 0.5, stars: 1, recommend: false, badge: '', link: '' },
     { name: 'Sys_6', balance: 12000, profit: 3600, month: 12.0, lastMonth: 9.4, stars: 4, recommend: false, badge: 'good', link: '' },
   ];
