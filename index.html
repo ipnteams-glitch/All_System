@@ -696,6 +696,38 @@
         .hero-glow { color: #22d3ee !important; animation: heroGlow 2.2s ease-in-out infinite; }
         .portal-hero-tags{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem}
         .portal-hero-tags span{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:0.4rem 1rem;border-radius:50px;font-size:0.85rem;color:#c8d6e5}
+        /* ── Signal Room CTA (เทรดกับเราวันนี้) ── */
+        .signal-cta{
+            display:inline-flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;
+            padding:15px 30px;border-radius:50px;text-decoration:none;
+            background:linear-gradient(135deg,#241b04,#120d02);
+            border:2px solid rgba(255,208,0,0.6);
+            box-shadow:0 0 24px rgba(255,200,0,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
+            animation:signalPulse 2s ease-in-out infinite;
+            transition:transform .3s ease, border-color .3s ease;
+        }
+        .signal-cta .signal-text{
+            color:#fff7d6;font-weight:700;font-size:1.05rem;letter-spacing:.02em;text-shadow:0 0 8px rgba(255,220,120,0.35);
+        }
+        .signal-cta .signal-star{
+            color:#ffd700;font-size:1.35rem;line-height:1;
+            text-shadow:0 0 10px rgba(255,215,0,0.9), 0 0 22px rgba(255,180,0,0.55);
+            animation:starBlink 1.5s ease-in-out infinite;
+        }
+        .signal-cta .signal-star.s2{animation-delay:.25s;}
+        .signal-cta .signal-star.s3{animation-delay:.5s;}
+        @keyframes signalPulse{
+            0%,100%{box-shadow:0 0 18px rgba(255,200,0,0.16), inset 0 1px 0 rgba(255,255,255,0.08);}
+            50%{box-shadow:0 0 44px rgba(255,200,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);}
+        }
+        @keyframes starBlink{
+            0%,100%{opacity:.3;transform:scale(.65);}
+            50%{opacity:1;transform:scale(1.2);}
+        }
+        .signal-cta-wrap{
+            text-align:center;
+            padding:20px 12px 6px 12px;
+        }
         .portal-hero-btns{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;align-items:center}
         .ph-btn{display:inline-block;padding:0.8rem 2rem;font-weight:600;font-size:0.95rem;text-decoration:none;border-radius:8px;transition:all 0.3s}
         .ph-btn-trial{display:inline-block;padding:1rem 3rem;font-weight:600;font-size:1.05rem;text-decoration:none;border-radius:8px;transition:all 0.3s ease;letter-spacing:0.03em;position:relative;overflow:hidden;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#f0c040;border:1.5px solid rgba(240,192,64,0.3);box-shadow:0 0 30px rgba(240,192,64,0.08),inset 0 1px 0 rgba(255,255,255,0.03)}
@@ -803,6 +835,9 @@
                 
             </div>
             
+        </div>
+        <div class="signal-cta-wrap">
+            <div class="signal-cta"><span class="signal-star s1">⭐</span><span class="signal-text">เทรดกับเราวันนี้</span><span class="signal-star s2">⭐</span><span class="signal-text">เข้าห้องโปรแกรมซิกฟรี</span><span class="signal-star s3">⭐</span></div>
         </div>
         <div class="status-online">
             <span class="dot"></span>Live Update
