@@ -586,15 +586,6 @@
             .rt-ea-name { font-size: 10px; } .rt-stars { font-size: 11px; letter-spacing: 0; }
             .rt-table tfoot td { border-top: 2px solid rgba(249, 115, 22, 0.7); font-size: 12px; padding: 8px 6px; }
         }
-        /* ── Pie Chart ── */
-        .pie-section { margin: 30px 5px 20px 5px; text-align: center; }
-        .pie-title { color: #D4AF37; font-size: 1.1rem; font-weight: 500; margin-bottom: 20px; }
-        .pie-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
-        .pie-svg { width: 220px; height: 220px; filter: drop-shadow(0 0 20px rgba(249,115,22,0.12)); }
-        .pie-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; color: #c9d1d9; font-size: 0.82rem; max-width: 550px; }
-        .legend-item { display: flex; align-items: center; gap: 6px; }
-        .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-        
         /* ── Energy Cores (แกนพลังงาน) ── */
         .ec-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; margin: 25px 5px 20px 5px; }
         .ec-card { display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: transform 0.3s; width: 95px; }
@@ -963,14 +954,6 @@
                 </tr>
             </tfoot>
         </table>
-    </div>
-    <div id="pieSection" class="pie-section" style="display:none;">
-        <div class="pie-title">📊 สัดส่วนกำไรเดือนปัจจุบัน</div>
-        <div style="color:#fff; font-size:0.8rem; text-align:center; padding:0 10px 10px 10px;">เป็นข้อมูลทดสอบเท่านั้น ไม่มีเจตนาอวดอ้าง ชี้นำ ชักชวน ผลการรันจริงอาจแตกต่างได้ ตามสภาพตลาด</div>
-        <div class="pie-wrap">
-            <svg id="pieSvg" class="pie-svg" viewBox="0 0 200 200"></svg>
-            <div id="pieLegend" class="pie-legend"></div>
-        </div>
     </div>
     <div style="text-align:center; margin:20px 5px 10px 5px;">
         <span style="font-size:1.1rem;font-weight:500;letter-spacing:2px;background:linear-gradient(90deg,#64b5f6,#ce93d8,#64b5f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">⚡ MyFxBook</span>
