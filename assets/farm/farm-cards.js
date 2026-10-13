@@ -30,6 +30,38 @@
   // ── เกณฑ์เทอร์โบ (% กำไรต่อทุน) — จูนได้ที่เดียว ──
   const TURBO = (VMFarm && VMFarm.DEFAULT_TURBO != null) ? VMFarm.DEFAULT_TURBO : 60;
 
+  // ── สีเฉพาะต่อคัน: golden-angle hue (137.508°) → แต่ละระบบสีห่างสุด, รถใหม่ได้สีใหม่ไม่ซ้ำ ──
+  const _nameIdx = {};
+  let _nameCounter = 0;
+  function hslToRgb(h, s, l) { // h,s,l = 0..1 → [r,g,b] 0..255
+    let r, g, b;
+    if (s === 0) { r = g = b = l; }
+    else {
+      const hue2rgb = (p, q, t) => {
+        if (t < 0) t += 1; if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+      };
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1 / 3); g = hue2rgb(p, q, h); b = hue2rgb(p, q, h - 1 / 3);
+    }
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  }
+  function carColorFor(name) {
+    const m = String(name).match(/(\d+)/);
+    let n;
+    if (m) n = parseInt(m[1], 10);                                  // Sys_7 → 7 (stable)
+    else { if (_nameIdx[name] == null) _nameIdx[name] = _nameCounter++; n = _nameIdx[name]; }
+    const hue = (n * 137.508) % 360;
+    return {
+      main: 'hsl(' + hue.toFixed(1) + ',72%,58%)',
+      dark: 'hsl(' + hue.toFixed(1) + ',60%,30%)',
+      rgb: hslToRgb(hue / 360, 0.72, 0.58).join(','),
+    };
+  }
+
   function normRisk(s) {
     const v = String(s || '').toLowerCase();
     if (v.indexOf('high') >= 0 || v.indexOf('เสี่ยงสูง') >= 0) return 'high';
@@ -62,12 +94,12 @@
 
   // ── ข้อมูลตัวอย่าง (แสดงเมื่อดึงชีตไม่ได้) ──
   const DEMO_ROWS = [
-    { name: 'Sys_1', balance: 10000, profit: 2450, month: 8.2, lastMonth: 5.1, stars: 5, recommend: true, badge: 'recommend', link: 'https://www.forexcool.com/?sys=1' },
-    { name: 'Sys_2', balance: 5000, profit: 640, month: 3.4, lastMonth: -1.2, stars: 3, recommend: false, badge: 'good', link: 'https://www.forexcool.com/?sys=2' },
-    { name: 'Sys_3', balance: 20000, profit: -320, month: -1.1, lastMonth: 2.0, stars: 2, recommend: false, badge: '', link: '' },
-    { name: 'Sys_4', balance: 8000, profit: 5200, month: 24.5, lastMonth: 18.0, stars: 5, recommend: true, badge: 'recommend', link: 'https://www.forexcool.com/?sys=4' },
-    { name: 'Sys_5', balance: 3000, profit: 120, month: 1.2, lastMonth: 0.5, stars: 1, recommend: false, badge: '', link: '' },
-    { name: 'Sys_6', balance: 12000, profit: 3600, month: 12.0, lastMonth: 9.4, stars: 4, recommend: false, badge: 'good', link: '' },
+    { name: 'Sys_1', balance: 10000, profit: 2450, month: 820, lastMonth: 2400, stars: 5, recommend: true, badge: 'recommend', link: 'https://www.forexcool.com/?sys=1' },
+    { name: 'Sys_2', balance: 5000, profit: 640, month: 340, lastMonth: 640, stars: 3, recommend: false, badge: 'good', link: 'https://www.forexcool.com/?sys=2' },
+    { name: 'Sys_3', balance: 20000, profit: -320, month: -110, lastMonth: -320, stars: 2, recommend: false, badge: '', link: '' },
+    { name: 'Sys_4', balance: 8000, profit: 5200, month: 2450, lastMonth: 5200, stars: 5, recommend: true, badge: 'recommend', link: 'https://www.forexcool.com/?sys=4' },
+    { name: 'Sys_5', balance: 3000, profit: 120, month: 36, lastMonth: 120, stars: 1, recommend: false, badge: '', link: '' },
+    { name: 'Sys_6', balance: 12000, profit: 3600, month: 1120, lastMonth: 3600, stars: 4, recommend: false, badge: 'good', link: '' },
   ];
 
   let lastRows = null;
@@ -164,9 +196,9 @@
 
     const list = rows.map((row) => {
       const balance = Number(row.balance) || 0;
-      const profit = Number(row.profit) || 0;
-      const growth = balance > 0 ? (profit / balance) * 100 : 0;
-      return { row: row, growth: growth };
+      const lastWeek = Number(row.lastMonth) || 0; // คอลัมน์ H (LastWeek) = ตัวตัดสินกำไรต่อทุน
+      const growth = balance > 0 ? (lastWeek / balance) * 100 : 0;
+      return { row: row, growth: growth, effProfit: lastWeek };
     });
     list.sort((a, b) => b.growth - a.growth);
 
@@ -180,12 +212,16 @@
       const norm = Math.max(0, Math.min(100, it.growth)) / 100;
       const laneTop = TOP_PAD + LANE_H * i;
       const y = laneTop + LANE_H * 0.52;
-      const target = m.trackX0 + norm * m.trackW;
+      // เผื่อระยะจมูก→ปีกหน้า (ขวาสุด ~34*unit) ให้กันชนหน้าแตะเส้นชัยพอดี ไม่ทะลุ
+      const NOSE = 34;
+      const usable = Math.max(20, m.trackW - NOSE);
+      const target = m.trackX0 + norm * usable;
       return {
         row: it.row, growth: it.growth, norm: norm, target: target,
         pos: prevByName[it.row.name] != null ? prevByName[it.row.name] : m.trackX0,
         y: y, laneTop: laneTop, link: it.row.link,
-        stats: VMFarm.statsFor ? VMFarm.statsFor(it.row, 'racing') : { level: 1, stars: it.row.stars || 0 },
+        carColor: carColorFor(it.row.name),
+        stats: VMFarm.statsFor ? VMFarm.statsFor({ ...it.row, profit: it.effProfit }, 'racing') : { level: 1, stars: it.row.stars || 0 },
       };
     });
 
@@ -245,6 +281,7 @@
       l.pos += (l.target - l.pos) * 0.06;
       VMFarm.drawCar(ctx, {
         cx: l.pos, cy: l.y, unit: 1, t: t, growth: l.growth, turboAt: TURBO,
+        carColor: l.carColor,
         risk: riskByName[l.row.name] || 'medium',
         level: (l.stats && l.stats.level) || 1,
         badge: l.row.badge, recommend: l.row.recommend,

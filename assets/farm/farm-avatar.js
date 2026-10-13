@@ -45,8 +45,10 @@
     const broken = growth < 0;
     const turbo = growth >= turboAt;
 
-    let col = riskCol(risk), dk = riskDark(risk), rgb = riskRGB(risk);
+    let col, dk, rgb;
     if (broken) { col = '#6b7280'; dk = '#2a2f38'; rgb = '120,130,145'; }
+    else if (o.carColor) { col = o.carColor.main; dk = o.carColor.dark; rgb = o.carColor.rgb; }
+    else { col = riskCol(risk); dk = riskDark(risk); rgb = riskRGB(risk); }
     const golden = level >= 25 && !broken;
     const bodyLo = golden ? '#9c6f1c' : dk, bodyHi = golden ? '#ffe79a' : col;
 
