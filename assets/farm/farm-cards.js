@@ -1,6 +1,9 @@
-/* farm-cards.js — ตัวควบคุม: ดึง Google Sheet (GViz) → คำนวณ stat → render กริดการ์ด
- * รียูสรูปแบบ fetch/parse เดียวกับ index.html เดิม (RT sheet, gid=0)
- * client-side ล้วน: ไม่มี backend, อ่านชีตแบบ read-only, auto-refresh + ตรวจจับ level-up
+/* farm-cards.js — ตัวควบคุม: ดึง Google Sheet (GViz) → คำนวณ growth → render ลู่แข่ง
+ * ธีมเดียว "สนามแข่ง": แต่ละระบบ = รถ 1 คัน, ระยะบนลู่ = กำไรต่อทุน (growth %)
+ *   สตาร์ท 0%  →  เส้นชัย 100%   (คลิป 0..100)
+ *   growth < 0        → รถพัง (วาดใน farm-avatar.js) + ป้ายสถานะ
+ *   growth >= TURBO   → ติดเทอร์โบ
+ * client-side ล้วน: ไม่มี backend, อ่านชีตแบบ read-only, auto-refresh
  * ต้องโหลดหลัง farm-levels.js และ farm-avatar.js (ใช้ window.VMFarm)
  */
 (function () {
@@ -10,19 +13,22 @@
   // i18n — index.html = ไทย (ดีฟอลต์), index_en.html ตั้ง window.VM_LANG='en' ก่อนโหลดสคริปต์
   const LANG = window.VM_LANG === 'en' ? 'en' : 'th';
   const T = {
-    th: { minCap: 'ทุนขั้นต่ำ', profit2m: 'กำไร 2 เดือน', flat: 'ทรงตัว' },
-    en: { minCap: 'Min. capital', profit2m: '2-mo. profit', flat: 'Flat' },
+    th: { minCap: 'ทุน', broken: 'พัง', demo: 'เดโม', start: 'สตาร์ท', finish: 'เส้นชัย' },
+    en: { minCap: 'Capital', broken: 'DNF', demo: 'demo', start: 'Start', finish: 'Finish' },
   }[LANG];
 
-  // ── แหล่งข้อมูล (เหมือนตาราง RealTime เดิม) ──
+  // ── แหล่งข้อมูล (ตาราง RealTime) ──
   const RT_SHEET_ID = '1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU';
   const RT_URL = `https://docs.google.com/spreadsheets/d/${RT_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
   const REFRESH_MS = 30000;
 
-  // ── ชีต EA (คอลัมน์ E = ระดับความเสี่ยง) แยกจากชีต RT — join ด้วยชื่อ Sys_N ──
+  // ── ชีต EA (คอลัมน์ E = ระดับความเสี่ยง) — join ด้วยชื่อ Sys_N ──
   const EA_SHEET_ID = '193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ';
   const EA_URL = `https://docs.google.com/spreadsheets/d/${EA_SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
   let riskByName = {}; // { 'Sys_1': 'high' | 'medium' | 'low' }
+
+  // ── เกณฑ์เทอร์โบ (% กำไรต่อทุน) — จูนได้ที่เดียว ──
+  const TURBO = (VMFarm && VMFarm.DEFAULT_TURBO != null) ? VMFarm.DEFAULT_TURBO : 60;
 
   function normRisk(s) {
     const v = String(s || '').toLowerCase();
@@ -48,17 +54,13 @@
         if (nm && rk) map[nm] = rk;
       }
       riskByName = map;
-      if (lastRows) renderGrid(lastRows, false); // ได้ risk แล้ว → รีเฟรชสี
+      if (lastRows) buildScene(lastRows); // ได้ risk แล้ว → รีเฟรชสี
     } catch (e) { /* ดึงไม่ได้ → ใช้สีดีฟอลต์ (medium/ฟ้า) */ }
   }
 
-  // เพดาน % กำไร 2 เดือน ที่ทำให้แถบเต็ม (จูนได้)
-  const PERF_CEILING = 100;
+  function fmtInt(n) { return Math.round(Number(n) || 0).toLocaleString('en-US'); }
 
-  // ── ขนาด canvas การ์ด ──
-  const CV = { W: 150, H: 140, baseX: 75, baseY: 126, unit: 4.4 };
-
-  // ── ข้อมูลตัวอย่าง (แสดงเมื่อดึงชีตไม่ได้ เช่น เปิดแบบ offline) ──
+  // ── ข้อมูลตัวอย่าง (แสดงเมื่อดึงชีตไม่ได้) ──
   const DEMO_ROWS = [
     { name: 'Sys_1', balance: 10000, profit: 2450, month: 8.2, lastMonth: 5.1, stars: 5, recommend: true, badge: 'recommend', link: 'https://www.forexcool.com/?sys=1' },
     { name: 'Sys_2', balance: 5000, profit: 640, month: 3.4, lastMonth: -1.2, stars: 3, recommend: false, badge: 'good', link: 'https://www.forexcool.com/?sys=2' },
@@ -68,33 +70,22 @@
     { name: 'Sys_6', balance: 12000, profit: 3600, month: 12.0, lastMonth: 9.4, stars: 4, recommend: false, badge: 'good', link: '' },
   ];
 
-  // จำธีมที่ผู้ใช้เลือกไว้ (localStorage) — เปิดเว็บครั้งถัดไปใช้ธีมเดิม
-  const THEME_KEY = 'vmFarmTheme';
-  const THEMES = ['robot', 'farm', 'dev'];
-  let savedTheme = null;
-  try { savedTheme = localStorage.getItem(THEME_KEY); } catch (e) {}
-  let THEME = THEMES.indexOf(savedTheme) >= 0 ? savedTheme : 'robot';
   let lastRows = null;
   let DEMO = false;
-  let cards = []; // { ctx, W,H, baseX,baseY,unit, stats, cfg, mood, risk, row, pop, popStart }
-  const prevLevels = {};
+  let canvas = null, ctx = null, dpr = 1;
+  let lanes = [];      // [{ row, growth, norm, target, pos, y, laneTop, link }]
+  let W = 660, H = 372;
   let rafOn = false;
 
-  function esc(s) {
-    return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  }
-  function fmtInt(n) {
-    return Math.round(Number(n) || 0).toLocaleString('en-US');
-  }
-  function starStr(n) {
-    let s = '';
-    for (let i = 0; i < 5; i++) s += i < n ? '<span class="vm-star-on">★</span>' : '<span class="vm-star-off">★</span>';
-    return s;
+  // ── layout (responsive) ──
+  const LANE_H = 58, TOP_PAD = 14, LABEL_W = 108;
+  function metrics() {
+    const trackX0 = Math.min(LABEL_W + 24, W * 0.30);
+    const trackX1 = W - 56;                 // เว้นที่เส้นชัย checkered
+    return { trackX0, trackX1, trackW: Math.max(40, trackX1 - trackX0) };
   }
 
-  // (ปุ่ม Copy เป็นลิงก์ไปหน้า copytrade_approve.html เหมือนตาราง — ไม่ใช้คลิปบอร์ดแล้ว)
-
-  // ── parse GViz rows → snapshot objects (คอลัมน์เดียวกับตาราง RealTime) ──
+  // ── parse GViz rows → snapshot (คอลัมน์เดียวกับตาราง RealTime) ──
   function parseRows(json) {
     const out = [];
     const rows = json && json.table && json.table.rows;
@@ -108,8 +99,8 @@
         name: cell(1) !== null ? String(cell(1)) : '-',
         balance: cell(2) !== null ? parseFloat(cell(2)) : 0,
         profit: cell(4) !== null ? parseFloat(cell(4)) : 0,
-        month: cell(6) !== null ? parseFloat(cell(6)) : 0,        // เดือนนี้ (%)
-        lastMonth: cell(7) !== null ? parseFloat(cell(7)) : 0,    // เดือนที่แล้ว (%)
+        month: cell(6) !== null ? parseFloat(cell(6)) : 0,
+        lastMonth: cell(7) !== null ? parseFloat(cell(7)) : 0,
         stars: cell(8) !== null ? parseInt(cell(8), 10) : 0,
         label: label,
         recommend: label.toLowerCase() === 'recommend',
@@ -117,8 +108,6 @@
         link: cell(10) !== null ? String(cell(10)).trim() : '',
       });
     }
-    // เรียงตามชื่อแบบตัวเลข (Sys_1, Sys_2, ...)
-    out.sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
     return out;
   }
 
@@ -129,150 +118,161 @@
       const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
       const rows = parseRows(json);
       if (!rows.length) throw new Error('empty');
-      lastRows = rows;
-      DEMO = false;
-      renderGrid(rows, true);
+      lastRows = rows; DEMO = false;
+      buildScene(rows);
     } catch (e) {
-      // ดึงไม่ได้ → โชว์เดโมครั้งแรกเพื่อให้เห็นหน้าตา (ติดป้าย "เดโม")
-      if (!lastRows) {
-        lastRows = DEMO_ROWS;
-        DEMO = true;
-        renderGrid(DEMO_ROWS, false);
-      }
+      if (!lastRows) { lastRows = DEMO_ROWS; DEMO = true; buildScene(DEMO_ROWS); }
     }
   }
 
-  function trendHtml(row) {
-    // กำไรย้อนหลัง 2 เดือน (คอลัมน์ G + H) คิดเป็น % ของทุน (คอลัมน์ C)
-    const profit2m = (Number(row.month) || 0) + (Number(row.lastMonth) || 0);
-    const pct = Number(row.balance) > 0 ? (profit2m / Number(row.balance)) * 100 : 0;
-    if (pct > 0) return `<div class="vm-trend up">📈 +${pct.toFixed(1)}% ${T.profit2m}</div>`;
-    if (pct < 0) return `<div class="vm-trend down">📉 ${pct.toFixed(1)}% ${T.profit2m}</div>`;
-    return `<div class="vm-trend flat">➖ ${T.flat}</div>`;
+  function ensureCanvas() {
+    const host = document.getElementById('vm-farm-grid');
+    if (!host) return false;
+    if (!canvas) {
+      host.innerHTML = '';
+      host.style.display = 'block'; // ยกเลิก grid เดิม — ลู่แข่งเป็น canvas เต็มกว้าง
+      canvas = document.createElement('canvas');
+      canvas.className = 'vm-race';
+      canvas.style.display = 'block';
+      canvas.style.width = '100%';
+      canvas.style.cursor = 'default';
+      host.appendChild(canvas);
+      canvas.addEventListener('click', onClick);
+      canvas.addEventListener('mousemove', onMove);
+      window.addEventListener('resize', () => { if (lastRows) buildScene(lastRows); });
+    }
+    return true;
   }
 
-  function buildCard(row, stats, leveledUp) {
-    const card = document.createElement('div');
-    card.className = 'vm-card' + (row.badge === 'recommend' ? ' rec' : row.badge === 'good' ? ' good' : '') + (leveledUp ? ' levelup' : '');
-    // ชื่อโมเดล: ถ้ามีลิงก์ให้ลิงก์ไปหน้า approve ก่อน (เหมือนปุ่ม Copy) เปิดแท็บใหม่
-    const nameHtml = row.link
-      ? `<a href="copytrade_approve.html?url=${encodeURIComponent(row.link)}" target="_blank" style="color:inherit;text-decoration:none;">${esc(row.name)}</a>`
-      : esc(row.name);
-    // กำไร 2 เดือน (%) — ใช้เป็นความยาวแถบ + ตัวเลขในแถบ + สีตามบวก/ลบ
-    const p2 = row.balance > 0 ? ((row.month + row.lastMonth) / row.balance) * 100 : 0;
-    const p2col = p2 < 0 ? '#ff6b6b' : p2 > 0 ? '#8be9a0' : '#e6edf3';
-    card.innerHTML =
-      (row.link ? `<a class="vm-copy" href="copytrade_approve.html?url=${encodeURIComponent(row.link)}" target="_blank">Copy</a>` : '') +
-      (row.badge === 'recommend' ? '<div class="vm-recbadge">👑</div>' : row.badge === 'good' ? '<div class="vm-recbadge">🧢</div>' : '') +
-      `<canvas class="vm-canvas" width="1" height="1"></canvas>` +
-      `<div class="vm-name">${nameHtml}</div>` +
-      `<div class="vm-title">💵 ${T.minCap} $${fmtInt(row.balance)}</div>` +
-      `<div class="vm-xpbar"><div class="vm-xpfill" style="width:0%"></div>` +
-      `<span class="vm-xptext" style="color:${p2col}">${p2 > 0 ? '+' : ''}${p2.toFixed(1)}%</span></div>` +
-      `<div class="vm-meta"><span class="vm-gold" style="color:${row.profit < 0 ? '#ff6b6b' : row.profit > 0 ? '#4cd137' : '#ffffff'}">🪙 ${fmtInt(row.profit)}</span>` +
-      `<span class="vm-stars">${starStr(stats.stars)}</span></div>` +
-      trendHtml(row) +
-      `<div class="vm-lvlup">LEVEL UP!<br>Lv ${stats.level}</div>`;
-    return card;
-  }
-
-  function setupCanvas(canvas) {
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = CV.W * dpr;
-    canvas.height = CV.H * dpr;
-    canvas.style.width = CV.W + 'px';
-    canvas.style.height = CV.H + 'px';
-    const ctx = canvas.getContext('2d');
+  function resizeCanvas(nRows) {
+    const host = document.getElementById('vm-farm-grid');
+    W = Math.max(320, host.clientWidth || 660);
+    H = TOP_PAD * 2 + LANE_H * nRows + 14; // +14 เผื่อป้าย 0%/100%
+    dpr = window.devicePixelRatio || 1;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    canvas.style.height = H + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    return ctx;
   }
 
-  function renderGrid(rows, detectLevelUp) {
-    const grid = document.getElementById('vm-farm-grid');
-    if (!grid) return;
+  // ── เตรียมฉาก: จัดอันดับตาม growth, คำนวณตำแหน่งเป้าหมาย ──
+  function buildScene(rows) {
+    if (!ensureCanvas()) return;
+    if (!ctx) ctx = canvas.getContext('2d');
+
     const demoBadge = document.getElementById('vm-demo');
     if (demoBadge) demoBadge.style.display = DEMO ? 'inline-block' : 'none';
 
-    grid.innerHTML = '';
-    cards = [];
-    const now = performance.now();
+    const list = rows.map((row) => {
+      const balance = Number(row.balance) || 0;
+      const profit = Number(row.profit) || 0;
+      const growth = balance > 0 ? (profit / balance) * 100 : 0;
+      return { row: row, growth: growth };
+    });
+    list.sort((a, b) => b.growth - a.growth);
 
-    rows.forEach((row) => {
-      const stats = VMFarm.statsFor(row, THEME);
-      const cfg = VMFarm.paletteFor(row.name);
-      // สีหน้าอิง % กำไรที่โชว์บนการ์ด (คอลัมน์ G + H ÷ ทุนคอลัมน์ C)
-      const moodPct = row.balance > 0 ? ((row.month + row.lastMonth) / row.balance) * 100 : 0;
-      const mood = moodPct > 0 ? 1 : moodPct < 0 ? -1 : 0;
-      const risk = riskByName[row.name] || null; // สีตัว: High=แดง Medium=ฟ้า Low=เขียว (null→medium)
-      const prev = prevLevels[row.name];
-      const leveledUp = !!detectLevelUp && prev != null && stats.level > prev;
-      prevLevels[row.name] = stats.level;
+    resizeCanvas(list.length);
+    const m = metrics();
 
-      const card = buildCard(row, stats, leveledUp);
-      grid.appendChild(card);
-      const ctx = setupCanvas(card.querySelector('.vm-canvas'));
+    const prevByName = {};
+    lanes.forEach((l) => { prevByName[l.row.name] = l.pos; });
 
-      cards.push({
-        ctx: ctx, W: CV.W, H: CV.H, baseX: CV.baseX, baseY: CV.baseY, unit: CV.unit,
-        stats: stats, cfg: cfg, mood: mood, risk: risk, row: row,
-        pop: leveledUp ? 1 : 0, popStart: now,
-      });
-
-      // แถบ XP เด้ง (transition)
-      const fill = card.querySelector('.vm-xpfill');
-      requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = Math.max(0, Math.min(100, (moodPct / PERF_CEILING) * 100)) + '%'; }));
-      if (leveledUp) setTimeout(() => card.classList.remove('levelup'), 1700);
+    lanes = list.map((it, i) => {
+      const norm = Math.max(0, Math.min(100, it.growth)) / 100;
+      const laneTop = TOP_PAD + LANE_H * i;
+      const y = laneTop + LANE_H * 0.52;
+      const target = m.trackX0 + norm * m.trackW;
+      return {
+        row: it.row, growth: it.growth, norm: norm, target: target,
+        pos: prevByName[it.row.name] != null ? prevByName[it.row.name] : m.trackX0,
+        y: y, laneTop: laneTop, link: it.row.link,
+        stats: VMFarm.statsFor ? VMFarm.statsFor(it.row, 'racing') : { level: 1, stars: it.row.stars || 0 },
+      };
     });
 
-    if (!rafOn) {
-      rafOn = true;
-      requestAnimationFrame(tick);
+    if (!rafOn) { rafOn = true; requestAnimationFrame(tick); }
+  }
+
+  function onMove(e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    let hit = false;
+    for (const l of lanes) {
+      if (l.link && my >= l.laneTop && my < l.laneTop + LANE_H) { hit = true; break; }
+    }
+    canvas.style.cursor = hit ? 'pointer' : 'default';
+  }
+
+  function onClick(e) {
+    const rect = canvas.getBoundingClientRect();
+    const my = e.clientY - rect.top;
+    for (const l of lanes) {
+      if (l.link && my >= l.laneTop && my < l.laneTop + LANE_H) {
+        window.open('copytrade_approve.html?url=' + encodeURIComponent(l.link), '_blank');
+        return;
+      }
     }
   }
 
   function tick(now) {
     const t = now / 1000;
-    for (const c of cards) {
-      c.ctx.clearRect(0, 0, c.W, c.H);
-      let pop = 0;
-      if (c.pop > 0) {
-        const dt = (now - c.popStart) / 1000;
-        pop = Math.max(0, 1 - dt / 1.2);
-        if (pop <= 0) c.pop = 0;
-      }
-      VMFarm.drawCreature(c.ctx, {
-        theme: THEME, cx: c.baseX, cy: c.baseY, unit: c.unit, t: t,
-        level: c.stats.level, stars: c.stats.stars, mood: c.mood, risk: c.risk,
-        cfg: c.cfg, recommend: c.row.recommend, badge: c.row.badge, pop: pop,
-      });
-    }
-    requestAnimationFrame(tick);
-  }
+    const m = metrics();
+    ctx.clearRect(0, 0, W, H);
 
-  function wireThemeButtons() {
-    const btns = document.querySelectorAll('#vm-farm .vm-theme-btn');
-    // ตั้งปุ่ม active ให้ตรงกับธีมที่จำไว้ (จาก localStorage)
-    btns.forEach((x) => x.classList.toggle('active', x.getAttribute('data-theme') === THEME));
-    btns.forEach((b) => {
-      b.addEventListener('click', () => {
-        const th = b.getAttribute('data-theme');
-        if (th === THEME) return;
-        THEME = th;
-        try { localStorage.setItem(THEME_KEY, THEME); } catch (e) {} // จำธีมที่เลือก
-        btns.forEach((x) => x.classList.toggle('active', x === b));
-        if (lastRows) renderGrid(lastRows, false); // สลับธีมไม่นับเป็น level-up
+    lanes.forEach((l, i) => {
+      // พื้นเลน
+      ctx.fillStyle = i % 2 ? '#0d1420' : '#0f1725';
+      ctx.fillRect(0, l.laneTop, W, LANE_H);
+      // เส้นประกลางเลน
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1; ctx.setLineDash([12, 12]);
+      ctx.beginPath(); ctx.moveTo(m.trackX0, l.y + 15); ctx.lineTo(m.trackX1, l.y + 15); ctx.stroke(); ctx.setLineDash([]);
+
+      // เหรียญอันดับ
+      const medal = i === 0 ? '#ffd23b' : i === 1 ? '#c0c8d0' : i === 2 ? '#cd7f32' : '#2d3a4d';
+      ctx.fillStyle = medal; ctx.beginPath(); ctx.arc(18, l.y, 12, 0, 7); ctx.fill();
+      ctx.fillStyle = i < 3 ? '#1a1200' : '#8fa4bd'; ctx.font = 'bold 12px Kanit,sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('P' + (i + 1), 18, l.y);
+
+      // ชื่อ + growth%
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = '#e6edf3'; ctx.font = '13px Kanit,sans-serif';
+      ctx.fillText(l.row.name, 36, l.y - 5);
+      const neg = l.growth < 0, hot = l.growth >= TURBO;
+      ctx.fillStyle = neg ? '#ff6b6b' : hot ? '#ffd23b' : l.growth > 0 ? '#4cd137' : '#e6edf3';
+      ctx.font = 'bold 13px Kanit,sans-serif';
+      ctx.fillText((l.growth > 0 ? '+' : '') + l.growth.toFixed(1) + '%' + (hot ? ' 🔥' : neg ? ' ' + T.broken : ''), 36, l.y + 10);
+
+      // เคลื่อนรถเข้าหาเป้าหมาย (รถพังจอดนิ่งที่สตาร์ท)
+      l.pos += (l.target - l.pos) * 0.06;
+      VMFarm.drawCar(ctx, {
+        cx: l.pos, cy: l.y, unit: 1, t: t, growth: l.growth, turboAt: TURBO,
+        risk: riskByName[l.row.name] || 'medium',
+        level: (l.stats && l.stats.level) || 1,
+        badge: l.row.badge, recommend: l.row.recommend,
       });
     });
+
+    // เส้นชัย checkered
+    const sq = 6, bottom = TOP_PAD + LANE_H * lanes.length;
+    for (let yy = TOP_PAD; yy < bottom; yy += sq) {
+      for (let xx = 0; xx < 2; xx++) {
+        ctx.fillStyle = ((Math.floor(yy / sq) + xx) % 2) ? '#e6edf3' : '#11161f';
+        ctx.fillRect(m.trackX1 + xx * sq, yy, sq, sq);
+      }
+    }
+    // เส้นสตาร์ท
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(m.trackX0, TOP_PAD); ctx.lineTo(m.trackX0, bottom); ctx.stroke();
+    // ป้าย 0% / 100%
+    ctx.fillStyle = '#4a5568'; ctx.font = '11px Kanit,sans-serif'; ctx.textBaseline = 'alphabetic';
+    ctx.textAlign = 'center'; ctx.fillText('0%', m.trackX0, bottom + 11);
+    ctx.fillText('100%', m.trackX1, bottom + 11);
+
+    requestAnimationFrame(tick);
   }
 
   function init() {
     if (!window.VMFarm || !document.getElementById('vm-farm-grid')) return;
-    wireThemeButtons();
-    // เปิดหน้า approve ด้วย window.open() (script-opened) เพื่อให้หน้านั้นปิดแท็บตัวเองได้
-    document.addEventListener('click', function (e) {
-      var a = e.target && e.target.closest ? e.target.closest('#vm-farm a[href*="copytrade_approve.html"]') : null;
-      if (a) { e.preventDefault(); window.open(a.href, '_blank'); }
-    }, false);
+    // เปิดหน้า approve ด้วย window.open (จัดการใน onClick)
     fetchRisk();
     fetchData();
     setInterval(function () { fetchRisk(); fetchData(); }, REFRESH_MS);
