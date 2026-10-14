@@ -196,9 +196,9 @@
 
     const list = rows.map((row) => {
       const balance = Number(row.balance) || 0;
-      const lastWeek = Number(row.lastMonth) || 0; // คอลัมน์ H (LastWeek) = ตัวตัดสินกำไรต่อทุน
-      const growth = balance > 0 ? (lastWeek / balance) * 100 : 0;
-      return { row: row, growth: growth, effProfit: lastWeek };
+      const colG = Number(row.month) || 0; // คอลัมน์ G (profit7day) = ตัวตัดสินกำไรต่อทุน
+      const growth = balance > 0 ? (colG / balance) * 100 : 0;
+      return { row: row, growth: growth, effProfit: colG };
     });
     list.sort((a, b) => b.growth - a.growth);
 
