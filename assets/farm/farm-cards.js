@@ -284,6 +284,7 @@
         carColor: l.carColor,
         risk: riskByName[l.row.name] || 'medium',
         level: (l.stats && l.stats.level) || 1,
+        stars: l.row.stars || 0,
         badge: l.row.badge, recommend: l.row.recommend,
       });
     });

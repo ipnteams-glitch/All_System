@@ -42,6 +42,7 @@
     const risk = o.risk || 'medium';
     const level = o.level || 1;
     const badge = o.badge || (o.recommend ? 'recommend' : '');
+    const stars = Math.max(0, Math.min(5, o.stars || 0));
     const broken = growth < 0;
     const turbo = growth >= turboAt;
 
@@ -72,8 +73,8 @@
     if (broken) ctx.rotate(0.12); // เอียงหัวทิ่ม
     const wr = 7 * s, spin = broken ? 0 : t * 11;
 
-    // เทอร์โบ: speed lines + เปลวไฟแรง
-    if (turbo) {
+    // เทอร์โบ: speed lines
+    if (turbo && !broken) {
       ctx.strokeStyle = 'rgba(' + rgb + ',0.5)'; ctx.lineWidth = 1.2 * s;
       for (let i = 0; i < 4; i++) {
         const sx = -20 * s - ((t * 60 + i * 14) % 42) * s;
@@ -81,12 +82,17 @@
         ctx.moveTo(sx, (-3 + i * 3) * s); ctx.lineTo(sx - 10 * s, (-3 + i * 3) * s); ctx.stroke();
       }
       ctx.globalAlpha = 1;
-      const fl = 0.6 + 0.4 * Math.sin(t * 30 + o.cx);
-      const fg = ctx.createLinearGradient(-19 * s, 0, -46 * s, 0);
+    }
+    // ไอพ่นท้ายรถ ตามจำนวนดาว: 3=สั้น, 4+=ยาว (turbo บังคับยาว)
+    if (!broken && (stars >= 3 || turbo)) {
+      const longJet = (stars >= 4 || turbo);
+      const jetEnd = -19 * s - (longJet ? 30 : 15) * s;
+      const fl = 0.6 + 0.4 * Math.sin(t * 28 + o.cx);
+      const fg = ctx.createLinearGradient(-19 * s, 0, jetEnd, 0);
       fg.addColorStop(0, '#fff'); fg.addColorStop(0.3, 'rgba(' + rgb + ',0.95)');
       fg.addColorStop(0.65, 'rgba(255,200,90,0.6)'); fg.addColorStop(1, 'rgba(' + rgb + ',0)');
       ctx.globalAlpha = fl; ctx.fillStyle = fg;
-      ctx.beginPath(); ctx.moveTo(-19 * s, -2 * s); ctx.lineTo(-46 * s, 2 * s); ctx.lineTo(-19 * s, 6 * s); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(-19 * s, -2 * s); ctx.lineTo(jetEnd, 2 * s); ctx.lineTo(-19 * s, 6 * s); ctx.closePath(); ctx.fill();
       ctx.globalAlpha = 1;
     }
 
@@ -158,18 +164,34 @@
       }
       ctx.globalAlpha = 1;
       // ข้อความสถานะ (พัง/DNF) วาดโดย farm-cards.js เพื่อรองรับหลายภาษา
-    } else if (badge === 'recommend') {
-      ctx.fillStyle = '#ffd23b';
-      const cy = -12 * s, cw = 11 * s;
-      ctx.beginPath();
-      ctx.moveTo(-6 * s - cw / 2, cy + 3 * s); ctx.lineTo(-6 * s - cw / 2, cy);
-      ctx.lineTo(-6 * s - cw / 4, cy + 2 * s); ctx.lineTo(-6 * s, cy - 2.5 * s);
-      ctx.lineTo(-6 * s + cw / 4, cy + 2 * s); ctx.lineTo(-6 * s + cw / 2, cy); ctx.lineTo(-6 * s + cw / 2, cy + 3 * s);
-      ctx.closePath(); ctx.fill();
-    } else if (badge === 'good') {
-      ctx.fillStyle = '#3aa0ff';
-      ctx.beginPath(); ctx.arc(-6 * s, -11 * s, 4 * s, Math.PI, 2 * Math.PI); ctx.closePath(); ctx.fill();
-      ctx.fillRect(-11 * s, -11 * s, 10 * s, 1.6 * s);
+    } else {
+      // Recommend → บาเรียแนวตั้งรอบคัน (vertical shield bars)
+      if (badge === 'recommend') {
+        const fl = 0.5 + 0.5 * Math.sin(t * 4 + o.cx);
+        ctx.strokeStyle = 'rgba(255,210,59,' + (0.4 + 0.35 * fl) + ')';
+        ctx.lineWidth = 1.2 * s;
+        const bx0 = -24 * s, bx1 = 36 * s, by0 = -13 * s, by1 = 9 * s, nbar = 7;
+        for (let i = 0; i <= nbar; i++) {
+          const bx = bx0 + (bx1 - bx0) * i / nbar;
+          ctx.beginPath(); ctx.moveTo(bx, by0); ctx.lineTo(bx, by1); ctx.stroke();
+        }
+        ctx.globalAlpha = 0.45;
+        ctx.beginPath(); ctx.moveTo(bx0, by0); ctx.lineTo(bx1, by0);
+        ctx.moveTo(bx0, by1); ctx.lineTo(bx1, by1); ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+      // 5 ดาว → หัวลูกศรหน้ารถ (ขวา) แสดงความแรง
+      if (stars >= 5) {
+        const ax = 36 * s, ay = 2 * s, fl2 = 0.6 + 0.4 * Math.sin(t * 18 + o.cx);
+        ctx.globalAlpha = fl2; ctx.fillStyle = golden ? '#ffd23b' : '#ffffff';
+        for (let k = 0; k < 2; k++) {
+          const ox = ax + k * 5 * s;
+          ctx.beginPath();
+          ctx.moveTo(ox, ay - 3.2 * s); ctx.lineTo(ox + 4 * s, ay); ctx.lineTo(ox, ay + 3.2 * s);
+          ctx.lineTo(ox + 1.3 * s, ay); ctx.closePath(); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
     }
 
     ctx.restore();
