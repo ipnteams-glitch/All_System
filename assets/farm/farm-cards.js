@@ -307,8 +307,22 @@
     requestAnimationFrame(tick);
   }
 
+  // แสดงช่วงเดือนที่แล้วใน heading เช่น (1-30 ก.ย.) / (1-30 Sep) — dynamic ตามจำนวนวัน
+  function setMonthRange() {
+    var el = document.querySelector('#vm-farm .vm-range');
+    if (!el) return;
+    var now = new Date();
+    var lastDay = new Date(now.getFullYear(), now.getMonth(), 0).getDate(); // วันสุดท้ายเดือนที่แล้ว
+    var m = (now.getMonth() + 11) % 12;                                      // เดือนที่แล้ว 0-11
+    var monTh = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+    var monEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var mon = (LANG === 'en' ? monEn : monTh)[m];
+    el.textContent = '(1-' + lastDay + ' ' + mon + ')';
+  }
+
   function init() {
     if (!window.VMFarm || !document.getElementById('vm-farm-grid')) return;
+    setMonthRange();
     // เปิดหน้า approve ด้วย window.open (จัดการใน onClick)
     fetchRisk();
     fetchData();
