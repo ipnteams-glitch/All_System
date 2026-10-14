@@ -165,20 +165,18 @@
       ctx.globalAlpha = 1;
       // ข้อความสถานะ (พัง/DNF) วาดโดย farm-cards.js เพื่อรองรับหลายภาษา
     } else {
-      // Recommend → บาเรียแนวตั้งรอบคัน (vertical shield bars)
+      // Recommend → ธงสีแดงเหนือหัวรถ (ผ้าธงโบกตามเวลา)
       if (badge === 'recommend') {
-        const fl = 0.5 + 0.5 * Math.sin(t * 4 + o.cx);
-        ctx.strokeStyle = 'rgba(255,210,59,' + (0.4 + 0.35 * fl) + ')';
-        ctx.lineWidth = 1.2 * s;
-        const bx0 = -24 * s, bx1 = 36 * s, by0 = -13 * s, by1 = 9 * s, nbar = 7;
-        for (let i = 0; i <= nbar; i++) {
-          const bx = bx0 + (bx1 - bx0) * i / nbar;
-          ctx.beginPath(); ctx.moveTo(bx, by0); ctx.lineTo(bx, by1); ctx.stroke();
-        }
-        ctx.globalAlpha = 0.45;
-        ctx.beginPath(); ctx.moveTo(bx0, by0); ctx.lineTo(bx1, by0);
-        ctx.moveTo(bx0, by1); ctx.lineTo(bx1, by1); ctx.stroke();
-        ctx.globalAlpha = 1;
+        const fx = -2 * s, poleTop = -20 * s, poleBot = -8 * s;
+        ctx.strokeStyle = '#c9ccd1'; ctx.lineWidth = 0.8 * s;         // เสาธง
+        ctx.beginPath(); ctx.moveTo(fx, poleBot); ctx.lineTo(fx, poleTop); ctx.stroke();
+        const wave = Math.sin(t * 6 + o.cx) * 1.2 * s;
+        ctx.fillStyle = '#e02424';                                    // ผ้าธงแดง (สามเหลี่ยมโบก)
+        ctx.beginPath();
+        ctx.moveTo(fx, poleTop);
+        ctx.lineTo(fx + 9 * s, poleTop + 2 * s + wave);
+        ctx.lineTo(fx, poleTop + 4.5 * s);
+        ctx.closePath(); ctx.fill();
       }
       // 5 ดาว → หัวลูกศรหน้ารถ (ขวา) แสดงความแรง
       if (stars >= 5) {
