@@ -1231,8 +1231,10 @@
                 styleBgColor = '#a83232'; 
             } else if (typeText.includes('Medium Risk') || typeText.includes('ค่อนข้างสูง') || typeText.includes('ค่อนข้างต่ำ')) {
                 styleBgColor = '#b85c00'; 
+            } else if (typeText.includes('UltraLow') || typeText.includes('Ultra Low') || typeText.includes('เสี่ยงต่ำมาก')) {
+                styleBgColor = '#7bed3b'; // Lime
             } else if (typeText.includes('Low Risk') || typeText.includes('เสี่ยงต่ำ')) {
-                styleBgColor = '#1e8c4a'; 
+                styleBgColor = '#1e8c4a';
             }
 
             html += `
