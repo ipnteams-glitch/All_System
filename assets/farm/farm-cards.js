@@ -252,6 +252,7 @@
   function tick(now) {
     const t = now / 1000;
     const m = metrics();
+    const isDesktop = W >= 640;   // มือถือ (แคบ) = เดิม / คอม = growth% หน้ารถ
     ctx.clearRect(0, 0, W, H);
 
     lanes.forEach((l, i) => {
@@ -270,15 +271,24 @@
 
       // ชื่อ + growth%
       ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-      ctx.fillStyle = '#e6edf3'; ctx.font = '13px Kanit,sans-serif';
-      ctx.fillText(l.row.name, 36, l.y - 5);
       const neg = l.growth < 0, hot = l.growth >= TURBO;
-      ctx.fillStyle = neg ? '#ff6b6b' : hot ? '#ffd23b' : l.growth > 0 ? '#4cd137' : '#e6edf3';
-      ctx.font = 'bold 13px Kanit,sans-serif';
-      ctx.fillText((l.growth > 0 ? '+' : '') + l.growth.toFixed(1) + '%' + (hot ? ' 🔥' : neg ? ' ' + T.broken : ''), 36, l.y + 10);
+      const gtxt = (l.growth > 0 ? '+' : '') + l.growth.toFixed(1) + '%' + (hot ? ' 🔥' : neg ? ' ' + T.broken : '');
+      const gcol = neg ? '#ff6b6b' : hot ? '#ffd23b' : l.growth > 0 ? '#4cd137' : '#e6edf3';
 
-      // เคลื่อนรถเข้าหาเป้าหมาย (รถพังจอดนิ่งที่สตาร์ท)
+      // เคลื่อนรถเข้าหาเป้าหมาย (รถพังจอดนิ่งที่สตาร์ท) — คำนวณก่อนวาด growth หน้ารถ
       l.pos += (l.target - l.pos) * 0.06;
+
+      ctx.fillStyle = '#e6edf3'; ctx.font = '13px Kanit,sans-serif';
+      if (isDesktop) {
+        ctx.fillText(l.row.name, 36, l.y + 4);              // desktop: ชื่อกลางเลน
+        ctx.fillStyle = gcol; ctx.font = 'bold 14px Kanit,sans-serif';
+        var gx = l.pos + 40; if (gx > W - 58) gx = W - 58;  // growth% หน้ารถ (ตามรถ)
+        ctx.textBaseline = 'middle'; ctx.fillText(gtxt, gx, l.y); ctx.textBaseline = 'alphabetic';
+      } else {
+        ctx.fillText(l.row.name, 36, l.y - 5);              // mobile: เดิม
+        ctx.fillStyle = gcol; ctx.font = 'bold 13px Kanit,sans-serif';
+        ctx.fillText(gtxt, 36, l.y + 10);
+      }
       VMFarm.drawCar(ctx, {
         cx: l.pos, cy: l.y, unit: 1, t: t, growth: l.growth, turboAt: TURBO,
         carColor: l.carColor,
