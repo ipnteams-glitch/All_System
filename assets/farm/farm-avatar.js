@@ -165,28 +165,32 @@
       ctx.globalAlpha = 1;
       // ข้อความสถานะ (พัง/DNF) วาดโดย farm-cards.js เพื่อรองรับหลายภาษา
     } else {
-      // Recommend → ธงสีแดงเหนือหัวรถ (ผ้าธงโบกตามเวลา)
+      // Recommend → ร่มสีแดงเหนือหัวรถ (ใหญ่)
       if (badge === 'recommend') {
-        const fx = -2 * s, poleTop = -20 * s, poleBot = -8 * s;
-        ctx.strokeStyle = '#c9ccd1'; ctx.lineWidth = 0.8 * s;         // เสาธง
-        ctx.beginPath(); ctx.moveTo(fx, poleBot); ctx.lineTo(fx, poleTop); ctx.stroke();
-        const wave = Math.sin(t * 6 + o.cx) * 1.2 * s;
-        ctx.fillStyle = '#e02424';                                    // ผ้าธงแดง (สามเหลี่ยมโบก)
-        ctx.beginPath();
-        ctx.moveTo(fx, poleTop);
-        ctx.lineTo(fx + 9 * s, poleTop + 2 * s + wave);
-        ctx.lineTo(fx, poleTop + 4.5 * s);
-        ctx.closePath(); ctx.fill();
+        const ux = -2 * s, uy = -14 * s, ur = 11 * s;
+        ctx.strokeStyle = '#c9ccd1'; ctx.lineWidth = 1 * s;           // ด้ามร่ม
+        ctx.beginPath(); ctx.moveTo(ux, uy); ctx.lineTo(ux, -4 * s); ctx.stroke();
+        ctx.fillStyle = '#e02424';                                    // โดมร่ม (ครึ่งวงกลม)
+        ctx.beginPath(); ctx.arc(ux, uy, ur, Math.PI, 2 * Math.PI); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#c21c1c';                                    // ขอบหยักใต้โดม
+        const nsc = 4, scr = ur / nsc;
+        for (let i = 0; i < nsc; i++) {
+          const sx = ux - ur + scr + i * 2 * scr;
+          ctx.beginPath(); ctx.arc(sx, uy, scr, 0, Math.PI); ctx.closePath(); ctx.fill();
+        }
+        ctx.strokeStyle = '#c9ccd1'; ctx.lineWidth = 1 * s;           // ยอดร่ม
+        ctx.beginPath(); ctx.moveTo(ux, uy); ctx.lineTo(ux, uy - 3 * s); ctx.stroke();
+        ctx.fillStyle = '#ffd23b'; ctx.beginPath(); ctx.arc(ux, uy - 3 * s, 0.9 * s, 0, 7); ctx.fill();
       }
       // 5 ดาว → หัวลูกศรหน้ารถ (ขวา) แสดงความแรง
       if (stars >= 5) {
         const ax = 36 * s, ay = 2 * s, fl2 = 0.6 + 0.4 * Math.sin(t * 18 + o.cx);
         ctx.globalAlpha = fl2; ctx.fillStyle = golden ? '#ffd23b' : '#ffffff';
-        for (let k = 0; k < 2; k++) {
-          const ox = ax + k * 5 * s;
+        for (let k = 0; k < 2; k++) {                 // ลูกศรใหญ่ x2
+          const ox = ax + k * 10 * s;
           ctx.beginPath();
-          ctx.moveTo(ox, ay - 3.2 * s); ctx.lineTo(ox + 4 * s, ay); ctx.lineTo(ox, ay + 3.2 * s);
-          ctx.lineTo(ox + 1.3 * s, ay); ctx.closePath(); ctx.fill();
+          ctx.moveTo(ox, ay - 6.4 * s); ctx.lineTo(ox + 8 * s, ay); ctx.lineTo(ox, ay + 6.4 * s);
+          ctx.lineTo(ox + 2.6 * s, ay); ctx.closePath(); ctx.fill();
         }
         ctx.globalAlpha = 1;
       }
