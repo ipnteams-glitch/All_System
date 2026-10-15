@@ -282,7 +282,8 @@
       if (isDesktop) {
         ctx.fillText(l.row.name, 36, l.y + 4);              // desktop: ชื่อกลางเลน
         ctx.fillStyle = gcol; ctx.font = 'bold 14px Kanit,sans-serif';
-        var gx = l.pos + 40; if (gx > W - 58) gx = W - 58;  // growth% หน้ารถ (ตามรถ)
+        var goff = (l.row.stars >= 5) ? 60 : 40;            // 5 ดาวมีลูกศรหน้า เลื่อน % พ้นลูกศร
+        var gx = l.pos + goff; if (gx > W - 58) gx = W - 58; // growth% หน้ารถ (ตามรถ)
         ctx.textBaseline = 'middle'; ctx.fillText(gtxt, gx, l.y); ctx.textBaseline = 'alphabetic';
       } else {
         ctx.fillText(l.row.name, 36, l.y - 5);              // mobile: เดิม
