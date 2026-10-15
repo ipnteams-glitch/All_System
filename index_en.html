@@ -864,6 +864,60 @@
 </script>
 <!-- ===== /Vibemaster Farm Section ===== -->
 
+<!-- ===== Farm Allocator ===== -->
+<section id="farm-alloc">
+  <style>
+    #farm-alloc{max-width:1000px;margin:12px auto 22px;padding:0 6px;color:#c9d1d9;font-family:'Kanit',sans-serif;}
+    #farm-alloc *{box-sizing:border-box;}
+    #farm-alloc .fa-head{color:#D4AF37;font-weight:600;font-size:1.05rem;margin:6px 4px 12px;text-shadow:0 0 10px rgba(212,175,55,.3);}
+    #farm-alloc .fa-sub{color:#8b949e;font-size:.8rem;font-weight:400;margin-left:6px;}
+    #farm-alloc .fa-ctrl{background:#1c1f26;border:1px solid #2d333b;border-radius:12px;padding:12px 14px;margin-bottom:4px;}
+    #farm-alloc .fa-row{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;}
+    #farm-alloc .fa-lab{color:#8b949e;font-size:.85rem;min-width:80px;}
+    #farm-alloc input[type=number]{background:#0d1117;border:1px solid #2d333b;border-radius:8px;color:#fff;padding:6px 10px;width:130px;font-family:inherit;}
+    #farm-alloc input[type=range]{flex:1;min-width:160px;accent-color:#D4AF37;}
+    #farm-alloc #fa-capout{font-size:1.1rem;font-weight:600;color:#fff;}
+    #farm-alloc .fa-risklab{font-size:.8rem;font-weight:600;padding:3px 10px;border-radius:8px;color:#fff;min-width:64px;text-align:center;}
+    #farm-alloc #fa-shuffle{margin-left:auto;background:#1c1f26;border:1px solid #D4AF37;color:#ffd23b;border-radius:10px;padding:6px 14px;cursor:pointer;font-family:inherit;font-size:.85rem;}
+    #farm-alloc #fa-shuffle:hover{filter:brightness(1.15);}
+    #farm-alloc .fa-ticks{display:flex;justify-content:space-between;font-size:.68rem;color:#6e7681;padding-left:92px;margin-bottom:6px;}
+    #farm-alloc .fa-ticks span{flex:1;text-align:center;}
+    #farm-alloc .fa-ticks span:first-child{text-align:left;}#farm-alloc .fa-ticks span:last-child{text-align:right;}
+    #farm-alloc .fa-sets{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:10px;}
+    #farm-alloc .fa-set{background:#1c1f26;border:1px solid #2d333b;border-radius:12px;padding:10px 12px;}
+    #farm-alloc .fa-set h4{margin:0 0 8px;font-size:.95rem;font-weight:600;color:#ffeb3b;}
+    #farm-alloc .fa-set table{width:100%;border-collapse:collapse;font-size:.78rem;}
+    #farm-alloc .fa-set th{text-align:left;color:#6e7681;font-weight:400;padding:4px 2px;border-bottom:1px solid #2d333b;}
+    #farm-alloc .fa-set td{padding:4px 2px;border-bottom:1px solid #21262d;}
+    #farm-alloc .fa-badge{font-size:.62rem;padding:1px 6px;border-radius:6px;color:#fff;white-space:nowrap;}
+    #farm-alloc .fa-pin{font-size:.62rem;color:#58a6ff;margin-left:3px;}
+    #farm-alloc .fa-adj{font-size:.68rem;color:#8b949e;}
+    #farm-alloc .fa-foot{font-size:.76rem;margin-top:8px;color:#8b949e;line-height:1.6;}
+    #farm-alloc .fa-foot b{color:#e6edf3;font-weight:600;}
+    #farm-alloc .fa-loading{grid-column:1/-1;text-align:center;color:#8b949e;padding:24px;}
+  </style>
+  <div class="fa-head">🧮 Farm Allocator <span class="fa-sub">Enter capital + risk, then pick a set</span></div>
+  <div class="fa-ctrl">
+    <div class="fa-row">
+      <span class="fa-lab">Capital (Cent)</span>
+      <input id="fa-cap" type="number" min="0" step="1000" value="50000">
+      <span id="fa-capout"></span>
+      <button id="fa-shuffle">🎲 Reshuffle</button>
+    </div>
+    <div class="fa-row">
+      <span class="fa-lab">Risk level</span>
+      <input id="fa-risk" type="range" min="1" max="4" step="1" value="3">
+      <span id="fa-riskout" class="fa-risklab"></span>
+    </div>
+    <div class="fa-ticks"><span>Low</span><span>Normal</span><span>Medium</span><span>High</span></div>
+  </div>
+  <div id="fa-sets" class="fa-sets"></div>
+</section>
+<script>
+(function(){var s=document.createElement("script");s.src="assets/farm/farm-allocator.js?t="+Date.now();s.async=false;document.head.appendChild(s);})();
+</script>
+<!-- ===== /Farm Allocator ===== -->
+
 <div class="rt-table-container" style="display:none;"><!-- RealTime table hidden for now (kept in code for future use) -->
         <table class="rt-table">
             <thead>
