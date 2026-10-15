@@ -66,13 +66,14 @@
     return out;
   }
 
+  // lot = 0.01×f (ปลอดภัย) หรือ 0.01 (เสี่ยง); cost ต่อ unit = B หรือ B×ss (กลมเสมอ ไม่มีเศษ)
   function unitOf(name, risk, B) {
     var ss = SYSSCORE[risk];
-    if (name === 'Normal') return { c: B, lab: T.normal };
+    if (name === 'Normal') return { lot: 0.01, c: B, lab: T.normal };
     var sl = SL[name];
-    if (ss > sl) return { c: B * ss, lab: T.capx + ss };
+    if (ss > sl) return { lot: 0.01, c: B * ss, lab: T.capx + ss };        // เสี่ยง: 0.01 lot, cost B×ss
     var f = sl / ss;
-    return { c: Math.round(B / f), lab: (f === 1 ? T.normal : T.lotx + (f % 1 === 0 ? f : f.toFixed(1))) };
+    return { lot: 0.01 * f, c: B, lab: (f === 1 ? T.normal : T.lotx + (f % 1 === 0 ? f : f.toFixed(1))) };  // ปลอดภัย: 0.01×f lot, cost B
   }
 
   function buildSet(cap, name, targetN, rng, force) {
@@ -89,7 +90,7 @@
     }
     var add = true;
     while (add) { add = false; for (var j = 0; j < chosen.length; j++) { var c = chosen[j]; if (remain >= c.u.c) { c.units++; c.used += c.u.c; remain -= c.u.c; add = true; } } }
-    var lots = chosen.reduce(function (a, c) { return a + c.units * 0.01; }, 0);
+    var lots = chosen.reduce(function (a, c) { return a + c.units * c.u.lot; }, 0);
     return { chosen: chosen, used: cap - remain, remain: remain, lots: lots };
   }
 
@@ -99,7 +100,7 @@
       return '<tr><td style="font-weight:600">' + c.s.name + (c.pin ? '<span class="fa-pin">⚑</span>' : '') + '</td>' +
         '<td><span class="fa-badge" style="background:' + RCOLOR[c.s.risk] + '">' + c.s.risk + '</span></td>' +
         '<td class="fa-adj">' + c.u.lab + '</td>' +
-        '<td style="text-align:right;font-weight:600">' + (c.units * 0.01).toFixed(2) + '</td>' +
+        '<td style="text-align:right;font-weight:600">' + (c.units * c.u.lot).toFixed(2) + '</td>' +
         '<td style="text-align:right">¢' + fmt(c.used) + '</td></tr>';
     }).join('');
     return '<div class="fa-set"><h4>' + title + '</h4>' +
