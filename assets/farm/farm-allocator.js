@@ -122,18 +122,28 @@
 
     var maxAfford = Math.floor(cap / MIN_PER_SYS), small = cap < 20000;
     var lo = small ? 1 : 2, hi = Math.min(small ? 1 : MAX_SYS, maxAfford, SYS.length);
-    var html = '';
+    var nSets = cap < 100000 ? 4 : (cap > 120000 ? 6 : 5);   // จำนวนเซ็ตตามทุน
     LAST = { cap: cap, risk: name, sets: [] };
-    for (var k = 1; k <= NSETS; k++) {
+    var seen = {}, built = [], tries = 0, k = 0;
+    while (built.length < nSets && tries < 80) {
+      k++; tries++;
       var rng = mulberry32(seedBase + k);
       var lo2 = Math.min(lo, hi);
       var tn = (hi < 1) ? 0 : (lo2 + Math.floor(rng() * (hi - lo2 + 1)));
       var force = small ? null : ((rng() < 0.5) ? 'Sys_1' : 'Sys_2');
-      var res = tn < 1 ? { chosen: [], used: 0, remain: cap, lots: 0 } : buildSet(cap, name, tn, rng, force);
-      LAST.sets.push({ title: T.set + ' ' + k, res: res });
-      html += card(k - 1, T.set + ' ' + k, res);
+      if (tn < 1) continue;
+      var res = buildSet(cap, name, tn, rng, force);
+      if (!res.chosen.length) continue;
+      var sig = res.chosen.map(function (c) { return c.s.name + ':' + c.units; }).sort().join('|');  // เซ็ตไม่ซ้ำ
+      if (seen[sig]) continue;
+      seen[sig] = 1; built.push(res);
     }
-    setsEl.innerHTML = html;
+    var html = '';
+    for (var i = 0; i < built.length; i++) {
+      LAST.sets.push({ title: T.set + ' ' + (i + 1), res: built[i] });
+      html += card(i, T.set + ' ' + (i + 1), built[i]);
+    }
+    setsEl.innerHTML = html || ('<div class="fa-loading">' + T.low + '</div>');
   }
 
   // ===== ดาวน์โหลดชุดติดตั้ง (zip: setup.ps1 + config.json + card.png + README) =====
