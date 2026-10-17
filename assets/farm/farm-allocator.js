@@ -31,8 +31,8 @@
 
   var MIN_PER_SYS = 10000, NSETS = 5, MAX_SYS = 5;
   var LV = ['', 'Low', 'Normal', 'Medium', 'High'];
-  var SL = { Low: 1, Medium: 2, High: 3 };
-  var SYSSCORE = { Low: 1, Medium: 2, High: 3 };
+  // สเกลความเสี่ยง: Normal = Low (=1) ; ระบบในชีตมีแค่ Low/Medium/High
+  var SCORE = { Low: 1, Normal: 1, Medium: 2, High: 3 };
   var RCOLOR = { Low: '#1e8c4a', Medium: '#b85c00', High: '#a83232' };
 
   var SYS = [];   // โหลดจากชีต
@@ -70,14 +70,16 @@
     return out;
   }
 
-  // lot = 0.01×f (ปลอดภัย) หรือ 0.01 (เสี่ยง); cost ต่อ unit = B หรือ B×ss (กลมเสมอ ไม่มีเศษ)
+  // เทียบ risk ระบบ (ss) กับที่เลือก (sl):
+  //   ss == sl → ปกติ (lot 0.01, cost B)
+  //   ss >  sl → เสี่ยงกว่า: ทุน×(ss/sl), lot เท่าเดิม 0.01
+  //   ss <  sl → ปลอดภัยกว่า: lot×(sl/ss), ทุนเท่าเดิม B
   function unitOf(name, risk, B) {
-    var ss = SYSSCORE[risk];
-    if (name === 'Normal') return { lot: 0.01, c: B, lab: T.normal };
-    var sl = SL[name];
-    if (ss > sl) return { lot: 0.01, c: B * ss, lab: T.capx + ss };        // เสี่ยง: 0.01 lot, cost B×ss
+    var sl = SCORE[name] || 1, ss = SCORE[risk] || 1;
+    if (ss === sl) return { lot: 0.01, c: B, lab: T.normal };
+    if (ss > sl) { var r = ss / sl; return { lot: 0.01, c: Math.round(B * r), lab: T.capx + (r % 1 === 0 ? r : r.toFixed(1)) }; }
     var f = sl / ss;
-    return { lot: 0.01 * f, c: B, lab: (f === 1 ? T.normal : T.lotx + (f % 1 === 0 ? f : f.toFixed(1))) };  // ปลอดภัย: 0.01×f lot, cost B
+    return { lot: 0.01 * f, c: B, lab: T.lotx + (f % 1 === 0 ? f : f.toFixed(1)) };
   }
 
   function gcd(a, b) { while (b) { var t = b; b = a % b; a = t; } return a; }
