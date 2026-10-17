@@ -92,6 +92,14 @@
     }
     var add = true;
     while (add) { add = false; for (var j = 0; j < chosen.length; j++) { var c = chosen[j]; if (remain >= c.u.c) { c.units++; c.used += c.u.c; remain -= c.u.c; add = true; } } }
+    // ปัดทุนต่อระบบลงใกล้ multiple 5000 (lot ยัง 0.01) — คงขั้นต่ำ 10,000
+    chosen.forEach(function (c) {
+      var t = Math.floor(c.used / 5000) * 5000;
+      var nu = Math.floor(t / c.u.c);
+      var minU = Math.ceil(MIN_PER_SYS / c.u.c);
+      if (nu < minU) nu = minU;
+      if (nu < c.units) { remain += (c.units - nu) * c.u.c; c.units = nu; c.used = nu * c.u.c; }
+    });
     var lots = chosen.reduce(function (a, c) { return a + c.units * c.u.lot; }, 0);
     return { chosen: chosen, used: cap - remain, remain: remain, lots: lots };
   }
