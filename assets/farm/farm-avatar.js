@@ -373,6 +373,22 @@
     (function () {
       const [hx, hy] = arm(ctx, 3.4 * u, shoulderY, broken ? (Math.PI - 2.5) : fa, 6.3 * u, 2.2 * u, golden ? '#ffe79a' : col);
       ctx.fillStyle = skin; ctx.beginPath(); ctx.arc(hx, hy, 1.6 * u, 0, 7); ctx.fill();
+      // หอกสามง่าม (โพไซดอน) — ถือตั้งในมือขวา
+      if (o.trident && !broken) {
+        const topY = hy - 11 * u, botY = hy + 3.5 * u, by = topY;
+        ctx.strokeStyle = '#b98f2e'; ctx.lineWidth = 1.0 * u; ctx.lineCap = 'round';   // ด้าม
+        ctx.beginPath(); ctx.moveTo(hx, botY); ctx.lineTo(hx, by); ctx.stroke();
+        ctx.lineCap = 'butt';
+        const bw = 2.3 * u, ph = 4 * u;
+        ctx.fillStyle = '#ffd23b'; ctx.strokeStyle = '#8a6d1e'; ctx.lineWidth = 0.25 * u;
+        rr(ctx, hx - bw, by - 0.5 * u, bw * 2, 1 * u, 0.4 * u); ctx.fill(); ctx.stroke();   // คานขวาง
+        for (const gx of [-bw, 0, bw]) {                                                    // 3 ง่ามแหลม
+          const h2 = gx === 0 ? ph * 1.3 : ph;
+          ctx.beginPath();
+          ctx.moveTo(hx + gx - 0.55 * u, by); ctx.lineTo(hx + gx, by - h2); ctx.lineTo(hx + gx + 0.55 * u, by);
+          ctx.closePath(); ctx.fill(); ctx.stroke();
+        }
+      }
     })();
 
     // ── ประกายไฟ (เทอร์โบ/ร้อนแรง) ──

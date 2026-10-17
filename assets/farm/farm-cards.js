@@ -265,6 +265,12 @@
     for (let i = 0; i < stand.length; i += 5) groups.push({ idxs: stand.slice(i, i + 5), faded: true });
     for (let i = 0; i < dead.length; i += 5) groups.push({ idxs: dead.slice(i, i + 5), faded: true });
     if (!groups.length) groups.push({ idxs: idx, faded: false });
+    // ให้ Sys_2 อยู่กลางแถวของมัน
+    const s2 = idx.find((i) => list[i].row.name === 'Sys_2');
+    if (s2 != null) for (const g of groups) {
+      const pos = g.idxs.indexOf(s2);
+      if (pos >= 0) { g.idxs.splice(pos, 1); g.idxs.splice(Math.floor(g.idxs.length / 2), 0, s2); break; }
+    }
     return groups;
   }
 
@@ -374,6 +380,7 @@
         growth: l.growth, turboAt: TURBO, carColor: l.carColor, variant: l.variant,
         level: (l.stats && l.stats.level) || 1, stars: l.row.stars || 0,
         badge: l.row.badge, recommend: l.row.recommend, extreme: l.rank < 3,
+        trident: l.row.name === 'Sys_2',
       });
       drawTag(l);
       ctx.globalAlpha = 1;
