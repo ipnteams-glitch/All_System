@@ -89,7 +89,7 @@
       var s = order[i];
       var u = unitOf(name, s.risk, s.B);
       var need = Math.ceil(MIN_PER_SYS / u.c), needCost = need * u.c;
-      if (remain >= needCost) { chosen.push({ s: s, u: u, units: need, used: needCost, pin: (s.name === force) }); remain -= needCost; }
+      if (remain >= needCost) { chosen.push({ s: s, u: u, units: need, used: needCost, pin: !!s.rec }); remain -= needCost; }
     }
     var add = true;
     while (add) { add = false; for (var j = 0; j < chosen.length; j++) { var c = chosen[j]; if (remain >= c.u.c) { c.units++; c.used += c.u.c; remain -= c.u.c; add = true; } } }
@@ -111,24 +111,27 @@
     while (fb) { fb = false;
       for (var b = 0; b < chosen.length; b++) { var cb = chosen[b];
         if (remain >= cb.u.c) { cb.units++; cb.used += cb.u.c; remain -= cb.u.c; fb = true; } } }
-    // บังคับ flagship (recommend) >= 40% ของทุนรวม + มากกว่าทุก non-flagship
+    // บังคับทุน flagship (recommend): 1 ตัว >= 40% + > non-flag ทุกตัว; >=2 ตัว รวม >= 60%
     if (force) {
-      var fc = null; for (var fi = 0; fi < chosen.length; fi++) { if (chosen[fi].s.name === force) { fc = chosen[fi]; break; } }
+      var fc = null, flagList = [];
+      for (var fi = 0; fi < chosen.length; fi++) { if (chosen[fi].s.name === force) fc = chosen[fi]; if (chosen[fi].s.rec) flagList.push(chosen[fi]); }
       if (fc && chosen.length > 1) {
+        var pct = flagList.length >= 2 ? 0.6 : FLAG_PCT;
         var guard = 0;
         while (guard++ < 1000) {
           var total = chosen.reduce(function (a, c) { return a + c.used; }, 0);
-          var maxOther = 0, big = null;
+          var flagSum = flagList.reduce(function (a, c) { return a + c.used; }, 0);
+          var maxNon = 0, big = null;
           for (var oi = 0; oi < chosen.length; oi++) { var cc = chosen[oi];
-            if (cc !== fc) { if (cc.used > maxOther) maxOther = cc.used; if (!big || cc.used > big.used) big = cc; } }
-          if (fc.used >= FLAG_PCT * total && fc.used > maxOther) break;
-          if (!big) break;
-          if (big.units <= Math.ceil(MIN_PER_SYS / big.u.c)) break;    // ลด other ไม่ได้ (ขั้นต่ำ 10k)
+            if (!cc.s.rec) { if (cc.used > maxNon) maxNon = cc.used; if (!big || cc.used > big.used) big = cc; } }
+          if (flagSum >= pct * total && (flagList.length >= 2 || fc.used > maxNon)) break;
+          if (!big) break;                                 // ไม่มี non-flagship ให้ลด
+          if (big.units <= Math.ceil(MIN_PER_SYS / big.u.c)) break;
           big.units--; big.used -= big.u.c; remain += big.u.c;
           if (remain >= 5000 && 5000 % fc.u.c === 0) { fc.units += 5000 / fc.u.c; fc.used += 5000; remain -= 5000; }
           else if (remain >= fc.u.c) { fc.units++; fc.used += fc.u.c; remain -= fc.u.c; }
         }
-        while (remain >= fc.u.c) { fc.units++; fc.used += fc.u.c; remain -= fc.u.c; }   // เงินเหลือเข้า flagship
+        while (remain >= fc.u.c) { fc.units++; fc.used += fc.u.c; remain -= fc.u.c; }   // เงินเหลือเข้า flagship หลัก
       }
     }
     var lots = chosen.reduce(function (a, c) { return a + c.units * c.u.lot; }, 0);
