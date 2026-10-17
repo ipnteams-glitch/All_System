@@ -17,10 +17,10 @@
   var T = {
     th: { cap: 'ทุน (Cent)', risk: 'ระดับเสี่ยง', shuffle: '🎲 สุ่มใหม่', sys: 'ระบบ', adj: 'ปรับ', lot: 'Lot', used: 'ทุนที่วาง',
           set: 'เซ็ต', nSys: 'ระบบ', lotSum: 'lot รวม', use: 'ใช้', left: 'เหลือ', normal: 'ปกติ', lotx: 'ลอต×', capx: 'ทุน×',
-          low: 'ทุนไม่พอ (ขั้นต่ำ ¢10,000/ระบบ)', loading: '⏳ กำลังโหลดข้อมูลระบบ...' },
+          low: 'ทุนไม่พอ (ขั้นต่ำ ¢10,000/ระบบ)', loading: '⏳ กำลังโหลดข้อมูลระบบ...', download: '📥 ดาวน์โหลดชุดติดตั้ง', dling: '⏳ กำลังสร้าง...' },
     en: { cap: 'Capital (Cent)', risk: 'Risk level', shuffle: '🎲 Reshuffle', sys: 'System', adj: 'Adj', lot: 'Lot', used: 'Capital',
           set: 'Set', nSys: 'systems', lotSum: 'total lot', use: 'used', left: 'left', normal: 'base', lotx: 'lot×', capx: 'cap×',
-          low: 'Not enough (min ¢10,000/system)', loading: '⏳ Loading systems...' }
+          low: 'Not enough (min ¢10,000/system)', loading: '⏳ Loading systems...', download: '📥 Download installer', dling: '⏳ Building...' }
   }[LANG];
 
   var SHEET_ID = '193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ';
@@ -35,6 +35,8 @@
 
   var SYS = [];   // โหลดจากชีต
   var seedBase = Math.floor(Math.random() * 1e9);
+  var LAST = { cap: 0, risk: 'Normal', sets: [] };   // ผลล่าสุด (สำหรับดาวน์โหลด)
+  var EA_NAME = 'Harvest_Famr v8.0_Multi.ex5';
 
   function fmt(n) { return Math.round(n).toLocaleString('en-US'); }
   function byName(n) { for (var i = 0; i < SYS.length; i++) if (SYS[i].name === n) return SYS[i]; }
@@ -94,8 +96,8 @@
     return { chosen: chosen, used: cap - remain, remain: remain, lots: lots };
   }
 
-  function card(title, res) {
-    if (!res.chosen.length) return '<div class="fa-set"><h4>' + title + '</h4><div class="fa-foot">' + T.low + '</div></div>';
+  function card(idx, title, res) {
+    if (!res.chosen.length) return '<div class="fa-set" data-i="' + idx + '"><h4>' + title + '</h4><div class="fa-foot">' + T.low + '</div></div>';
     var rows = res.chosen.map(function (c) {
       return '<tr><td style="font-weight:600">' + c.s.name + (c.pin ? '<span class="fa-pin">⚑</span>' : '') + '</td>' +
         '<td><span class="fa-badge" style="background:' + RCOLOR[c.s.risk] + '">' + c.s.risk + '</span></td>' +
@@ -103,9 +105,10 @@
         '<td style="text-align:right;font-weight:600">' + (c.units * c.u.lot).toFixed(2) + '</td>' +
         '<td style="text-align:right">¢' + fmt(c.used) + '</td></tr>';
     }).join('');
-    return '<div class="fa-set"><h4>' + title + '</h4>' +
+    return '<div class="fa-set" data-i="' + idx + '"><h4>' + title + '</h4>' +
       '<table><tr><th>' + T.sys + '</th><th>Risk</th><th>' + T.adj + '</th><th style="text-align:right">' + T.lot + '</th><th style="text-align:right">' + T.used + '</th></tr>' + rows + '</table>' +
-      '<div class="fa-foot"><b>' + res.chosen.length + '</b> ' + T.nSys + ' · ' + T.lotSum + ' <b>' + res.lots.toFixed(2) + '</b> · ' + T.use + ' <b>¢' + fmt(res.used) + '</b> · ' + T.left + ' ¢' + fmt(res.remain) + '</div></div>';
+      '<div class="fa-foot"><b>' + res.chosen.length + '</b> ' + T.nSys + ' · ' + T.lotSum + ' <b>' + res.lots.toFixed(2) + '</b> · ' + T.use + ' <b>¢' + fmt(res.used) + '</b> · ' + T.left + ' ¢' + fmt(res.remain) + '</div>' +
+      '<button class="fa-dl" data-i="' + idx + '">' + T.download + '</button></div>';
   }
 
   function render() {
@@ -120,22 +123,118 @@
     var maxAfford = Math.floor(cap / MIN_PER_SYS), small = cap < 20000;
     var lo = small ? 1 : 2, hi = Math.min(small ? 1 : MAX_SYS, maxAfford, SYS.length);
     var html = '';
+    LAST = { cap: cap, risk: name, sets: [] };
     for (var k = 1; k <= NSETS; k++) {
       var rng = mulberry32(seedBase + k);
       var lo2 = Math.min(lo, hi);
       var tn = (hi < 1) ? 0 : (lo2 + Math.floor(rng() * (hi - lo2 + 1)));
       var force = small ? null : ((rng() < 0.5) ? 'Sys_1' : 'Sys_2');
-      html += card(T.set + ' ' + k, tn < 1 ? { chosen: [], used: 0, remain: cap, lots: 0 } : buildSet(cap, name, tn, rng, force));
+      var res = tn < 1 ? { chosen: [], used: 0, remain: cap, lots: 0 } : buildSet(cap, name, tn, rng, force);
+      LAST.sets.push({ title: T.set + ' ' + k, res: res });
+      html += card(k - 1, T.set + ' ' + k, res);
     }
     setsEl.innerHTML = html;
   }
 
+  // ===== ดาวน์โหลดชุดติดตั้ง (zip: setup.ps1 + config.json + card.png + README) =====
+  var LIBS = { zip: 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+               h2c: 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js' };
+  function loadScript(src) {
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement('script'); s.src = src; s.onload = resolve; s.onerror = reject; document.head.appendChild(s);
+    });
+  }
+  function loadLibs() {
+    var p = Promise.resolve();
+    if (!window.JSZip) p = p.then(function () { return loadScript(LIBS.zip); });
+    if (!window.html2canvas) p = p.then(function () { return loadScript(LIBS.h2c); });
+    return p;
+  }
+
+  function genConfig(s) {
+    var sys = s.res.chosen.map(function (c) {
+      return { sys: c.s.name, title: c.s.title, risk: c.s.risk, lot: +(c.units * c.u.lot).toFixed(2), capital: c.used, adjust: c.u.lab };
+    });
+    return { set: s.title, account_capital: LAST.cap, risk_level: LAST.risk, ea: EA_NAME, systems: sys };
+  }
+
+  function genSetupPs1() {
+    return [
+      '# ===== ติดตั้งฟาร์มอัตโนมัติ — clone template mt5_1 ตามจำนวนระบบ =====',
+      'chcp 65001 > $null',
+      'trap { Write-Host ("ERROR: " + $_.Exception.Message) -ForegroundColor Red; Read-Host "Enter to close"; exit 1 }',
+      '$Base = "C:\\MT5_Portable_Farm"',
+      '$Template = "$Base\\mt5_1"',
+      'if (-not (Test-Path $Template)) { Write-Host "ไม่พบ template: $Template" -ForegroundColor Red; Read-Host "Enter"; exit }',
+      '$cfg = Get-Content "$PSScriptRoot\\config.json" -Raw -Encoding UTF8 | ConvertFrom-Json',
+      '$CounterFile = "$Base\\counter.txt"',
+      '$Desktop = [Environment]::GetFolderPath("Desktop")',
+      '$Wsh = New-Object -ComObject WScript.Shell',
+      'Write-Host ("สร้าง {0} terminal สำหรับ {1}" -f $cfg.systems.Count, $cfg.set) -ForegroundColor Cyan',
+      'foreach ($s in $cfg.systems) {',
+      '  $n = 0; if (Test-Path $CounterFile) { $n = [int](Get-Content $CounterFile) }',
+      '  $n++; $name = "mt5_$n"; $dst = "$Base\\$name"',
+      '  Write-Host ("  -> {0}  [{1}] lot {2} capital {3}" -f $name, $s.sys, $s.lot, $s.capital) -ForegroundColor Green',
+      '  robocopy $Template $dst /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null',
+      '  $sc = $Wsh.CreateShortcut("$Desktop\\$name ($($s.sys)).lnk")',
+      '  $sc.TargetPath = "$dst\\terminal64.exe"; $sc.Arguments = "/portable"; $sc.WorkingDirectory = $dst; $sc.Save()',
+      '  Set-Content -Path $CounterFile -Value $n',
+      '}',
+      'Write-Host "เสร็จ! เปิด terminal จาก Desktop -> login -> ลาก EA -> ตั้ง Channel+Lot ตาม card.png" -ForegroundColor Yellow',
+      'Read-Host "Enter to close"'
+    ].join('\r\n');
+  }
+  var RUN_BAT = '@echo off\r\npowershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup.ps1"\r\npause\r\n';
+
+  function genReadme(cfg) {
+    var lines = ['ชุดติดตั้งฟาร์ม - ' + cfg.set, '================================', '',
+      'ทุนบัญชี: ' + cfg.account_capital + ' cent | ความเสี่ยง: ' + cfg.risk_level, 'EA: ' + cfg.ea, '',
+      'ระบบในชุดนี้:'];
+    cfg.systems.forEach(function (s) { lines.push('  - ' + s.sys + ' | lot ' + s.lot + ' | ทุน ' + s.capital + ' | ' + s.risk + ' | ' + s.adjust); });
+    lines.push('', 'วิธีใช้บน VPS:', '1. ต้องมี template C:\\MT5_Portable_Farm\\mt5_1 (มี EA ' + cfg.ea + ' อยู่แล้ว)',
+      '2. วางโฟลเดอร์นี้ไว้ที่ C:\\MT5_Portable_Farm แล้วดับเบิลคลิก run_setup.bat',
+      '3. สคริปต์ clone terminal ตามจำนวนระบบ + สร้าง shortcut /portable บน Desktop',
+      '4. เปิดแต่ละ terminal -> login บัญชี -> ลาก EA ลงกราฟ -> ตั้ง Channel = Sys_N, Lot ตาม card.png',
+      '', 'card.png = ภาพการ์ดเซ็ตนี้ (อ้างอิง lot/ทุนต่อระบบ)');
+    return lines.join('\r\n');
+  }
+
+  function faDownload(idx) {
+    var s = LAST.sets[idx]; if (!s || !s.res.chosen.length) return;
+    var btn = document.querySelector('.fa-set[data-i="' + idx + '"] .fa-dl');
+    var old = btn ? btn.textContent : ''; if (btn) { btn.textContent = T.dling; btn.disabled = true; }
+    loadLibs().then(function () {
+      var cardEl = document.querySelector('.fa-set[data-i="' + idx + '"]');
+      return window.html2canvas(cardEl, { backgroundColor: '#1c1f26', scale: 2, ignoreElements: function (el) { return el.classList && el.classList.contains('fa-dl'); } });
+    }).then(function (canvas) {
+      return new Promise(function (resolve) { canvas.toBlob(function (b) { resolve(b); }, 'image/png'); });
+    }).then(function (pngBlob) {
+      var cfg = genConfig(s);
+      var zip = new window.JSZip();
+      zip.file('config.json', JSON.stringify(cfg, null, 2));
+      zip.file('setup.ps1', genSetupPs1());
+      zip.file('run_setup.bat', RUN_BAT);
+      zip.file('README.txt', genReadme(cfg));
+      zip.file('card.png', pngBlob);
+      return zip.generateAsync({ type: 'blob' });
+    }).then(function (blob) {
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = 'farm_' + s.title.replace(/\s+/g, '_') + '.zip'; document.body.appendChild(a); a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+      if (btn) { btn.textContent = old; btn.disabled = false; }
+    }).catch(function (e) { if (btn) { btn.textContent = old; btn.disabled = false; } console.error('download fail', e); });
+  }
+
   function wire() {
-    var capEl = document.getElementById('fa-cap'), riskEl = document.getElementById('fa-risk'), sh = document.getElementById('fa-shuffle');
+    var capEl = document.getElementById('fa-cap'), riskEl = document.getElementById('fa-risk'), sh = document.getElementById('fa-shuffle'), setsEl = document.getElementById('fa-sets');
     if (!capEl) return;
     capEl.addEventListener('input', render);
     riskEl.addEventListener('input', render);
     if (sh) sh.addEventListener('click', function () { seedBase = Math.floor(Math.random() * 1e9); render(); });
+    if (setsEl) setsEl.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('.fa-dl') : null;
+      if (b) faDownload(parseInt(b.getAttribute('data-i'), 10));
+    });
   }
 
   function fetchData() {
