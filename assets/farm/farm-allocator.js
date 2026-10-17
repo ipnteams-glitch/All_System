@@ -87,7 +87,8 @@
   function lcmv(a, b) { return a / gcd(a, b) * b; }   // step ทุน = LCM(ทุน/0.01, 5000) → ทุนต่อระบบกลม 5000 เสมอ
 
   // กฎ: flagship = Sys_1/Sys_2 (force) ; ทุน flagship >= 40% รวม และ > sys อื่นทุกตัว ; ทุก sys >= 10,000
-  function buildSet(cap, name, targetN, rng, force) {
+  function buildSet(cap, name, targetN, rng, force, minKeep, relaxFlag) {
+    minKeep = minKeep || 1;
     var other = force === 'Sys_1' ? 'Sys_2' : force === 'Sys_2' ? 'Sys_1' : null;   // Sys_1/Sys_2 ไม่อยู่เซ็ตเดียวกัน
     var pool = SYS.filter(function (s) { return s.name !== force && s.name !== other; });
     var order = force ? [byName(force)].concat(shuffle(pool.slice(), rng)) : shuffle(SYS.slice(), rng);
@@ -102,7 +103,7 @@
     if (!chosen.length) return { chosen: [], used: 0, remain: cap, lots: 0 };
     var F = (chosen[0] && chosen[0].flag) ? chosen[0] : null;    // flagship = ตัว force (อยู่หัว order)
     function starW(c) { return Math.max(1, c.s.stars || 3); }    // ดาว 1-5 (ไม่มีดาว=3)
-    if (F) {
+    if (F && !relaxFlag) {
       // ลำดับการเติม: 1) ดัน flagship แค่พอ >=40% + ใหญ่สุด  2) เศษ → non-flag ที่ใกล้ขั้นต่ำสุด (ถ่วงดาว) ไม่ให้แซง flagship
       var g = 0;
       while (g++ < 50000) {
@@ -116,6 +117,7 @@
           for (var k2 = 0; k2 < chosen.length; k2++) { var cc = chosen[k2]; if (!cc.flag) { var mn = Math.max(MIN_PER_SYS, Math.ceil(cc.u.c / 5000) * 5000); if (cc.cap - cc.step >= mn && cc.cap > bc) { bc = cc.cap; bi = k2; } } }
           if (bi >= 0) { chosen[bi].cap -= chosen[bi].step; remain += chosen[bi].step; continue; }
           // หดไม่ได้ → ไล่ non-flag เล็กสุดออก
+          if (chosen.length <= minKeep) break;   // ห้าม drop ต่ำกว่าจำนวนระบบขั้นต่ำของเทียร์ (ยอมให้ flagship = ตัวอื่นได้ที่ขอบ)
           var smIdx = -1, smCap = Infinity;
           for (var si = 0; si < chosen.length; si++) { if (!chosen[si].flag && chosen[si].cap < smCap) { smCap = chosen[si].cap; smIdx = si; } }
           if (smIdx < 0) break;
@@ -131,7 +133,7 @@
         break;
       }
     } else {
-      // ไม่มี Sys_1/Sys_2 ในชีต → เติมเท่าๆ
+      // ทุน<30000 (relaxFlag) หรือไม่มี Sys_1/Sys_2 → เติมเท่าๆ (flagship ไม่ต้องมากกว่า non-flag)
       var a = true; while (a) { a = false; for (var j = 0; j < chosen.length; j++) { if (remain >= chosen[j].step) { chosen[j].cap += chosen[j].step; remain -= chosen[j].step; a = true; } } }
     }
     chosen.forEach(function (c) { c.units = Math.floor(c.cap / c.u.c); c.used = c.cap; c.pin = !!c.flag; });   // ลอต = floor(ทุน/cost)×0.01, เศษเป็น buffer
@@ -162,12 +164,12 @@
     var out = document.getElementById('fa-capout'); if (out) out.textContent = '¢ ' + fmt(cap);
     var rl = document.getElementById('fa-riskout'); if (rl) { rl.textContent = name; rl.style.background = (name === 'Normal') ? '#4a8f3a' : (RCOLOR[name] || '#4a8f3a'); }
     if (!SYS.length) { setsEl.innerHTML = '<div class="fa-loading">' + T.loading + '</div>'; return; }
+    if (cap < 30000) { setsEl.innerHTML = '<div class="fa-loading">' + (LANG === 'en' ? 'Minimum ¢30,000 to farm' : 'ทำฟาร์มขั้นต่ำ ¢30,000') + '</div>'; LAST = { cap: cap, risk: name, sets: [] }; return; }
 
     var maxAfford = Math.floor(cap / MIN_PER_SYS);
-    // จำนวนระบบตามทุน: <30k = 1 ; <100k = 2-3 ; >=100k = 3-5
+    // จำนวนระบบตามทุน: <100k = 2-3 ; >=100k = 3-5
     var lo, hi;
-    if (cap < 30000) { lo = 1; hi = 1; }
-    else if (cap < 100000) { lo = 2; hi = 3; }
+    if (cap < 100000) { lo = 2; hi = 3; }
     else { lo = 3; hi = 5; }
     hi = Math.min(hi, maxAfford, SYS.length);
     lo = Math.min(lo, hi);
@@ -182,7 +184,7 @@
       var tn = (hi < 1) ? 0 : (lo2 + Math.floor(rng() * (hi - lo2 + 1)));
       var force = flags.length ? flags[Math.floor(rng() * flags.length)].name : null;   // ทุกเซ็ต (รวมเซ็ตระบบเดียว) มี flagship
       if (tn < 1) continue;
-      var res = buildSet(cap, name, tn, rng, force);
+      var res = buildSet(cap, name, tn, rng, force, lo, cap < 30000);
       if (!res.chosen.length) continue;
       var sig = res.chosen.map(function (c) { return c.s.name + ':' + c.units; }).sort().join('|');  // เซ็ตไม่ซ้ำ
       if (seen[sig]) continue;
