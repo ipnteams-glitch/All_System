@@ -275,10 +275,11 @@
     }).then(function (pngBlob) {
       var cfg = genConfig(s);
       var zip = new window.JSZip();
+      var BOM = '﻿';   // UTF-8 BOM: ให้ PowerShell 5.1 / Notepad อ่านไทยถูก (กัน parser error)
       zip.file('config.json', JSON.stringify(cfg, null, 2));
-      zip.file('setup.ps1', genSetupPs1());
+      zip.file('setup.ps1', BOM + genSetupPs1());
       zip.file('run_setup.bat', RUN_BAT);
-      zip.file('README.txt', genReadme(cfg));
+      zip.file('README.txt', BOM + genReadme(cfg));
       zip.file('card.png', pngBlob);
       return zip.generateAsync({ type: 'blob' });
     }).then(function (blob) {
