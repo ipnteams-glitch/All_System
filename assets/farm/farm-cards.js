@@ -1,8 +1,9 @@
-/* farm-cards.js — ตัวควบคุม: ดึง Google Sheet (GViz) → คำนวณ growth → render ลู่แข่ง
- * ธีมเดียว "สนามแข่ง": แต่ละระบบ = รถ 1 คัน, ระยะบนลู่ = กำไรต่อทุน (growth %)
- *   สตาร์ท 0%  →  เส้นชัย 100%   (คลิป 0..100)
- *   growth < 0        → รถพัง (วาดใน farm-avatar.js) + ป้ายสถานะ
- *   growth >= TURBO   → ติดเทอร์โบ
+/* farm-cards.js — ตัวควบคุม: ดึง Google Sheet (GViz) → คำนวณ growth → render เวทีเต้น
+ * ธีม "เวทีเต้น": แต่ละระบบ = นักเต้น 1 ตัว บนเวทีคลับ, อันดับตามกำไรต่อทุน (growth %)
+ *   จัดเป็นแถวแบบมุมมองลึก: แถวหน้า (ล่าง/ใหญ่) = อันดับดีสุด, แถวหลัง (บน/เล็ก)
+ *   growth < 0        → ท่าหมดแรง (เทา, วาดใน farm-avatar.js) + ป้าย "พัง"
+ *   growth >= TURBO   → เต้นเร็ว + ประกาย + สปอตไลต์
+ * ป้ายชื่อ+growth% ลอยเหนือหัว ; คลิกป้าย/ตัว → เปิดหน้า copytrade
  * client-side ล้วน: ไม่มี backend, อ่านชีตแบบ read-only, auto-refresh
  * ต้องโหลดหลัง farm-levels.js และ farm-avatar.js (ใช้ window.VMFarm)
  */
@@ -13,7 +14,7 @@
   // i18n — index.html = ไทย (ดีฟอลต์), index_en.html ตั้ง window.VM_LANG='en' ก่อนโหลดสคริปต์
   const LANG = window.VM_LANG === 'en' ? 'en' : 'th';
   const T = {
-    th: { minCap: 'ทุน', broken: 'พัง', demo: 'เดโม', start: 'สตาร์ท', finish: 'เส้นชัย' },
+    th: { minCap: 'ทุน', broken: 'ตุย', demo: 'เดโม', start: 'สตาร์ท', finish: 'เส้นชัย' },
     en: { minCap: 'Capital', broken: 'DNF', demo: 'demo', start: 'Start', finish: 'Finish' },
   }[LANG];
 
@@ -105,16 +106,18 @@
   let lastRows = null;
   let DEMO = false;
   let canvas = null, ctx = null, dpr = 1;
-  let lanes = [];      // [{ row, growth, norm, target, pos, y, laneTop, link }]
+  let lanes = [];      // [{ row, growth, rank, fillRow, cx, cy, scale, variant, phase, link, hit }]
   let W = 660, H = 372;
   let rafOn = false;
 
-  // ── layout (responsive) ──
-  const LANE_H = 58, TOP_PAD = 14, LABEL_W = 108;
-  function metrics() {
-    const trackX0 = Math.min(LABEL_W + 24, W * 0.30);
-    const trackX1 = W - 56;                 // เว้นที่เส้นชัย checkered
-    return { trackX0, trackX1, trackW: Math.max(40, trackX1 - trackX0) };
+  // ── layout เวทีเต้น (responsive, perspective หลายแถว) ──
+  const TAG_PAD_TOP = 60, FLOOR_PAD = 40;
+  let rowsN = 1, rowSpacing = 90;
+  function variantFor(name) {
+    const mm = String(name).match(/(\d+)/);
+    if (mm) return parseInt(mm[1], 10);
+    let h = 0, s = String(name); for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+    return Math.abs(h);
   }
 
   // ── parse GViz rows → snapshot (คอลัมน์เดียวกับตาราง RealTime) ──
@@ -176,17 +179,18 @@
     return true;
   }
 
-  function resizeCanvas(nRows) {
+  function measureW() {
     const host = document.getElementById('vm-farm-grid');
     W = Math.max(320, host.clientWidth || 660);
-    H = TOP_PAD * 2 + LANE_H * nRows + 14; // +14 เผื่อป้าย 0%/100%
+  }
+  function resizeCanvas() {
     dpr = window.devicePixelRatio || 1;
     canvas.width = W * dpr; canvas.height = H * dpr;
     canvas.style.height = H + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  // ── เตรียมฉาก: จัดอันดับตาม growth, คำนวณตำแหน่งเป้าหมาย ──
+  // ── เตรียมฉาก: จัดอันดับตาม growth, วางตำแหน่งนักเต้นบนเวที ──
   function buildScene(rows) {
     if (!ensureCanvas()) return;
     if (!ctx) ctx = canvas.getContext('2d');
@@ -202,120 +206,178 @@
     });
     list.sort((a, b) => b.growth - a.growth);
 
-    resizeCanvas(list.length);
-    const m = metrics();
+    measureW();
+    const n = list.length || 1;
+    const isDesktop = W >= 640;
+    const rowGap = isDesktop ? 126 : 102;
+    rowSpacing = rowGap * 0.72;
+    const baseScale = isDesktop ? 4.2 : 3.2;
 
-    const prevByName = {};
-    lanes.forEach((l) => { prevByName[l.row.name] = l.pos; });
+    // จัดแถว: เต้น (growth>=10) อยู่ล่าง (หน้า 3 ดีสุด + กลาง 5/แถว), ส่วน <10% จางอยู่บนสุด (ไม่เต้น)
+    const groups = buildStageRows(list);     // index 0 = แถวหน้า (ดีสุด)
+    rowsN = groups.length;
 
-    lanes = list.map((it, i) => {
-      const norm = Math.max(0, Math.min(100, it.growth)) / 100;
-      const laneTop = TOP_PAD + LANE_H * i;
-      const y = laneTop + LANE_H * 0.52;
-      // เผื่อระยะจมูก→ปีกหน้า (ขวาสุด ~34*unit) ให้กันชนหน้าแตะเส้นชัยพอดี ไม่ทะลุ
-      const NOSE = 34;
-      const usable = Math.max(20, m.trackW - NOSE);
-      const target = m.trackX0 + norm * usable;
-      return {
-        row: it.row, growth: it.growth, norm: norm, target: target,
-        pos: prevByName[it.row.name] != null ? prevByName[it.row.name] : m.trackX0,
-        y: y, laneTop: laneTop, link: it.row.link,
-        carColor: carColorFor(it.row.name),
-        stats: VMFarm.statsFor ? VMFarm.statsFor({ ...it.row, profit: it.effProfit }, 'racing') : { level: 1, stars: it.row.stars || 0 },
-      };
+    // ความสูง canvas = ป้ายบน + ระยะแถว + ตัวแถวหน้า + พื้นเวที
+    H = Math.round(TAG_PAD_TOP + (rowsN - 1) * rowSpacing + 100 + FLOOR_PAD);
+    resizeCanvas();
+
+    const frontFeetY = H - FLOOR_PAD;        // แถวหน้า (อันดับดีสุด) อยู่ล่างสุด
+    const sideMargin = Math.max(24, W * 0.06);
+
+    lanes = [];
+    groups.forEach((grp, gi) => {
+      const itemsInRow = grp.idxs.length;
+      const spacing = (W - sideMargin * 2) / itemsInRow;
+      grp.idxs.forEach((rank, inRow) => {
+        const it = list[rank];
+        const v = variantFor(it.row.name);
+        lanes.push({
+          row: it.row, growth: it.growth, rank: rank, fillRow: gi, faded: grp.faded,
+          cx: sideMargin + spacing * (inRow + 0.5),         // เท้า x
+          cy: frontFeetY - gi * rowSpacing,                 // เท้า y (แถวหลังสูงขึ้น)
+          scale: baseScale * Math.pow(0.86, gi),            // แถวหลังเล็กลง (มุมมองลึก)
+          link: it.row.link, carColor: carColorFor(it.row.name),
+          variant: v, phase: (v % 10) * 0.63,               // เฟสเต้นต่างกันต่อระบบ
+          stats: VMFarm.statsFor ? VMFarm.statsFor({ ...it.row, profit: it.effProfit }, 'racing') : { level: 1, stars: it.row.stars || 0 },
+          hit: null,
+        });
+      });
     });
 
     if (!rafOn) { rafOn = true; requestAnimationFrame(tick); }
   }
 
-  function onMove(e) {
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-    let hit = false;
-    for (const l of lanes) {
-      if (l.link && my >= l.laneTop && my < l.laneTop + LANE_H) { hit = true; break; }
-    }
-    canvas.style.cursor = hit ? 'pointer' : 'default';
+  // แบ่งแถวเวที (list เรียงดี→แย่แล้ว): เต้น (growth>=10) = หน้า 3 ดีสุด + กลาง 5/แถว ;
+  // <10% = จาง อยู่บนสุด 5/แถว (ไม่เต้น, ติดลบ=ตุย). index 0 = แถวหน้า (ล่าง/ดีสุด)
+  function buildStageRows(list) {
+    const n = list.length, idx = [];
+    for (let i = 0; i < n; i++) idx.push(i);
+    const isRec = (i) => !!(list[i].row.recommend || list[i].row.badge === 'recommend');
+    const rec = idx.filter(isRec);                                     // แถวล่างสุด (เด่น)
+    const rest = idx.filter((i) => !isRec(i));
+    const strong = rest.filter((i) => list[i].growth >= 10);           // เต้น
+    const stand = rest.filter((i) => list[i].growth < 10 && list[i].growth >= 0); // ยืนเฉยๆ
+    const dead = rest.filter((i) => list[i].growth < 0);               // ตุย → บนสุด
+    const groups = [];
+    // ล่าง→บน: recommend, แล้ว non-recommend เรียงกำไรลดหลั่นขึ้นไป (strong → stand → ตุย)
+    for (let i = 0; i < rec.length; i += 5) groups.push({ idxs: rec.slice(i, i + 5), faded: false });
+    for (let i = 0; i < strong.length; i += 5) groups.push({ idxs: strong.slice(i, i + 5), faded: false });
+    for (let i = 0; i < stand.length; i += 5) groups.push({ idxs: stand.slice(i, i + 5), faded: true });
+    for (let i = 0; i < dead.length; i += 5) groups.push({ idxs: dead.slice(i, i + 5), faded: true });
+    if (!groups.length) groups.push({ idxs: idx, faded: false });
+    return groups;
   }
 
+  // hit-test: คลิก/ชี้ที่ป้าย+ตัวละคร → เปิดหน้า copytrade (ไล่หน้า→หลัง)
+  function hitAt(mx, my) {
+    for (let i = lanes.length - 1; i >= 0; i--) {
+      const l = lanes[i], h = l.hit;
+      if (l.link && h && mx >= h.x0 && mx <= h.x1 && my >= h.y0 && my <= h.y1) return l;
+    }
+    return null;
+  }
+  function onMove(e) {
+    const rect = canvas.getBoundingClientRect();
+    canvas.style.cursor = hitAt(e.clientX - rect.left, e.clientY - rect.top) ? 'pointer' : 'default';
+  }
   function onClick(e) {
     const rect = canvas.getBoundingClientRect();
-    const my = e.clientY - rect.top;
-    for (const l of lanes) {
-      if (l.link && my >= l.laneTop && my < l.laneTop + LANE_H) {
-        window.open('copytrade_approve.html?url=' + encodeURIComponent(l.link), '_blank');
-        return;
-      }
+    const l = hitAt(e.clientX - rect.left, e.clientY - rect.top);
+    if (l) window.open('copytrade_approve.html?url=' + encodeURIComponent(l.link), '_blank');
+  }
+
+  function roundRectC(c, x, y, w, h, r) {
+    c.beginPath(); c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+  }
+  function medalColor(rank) {
+    return rank === 0 ? '#ffd23b' : rank === 1 ? '#c0c8d0' : rank === 2 ? '#cd7f32' : '#3a4a5f';
+  }
+
+  // ── เวที: พื้นหลังคลับ + แสงบ๊อกเก้ + วงแหวนเรืองแสงต่อแถว ──
+  function drawStage(t) {
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#0a0618'); bg.addColorStop(0.5, '#120a26'); bg.addColorStop(1, '#070410');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+    for (let i = 0; i < 16; i++) {
+      const bx = ((i * 0.6180339) % 1) * W, by = 16 + ((i * 0.4142) % 1) * (H * 0.5);
+      const br = 5 + (i % 5) * 2, al = 0.05 + (i % 6) * 0.015;
+      ctx.globalAlpha = al; ctx.fillStyle = i % 3 === 0 ? '#ff5ea8' : i % 3 === 1 ? '#5ea8ff' : '#ffd23b';
+      ctx.beginPath(); ctx.arc(bx, by, br, 0, 7); ctx.fill();
     }
+    ctx.globalAlpha = 1;
+
+    const frontFeetY = H - FLOOR_PAD;
+    for (let r = rowsN - 1; r >= 0; r--) {       // หลัง → หน้า
+      const fy = frontFeetY - r * rowSpacing;
+      const rw = W * (0.9 - r * 0.05), rh = 14 + (rowsN - r) * 3;
+      const pulse = 0.5 + 0.5 * Math.sin(t * 2 + r);
+      ctx.save();
+      ctx.strokeStyle = 'rgba(54,255,160,' + (0.22 + 0.18 * pulse) + ')';
+      ctx.lineWidth = 2.5; ctx.shadowColor = '#36ffa0'; ctx.shadowBlur = 14;
+      ctx.beginPath(); ctx.ellipse(W / 2, fy + 2, Math.max(30, rw / 2), rh, 0, 0, 7); ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  // ── ป้ายชื่อ + growth% ลอยเหนือหัว ──
+  function drawTag(l) {
+    const neg = l.growth < 0, hot = l.growth >= TURBO;
+    const gtxt = (l.growth > 0 ? '+' : '') + l.growth.toFixed(1) + '%' + (hot ? ' 🔥' : neg ? ' ' + T.broken : '');
+    const gcol = neg ? '#ff6b6b' : hot ? '#ffd23b' : l.growth > 0 ? '#4cd137' : '#e6edf3';
+    const nameTxt = l.row.name;
+
+    ctx.font = '600 12px Kanit,sans-serif'; const w1 = ctx.measureText(nameTxt).width;
+    ctx.font = '700 14px Kanit,sans-serif'; const w2 = ctx.measureText(gtxt).width;
+    const tw = Math.max(w1, w2) + 20, th = 34;
+    const headTop = l.cy - 21 * l.scale, topY = headTop - 6 - th;
+    let tx = l.cx - tw / 2; tx = Math.max(3, Math.min(W - tw - 3, tx));
+
+    ctx.fillStyle = 'rgba(8,10,18,0.85)'; roundRectC(ctx, tx, topY, tw, th, 7); ctx.fill();
+    ctx.lineWidth = l.rank < 3 ? 1.6 : 1; ctx.strokeStyle = medalColor(l.rank); ctx.stroke();
+
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#cdd6e2'; ctx.font = '600 12px Kanit,sans-serif';
+    ctx.fillText(nameTxt, tx + tw / 2, topY + 14);
+    ctx.fillStyle = gcol; ctx.font = '700 14px Kanit,sans-serif';
+    ctx.fillText(gtxt, tx + tw / 2, topY + 29);
+
+    l.hit = { x0: Math.min(tx, l.cx - 9 * l.scale), x1: Math.max(tx + tw, l.cx + 9 * l.scale), y0: topY, y1: l.cy + 3 * l.scale };
   }
 
   function tick(now) {
     const t = now / 1000;
-    const m = metrics();
-    const isDesktop = W >= 640;   // มือถือ (แคบ) = เดิม / คอม = growth% หน้ารถ
     ctx.clearRect(0, 0, W, H);
+    drawStage(t);
 
-    lanes.forEach((l, i) => {
-      // พื้นเลน
-      ctx.fillStyle = i % 2 ? '#0d1420' : '#0f1725';
-      ctx.fillRect(0, l.laneTop, W, LANE_H);
-      // เส้นประกลางเลน
-      ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1; ctx.setLineDash([12, 12]);
-      ctx.beginPath(); ctx.moveTo(m.trackX0, l.y + 15); ctx.lineTo(m.trackX1, l.y + 15); ctx.stroke(); ctx.setLineDash([]);
-
-      // เหรียญอันดับ
-      const medal = i === 0 ? '#ffd23b' : i === 1 ? '#c0c8d0' : i === 2 ? '#cd7f32' : '#2d3a4d';
-      ctx.fillStyle = medal; ctx.beginPath(); ctx.arc(18, l.y, 12, 0, 7); ctx.fill();
-      ctx.fillStyle = i < 3 ? '#1a1200' : '#8fa4bd'; ctx.font = 'bold 12px Kanit,sans-serif';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('P' + (i + 1), 18, l.y);
-
-      // ชื่อ + growth%
-      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-      const neg = l.growth < 0, hot = l.growth >= TURBO;
-      const gtxt = (l.growth > 0 ? '+' : '') + l.growth.toFixed(1) + '%' + (hot ? ' 🔥' : neg ? ' ' + T.broken : '');
-      const gcol = neg ? '#ff6b6b' : hot ? '#ffd23b' : l.growth > 0 ? '#4cd137' : '#e6edf3';
-
-      // เคลื่อนรถเข้าหาเป้าหมาย (รถพังจอดนิ่งที่สตาร์ท) — คำนวณก่อนวาด growth หน้ารถ
-      l.pos += (l.target - l.pos) * 0.06;
-
-      ctx.fillStyle = '#e6edf3'; ctx.font = '13px Kanit,sans-serif';
-      if (isDesktop) {
-        ctx.fillText(l.row.name, 36, l.y + 4);              // desktop: ชื่อกลางเลน
-        ctx.fillStyle = gcol; ctx.font = 'bold 14px Kanit,sans-serif';
-        var goff = (l.row.stars >= 5) ? 60 : 40;            // 5 ดาวมีลูกศรหน้า เลื่อน % พ้นลูกศร
-        var gx = l.pos + goff; if (gx > W - 58) gx = W - 58; // growth% หน้ารถ (ตามรถ)
-        ctx.textBaseline = 'middle'; ctx.fillText(gtxt, gx, l.y); ctx.textBaseline = 'alphabetic';
-      } else {
-        ctx.fillText(l.row.name, 36, l.y - 5);              // mobile: เดิม
-        ctx.fillStyle = gcol; ctx.font = 'bold 13px Kanit,sans-serif';
-        ctx.fillText(gtxt, 36, l.y + 10);
+    // วาดแถวหลัง → หน้า (z-order ถูกต้อง)
+    const order = lanes.map((_, i) => i).sort((a, b) => lanes[b].fillRow - lanes[a].fillRow);
+    for (const i of order) {
+      const l = lanes[i];
+      const hot = !l.faded && l.growth >= TURBO && l.growth >= 0;
+      // สปอตไลต์ให้ท็อป 3 หรือคนที่ร้อนแรง (ข้ามแถวจาง)
+      if (!l.faded && (l.rank < 3 || hot)) {
+        const beam = (hot || l.rank === 0) ? '255,210,59' : '120,180,255';
+        const top = l.cy - 30 * l.scale;
+        const gr = ctx.createLinearGradient(l.cx, top, l.cx, l.cy);
+        gr.addColorStop(0, 'rgba(' + beam + ',0)'); gr.addColorStop(1, 'rgba(' + beam + ',0.14)');
+        ctx.fillStyle = gr; ctx.beginPath();
+        ctx.moveTo(l.cx - 4 * l.scale, top); ctx.lineTo(l.cx + 4 * l.scale, top);
+        ctx.lineTo(l.cx + 14 * l.scale, l.cy); ctx.lineTo(l.cx - 14 * l.scale, l.cy);
+        ctx.closePath(); ctx.fill();
       }
-      VMFarm.drawCar(ctx, {
-        cx: l.pos, cy: l.y, unit: 1, t: t, growth: l.growth, turboAt: TURBO,
-        carColor: l.carColor,
-        risk: riskByName[l.row.name] || 'medium',
-        level: (l.stats && l.stats.level) || 1,
-        stars: l.row.stars || 0,
-        badge: l.row.badge, recommend: l.row.recommend,
+      ctx.globalAlpha = l.faded ? 0.5 : 1;    // แถวหลัง (worst) แสดงลางๆ 50%
+      VMFarm.drawDancer(ctx, {
+        cx: l.cx, cy: l.cy, scale: l.scale, t: t, phase: l.phase,
+        growth: l.growth, turboAt: TURBO, carColor: l.carColor, variant: l.variant,
+        level: (l.stats && l.stats.level) || 1, stars: l.row.stars || 0,
+        badge: l.row.badge, recommend: l.row.recommend, extreme: l.rank < 3,
       });
-    });
-
-    // เส้นชัย checkered
-    const sq = 6, bottom = TOP_PAD + LANE_H * lanes.length;
-    for (let yy = TOP_PAD; yy < bottom; yy += sq) {
-      for (let xx = 0; xx < 2; xx++) {
-        ctx.fillStyle = ((Math.floor(yy / sq) + xx) % 2) ? '#e6edf3' : '#11161f';
-        ctx.fillRect(m.trackX1 + xx * sq, yy, sq, sq);
-      }
+      drawTag(l);
+      ctx.globalAlpha = 1;
     }
-    // เส้นสตาร์ท
-    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(m.trackX0, TOP_PAD); ctx.lineTo(m.trackX0, bottom); ctx.stroke();
-    // ป้าย 0% / 100%
-    ctx.fillStyle = '#4a5568'; ctx.font = '11px Kanit,sans-serif'; ctx.textBaseline = 'alphabetic';
-    ctx.textAlign = 'center'; ctx.fillText('0%', m.trackX0, bottom + 11);
-    ctx.fillText('100%', m.trackX1, bottom + 11);
-
     requestAnimationFrame(tick);
   }
 
