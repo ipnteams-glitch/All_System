@@ -86,7 +86,7 @@
   function gcd(a, b) { while (b) { var t = b; b = a % b; a = t; } return a; }
   function lcmv(a, b) { return a / gcd(a, b) * b; }   // step ทุน = LCM(ทุน/0.01, 5000) → ทุนต่อระบบกลม 5000 เสมอ
 
-  // กฎ: flagship = Sys_1/Sys_2 (force) ; ทุน flagship >= 50% รวม และ > sys อื่นทุกตัว ; ทุก sys >= 10,000
+  // กฎ: flagship = Sys_1/Sys_2 (force) ; ทุน flagship >= 40% รวม และ > sys อื่นทุกตัว ; ทุก sys >= 10,000
   function buildSet(cap, name, targetN, rng, force) {
     var other = force === 'Sys_1' ? 'Sys_2' : force === 'Sys_2' ? 'Sys_1' : null;   // Sys_1/Sys_2 ไม่อยู่เซ็ตเดียวกัน
     var pool = SYS.filter(function (s) { return s.name !== force && s.name !== other; });
@@ -119,7 +119,7 @@
       while (guard++ < 1000) {
         var total = 0, maxNon = 0, bigIdx = -1;
         for (var q = 0; q < chosen.length; q++) { total += chosen[q].cap; if (!chosen[q].flag && chosen[q].cap > maxNon) { maxNon = chosen[q].cap; bigIdx = q; } }
-        if (chosen.length === 1 || (F.cap > maxNon && F.cap >= 0.5 * total)) break;   // flagship เด่น >=50% + ใหญ่สุด
+        if (chosen.length === 1 || (F.cap > maxNon && F.cap >= 0.4 * total)) break;   // flagship >=40% + ใหญ่สุด
         var moved = false;
         if (bigIdx >= 0) {
           var bn = chosen[bigIdx], bnMin = Math.ceil(MIN_PER_SYS / bn.step) * bn.step;
