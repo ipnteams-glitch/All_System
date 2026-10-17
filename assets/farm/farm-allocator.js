@@ -245,10 +245,10 @@
       '}',
       'if (Test-Path "$PSScriptRoot\\card.png") { Start-Process "$PSScriptRoot\\card.png" }',
       'Write-Host "Done! Terminals opened + card.png shown. Login -> drag EA -> set Channel+Lot per card.png" -ForegroundColor Yellow',
-      'Read-Host "Enter to close"'
+      'for ($i = 3; $i -ge 1; $i--) { Write-Host ("Closing in {0}..." -f $i) -ForegroundColor DarkGray; Start-Sleep -Seconds 1 }'
     ].join('\r\n');
   }
-  var RUN_BAT = '@echo off\r\npowershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup.ps1"\r\npause\r\n';
+  var RUN_BAT = '@echo off\r\npowershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup.ps1"\r\n';
 
   function genReadme(cfg) {
     var lines = ['Farm installer - ' + cfg.set, '================================', '',
