@@ -30,10 +30,10 @@
   var FLAG_PCT = 0.4;   // flagship (recommend) ต้อง >= 40% ของทุนรวม
 
   var MIN_PER_SYS = 10000, NSETS = 5, MAX_SYS = 5;
-  var LV = ['', 'Low', 'Normal', 'Medium', 'High'];
+  var LV = ['', 'Safe', 'Normal', 'Medium', 'High'];
   // สเกลความเสี่ยง: Normal = Low (=1) ; ระบบในชีตมีแค่ Low/Medium/High
   var SCORE = { Low: 1, Normal: 1, Medium: 2, High: 3 };
-  var RCOLOR = { Low: '#1e8c4a', Medium: '#b85c00', High: '#a83232' };
+  var RCOLOR = { Low: '#1e8c4a', Safe: '#1e8c4a', Medium: '#b85c00', High: '#a83232' };
 
   var SYS = [];   // โหลดจากชีต
   var seedBase = Math.floor(Math.random() * 1e9);
@@ -75,6 +75,7 @@
   //   ss >  sl → เสี่ยงกว่า: ทุน×(ss/sl), lot เท่าเดิม 0.01
   //   ss <  sl → ปลอดภัยกว่า: lot×(sl/ss), ทุนเท่าเดิม B
   function unitOf(name, risk, B) {
+    if (name === 'Safe') return { lot: 0.01, c: B * 2, lab: T.capx + 2 };   // Safe: ทุกระบบ ทุน×2, lot เท่าเดิม
     var sl = SCORE[name] || 1, ss = SCORE[risk] || 1;
     if (ss === sl) return { lot: 0.01, c: B, lab: T.normal };
     if (ss > sl) { var r = ss / sl; return { lot: 0.01, c: Math.round(B * r), lab: T.capx + (r % 1 === 0 ? r : r.toFixed(1)) }; }
