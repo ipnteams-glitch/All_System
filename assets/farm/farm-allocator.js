@@ -75,12 +75,12 @@
   //   ss >  sl → เสี่ยงกว่า: ทุน×(ss/sl), lot เท่าเดิม 0.01
   //   ss <  sl → ปลอดภัยกว่า: lot×(sl/ss), ทุนเท่าเดิม B
   function unitOf(name, risk, B) {
-    if (name === 'Normal') return { lot: 0.01, c: B, lab: T.normal };       // Normal: ทุกระบบปกติ
+    if (name === 'Normal') return { lot: 0.01, c: B, lab: T.normal, en: 'base' };    // Normal: ทุกระบบปกติ
     var sl = SCORE[name] || 1, ss = SCORE[risk] || 1;
-    if (ss === sl) return { lot: 0.01, c: B, lab: T.normal };
-    if (ss > sl) { var k = ss - sl + 1; return { lot: 0.01, c: B * k, lab: T.capx + k }; }  // เสี่ยงกว่า: ทุน×(ss-sl+1)
+    if (ss === sl) return { lot: 0.01, c: B, lab: T.normal, en: 'base' };
+    if (ss > sl) { var k = ss - sl + 1; return { lot: 0.01, c: B * k, lab: T.capx + k, en: 'cap x' + k }; }  // เสี่ยงกว่า
     var f = sl - ss + 1;
-    return { lot: 0.01 * f, c: B, lab: T.lotx + f };                        // ปลอดภัยกว่า: lot×(sl-ss+1)
+    return { lot: 0.01 * f, c: B, lab: T.lotx + f, en: 'lot x' + f };                // ปลอดภัยกว่า
   }
 
   function gcd(a, b) { while (b) { var t = b; b = a % b; a = t; } return a; }
@@ -183,7 +183,7 @@
     }
     var html = '';
     for (var i = 0; i < built.length; i++) {
-      LAST.sets.push({ title: T.set + ' ' + (i + 1), res: built[i] });
+      LAST.sets.push({ title: T.set + ' ' + (i + 1), n: i + 1, res: built[i] });
       html += card(i, T.set + ' ' + (i + 1), built[i]);
     }
     setsEl.innerHTML = html || ('<div class="fa-loading">' + T.low + '</div>');
@@ -206,33 +206,33 @@
 
   function genConfig(s) {
     var sys = s.res.chosen.map(function (c) {
-      return { sys: c.s.name, title: c.s.title, risk: c.s.risk, lot: +(c.units * c.u.lot).toFixed(2), capital: c.used, adjust: c.u.lab };
+      return { sys: c.s.name, risk: c.s.risk, lot: +(c.units * c.u.lot).toFixed(2), capital: c.used, adjust: c.u.en };
     });
-    return { set: s.title, account_capital: LAST.cap, risk_level: LAST.risk, ea: EA_NAME, systems: sys };
+    return { set: 'Set ' + s.n, account_capital: LAST.cap, risk_level: LAST.risk, ea: EA_NAME, systems: sys };   // อังกฤษล้วน
   }
 
   function genSetupPs1() {
     return [
-      '# ===== ติดตั้งฟาร์มอัตโนมัติ — clone template mt5_1 ตามจำนวนระบบ =====',
+      '# ===== Auto farm installer - clone MT5 portable template per system =====',
       'chcp 65001 > $null',
       'trap { Write-Host ("ERROR: " + $_.Exception.Message) -ForegroundColor Red; Read-Host "Enter to close"; exit 1 }',
       '$Base = "C:\\MT5_Portable_Farm"',
       '$Template = "$Base\\mt5_1"',
       '$TplUrl = "https://github.com/ipnteams-glitch/All_System/releases/download/template-v1/template_mt5.zip"',
       'if (-not (Test-Path $Template)) {',
-      '  Write-Host "ดาวน์โหลด template MT5 (ครั้งแรก ~133MB)..." -ForegroundColor Cyan',
+      '  Write-Host "Downloading MT5 template (first run, ~150MB)..." -ForegroundColor Cyan',
       '  if (-not (Test-Path $Base)) { New-Item -ItemType Directory $Base -Force | Out-Null }',
       '  $zip = "$Base\\template_mt5.zip"',
-      '  try { Invoke-WebRequest -Uri $TplUrl -OutFile $zip -UseBasicParsing } catch { Write-Host "ดาวน์โหลด template ไม่สำเร็จ" -ForegroundColor Red; Read-Host "Enter"; exit }',
+      '  try { Invoke-WebRequest -Uri $TplUrl -OutFile $zip -UseBasicParsing } catch { Write-Host "Template download failed" -ForegroundColor Red; Read-Host "Enter"; exit }',
       '  Expand-Archive -Path $zip -DestinationPath $Base -Force',
       '  Remove-Item $zip -Force',
-      '  Write-Host "ติดตั้ง template เสร็จ" -ForegroundColor Green',
+      '  Write-Host "Template installed" -ForegroundColor Green',
       '}',
       '$cfg = Get-Content "$PSScriptRoot\\config.json" -Raw -Encoding UTF8 | ConvertFrom-Json',
       '$CounterFile = "$Base\\counter.txt"',
       '$Desktop = [Environment]::GetFolderPath("Desktop")',
       '$Wsh = New-Object -ComObject WScript.Shell',
-      'Write-Host ("สร้าง {0} terminal สำหรับ {1}" -f $cfg.systems.Count, $cfg.set) -ForegroundColor Cyan',
+      'Write-Host ("Creating {0} terminal(s) for {1}" -f $cfg.systems.Count, $cfg.set) -ForegroundColor Cyan',
       'foreach ($s in $cfg.systems) {',
       '  $n = 0; if (Test-Path $CounterFile) { $n = [int](Get-Content $CounterFile) }',
       '  $n++; $name = "mt5_$n"; $dst = "$Base\\$name"',
@@ -241,25 +241,27 @@
       '  $sc = $Wsh.CreateShortcut("$Desktop\\$name ($($s.sys)).lnk")',
       '  $sc.TargetPath = "$dst\\terminal64.exe"; $sc.Arguments = "/portable"; $sc.WorkingDirectory = $dst; $sc.Save()',
       '  Set-Content -Path $CounterFile -Value $n',
+      '  Start-Process -FilePath "$dst\\terminal64.exe" -ArgumentList "/portable" -WorkingDirectory $dst',
       '}',
-      'Write-Host "เสร็จ! เปิด terminal จาก Desktop -> login -> ลาก EA -> ตั้ง Channel+Lot ตาม card.png" -ForegroundColor Yellow',
+      'if (Test-Path "$PSScriptRoot\\card.png") { Start-Process "$PSScriptRoot\\card.png" }',
+      'Write-Host "Done! Terminals opened + card.png shown. Login -> drag EA -> set Channel+Lot per card.png" -ForegroundColor Yellow',
       'Read-Host "Enter to close"'
     ].join('\r\n');
   }
   var RUN_BAT = '@echo off\r\npowershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup.ps1"\r\npause\r\n';
 
   function genReadme(cfg) {
-    var lines = ['ชุดติดตั้งฟาร์ม - ' + cfg.set, '================================', '',
-      'ทุนบัญชี: ' + cfg.account_capital + ' cent | ความเสี่ยง: ' + cfg.risk_level, 'EA: ' + cfg.ea, '',
-      'ระบบในชุดนี้:'];
-    cfg.systems.forEach(function (s) { lines.push('  - ' + s.sys + ' | lot ' + s.lot + ' | ทุน ' + s.capital + ' | ' + s.risk + ' | ' + s.adjust); });
-    lines.push('', 'วิธีใช้บน VPS:',
-      '1. แตก zip วางที่ไหนก็ได้ (เช่น Desktop)',
-      '2. ดับเบิลคลิก run_setup.bat',
-      '   - ครั้งแรก: ดาวน์โหลด template MT5 (~133MB) -> C:\\MT5_Portable_Farm\\mt5_1 อัตโนมัติ',
-      '   - clone terminal ตามจำนวนระบบ + shortcut /portable บน Desktop',
-      '3. เปิดแต่ละ terminal -> login บัญชี -> ลาก EA (' + cfg.ea + ') ลงกราฟ -> ตั้ง Channel = Sys_N, Lot ตาม card.png',
-      '', 'card.png = ภาพการ์ดเซ็ตนี้ (อ้างอิง lot/ทุนต่อระบบ)');
+    var lines = ['Farm installer - ' + cfg.set, '================================', '',
+      'Account capital: ' + cfg.account_capital + ' cent | Risk: ' + cfg.risk_level, 'EA: ' + cfg.ea, '',
+      'Systems in this set:'];
+    cfg.systems.forEach(function (s) { lines.push('  - ' + s.sys + ' | lot ' + s.lot + ' | capital ' + s.capital + ' | ' + s.risk + ' | ' + s.adjust); });
+    lines.push('', 'How to use on VPS:',
+      '1. Extract the zip anywhere (e.g. Desktop)',
+      '2. Double-click run_setup.bat',
+      '   - First run: downloads MT5 template (~150MB) -> C:\\MT5_Portable_Farm\\mt5_1',
+      '   - clones one terminal per system + /portable shortcut on Desktop',
+      '3. Open each terminal -> login account -> drag EA (' + cfg.ea + ') onto a chart -> set Channel = Sys_N, Lot per card.png',
+      '', 'card.png = image of this set card (reference lot/capital per system)');
     return lines.join('\r\n');
   }
 
@@ -284,7 +286,7 @@
       return zip.generateAsync({ type: 'blob' });
     }).then(function (blob) {
       var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-      a.download = 'farm_' + s.title.replace(/\s+/g, '_') + '.zip'; document.body.appendChild(a); a.click();
+      a.download = 'farm_Set_' + s.n + '.zip'; document.body.appendChild(a); a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
       if (btn) { btn.textContent = old; btn.disabled = false; }
     }).catch(function (e) { if (btn) { btn.textContent = old; btn.disabled = false; } console.error('download fail', e); });
