@@ -91,51 +91,50 @@
     var other = force === 'Sys_1' ? 'Sys_2' : force === 'Sys_2' ? 'Sys_1' : null;   // Sys_1/Sys_2 ไม่อยู่เซ็ตเดียวกัน
     var pool = SYS.filter(function (s) { return s.name !== force && s.name !== other; });
     var order = force ? [byName(force)].concat(shuffle(pool.slice(), rng)) : shuffle(SYS.slice(), rng);
-    function meta(s) { var u = unitOf(name, s.risk, s.B); return { s: s, u: u, step: lcmv(u.c, 5000) }; }
+    function meta(s) { var u = unitOf(name, s.risk, s.B); return { s: s, u: u, step: 5000 }; }   // ทุนขยับทีละ 5000
+    function minCapOf(m) { return Math.max(MIN_PER_SYS, Math.ceil(m.u.c / 5000) * 5000); }        // >=10,000 และ >=cost (ได้ >=1 ลอต)
     var chosen = [], remain = cap;
     for (var i = 0; i < order.length && chosen.length < targetN; i++) {
       var m = meta(order[i]);
-      var minCap = Math.ceil(MIN_PER_SYS / m.step) * m.step;      // ขั้นต่ำ >=10,000 ปัดขึ้น step (กลม 5000)
+      var minCap = minCapOf(m);
       if (remain >= minCap) { chosen.push({ s: m.s, u: m.u, step: m.step, cap: minCap, flag: (m.s.name === force) }); remain -= minCap; }
     }
     if (!chosen.length) return { chosen: [], used: 0, remain: cap, lots: 0 };
     var F = (chosen[0] && chosen[0].flag) ? chosen[0] : null;    // flagship = ตัว force (อยู่หัว order)
-    // น้ำหนักทุน: flagship เด่น (10) ; sys อื่นตามดาว 1-5 (ไม่มีดาว=3) → ดาวน้อย ทุนน้อย
-    function wt(c) { return c.flag ? 10 : Math.max(1, c.s.stars || 3); }
-    // เติมทุนแบบถ่วงน้ำหนัก: ให้ step แก่ระบบที่ (cap+step)/weight ต่ำสุด → ทุน ∝ น้ำหนัก
-    function wfill() {
-      var g = 0;
-      while (g++ < 10000) {
-        var best = -1, bestRatio = Infinity;
-        for (var j = 0; j < chosen.length; j++) { var c = chosen[j]; if (remain >= c.step) { var ratio = (c.cap + c.step) / wt(c); if (ratio < bestRatio) { bestRatio = ratio; best = j; } } }
-        if (best < 0) break;
-        chosen[best].cap += chosen[best].step; remain -= chosen[best].step;
-      }
-    }
-    wfill();                                                    // เติมตามน้ำหนัก (ดาว + flagship)
+    function starW(c) { return Math.max(1, c.s.stars || 3); }    // ดาว 1-5 (ไม่มีดาว=3)
     if (F) {
-      // ปรับให้ flagship > ทุก sys อื่น และ >= 40% ของทุนรวม (ย้ายทุนจาก non ใหญ่สุด → flagship ทีละ step)
-      var guard = 0;
-      while (guard++ < 1000) {
-        var total = 0, maxNon = 0, bigIdx = -1;
-        for (var q = 0; q < chosen.length; q++) { total += chosen[q].cap; if (!chosen[q].flag && chosen[q].cap > maxNon) { maxNon = chosen[q].cap; bigIdx = q; } }
-        if (chosen.length === 1 || (F.cap > maxNon && F.cap >= 0.4 * total)) break;   // flagship >=40% + ใหญ่สุด
-        var moved = false;
-        if (bigIdx >= 0) {
-          var bn = chosen[bigIdx], bnMin = Math.ceil(MIN_PER_SYS / bn.step) * bn.step;
-          if (bn.cap - bn.step >= bnMin) { bn.cap -= bn.step; remain += bn.step; moved = true; }   // ลด non ใหญ่สุด
-        }
-        if (remain >= F.step) { F.cap += F.step; remain -= F.step; moved = true; }                  // ดัน flagship
-        if (!moved) {   // non อยู่ขั้นต่ำหมด ปรับไม่ได้ → ไล่ non เล็กสุดออก แล้วเติมใหม่
+      // ลำดับการเติม: 1) ดัน flagship แค่พอ >=40% + ใหญ่สุด  2) เศษ → non-flag ที่ใกล้ขั้นต่ำสุด (ถ่วงดาว) ไม่ให้แซง flagship
+      var g = 0;
+      while (g++ < 50000) {
+        var total = 0, maxNon = 0;
+        for (var q = 0; q < chosen.length; q++) { total += chosen[q].cap; if (!chosen[q].flag && chosen[q].cap > maxNon) maxNon = chosen[q].cap; }
+        var flagShort = (chosen.length > 1) && (F.cap <= maxNon || F.cap < 0.4 * total);
+        if (flagShort) {
+          if (remain >= F.step) { F.cap += F.step; remain -= F.step; continue; }           // ดัน flagship
+          // ไม่มีเงินเหลือ → หด non-flag ใหญ่สุดที่ลดได้ (ยัง >=ขั้นต่ำ) คืนทุนมาดัน flagship
+          var bi = -1, bc = -1;
+          for (var k2 = 0; k2 < chosen.length; k2++) { var cc = chosen[k2]; if (!cc.flag) { var mn = Math.max(MIN_PER_SYS, Math.ceil(cc.u.c / 5000) * 5000); if (cc.cap - cc.step >= mn && cc.cap > bc) { bc = cc.cap; bi = k2; } } }
+          if (bi >= 0) { chosen[bi].cap -= chosen[bi].step; remain += chosen[bi].step; continue; }
+          // หดไม่ได้ → ไล่ non-flag เล็กสุดออก
           var smIdx = -1, smCap = Infinity;
           for (var si = 0; si < chosen.length; si++) { if (!chosen[si].flag && chosen[si].cap < smCap) { smCap = chosen[si].cap; smIdx = si; } }
           if (smIdx < 0) break;
-          remain += chosen[smIdx].cap; chosen.splice(smIdx, 1); wfill();
+          remain += chosen[smIdx].cap; chosen.splice(smIdx, 1); continue;
         }
+        if (remain > 0) {
+          // flagship พอแล้ว → เติม non-flag: ใกล้ขั้นต่ำสุดก่อน (ถ่วงดาว) โดยยังน้อยกว่า flagship
+          var pick = -1, bestRatio = Infinity;
+          for (var k = 0; k < chosen.length; k++) { var c = chosen[k]; if (!c.flag && remain >= c.step && (c.cap + c.step) < F.cap && F.cap >= 0.4 * (total + c.step)) { var ratio = (c.cap + c.step) / starW(c); if (ratio < bestRatio) { bestRatio = ratio; pick = k; } } }
+          if (pick >= 0) { chosen[pick].cap += chosen[pick].step; remain -= chosen[pick].step; continue; }
+          if (remain >= F.step) { F.cap += F.step; remain -= F.step; continue; }            // เติม non-flag ไม่ได้ → flagship
+        }
+        break;
       }
-      if (remain >= F.step) { F.cap += Math.floor(remain / F.step) * F.step; remain = remain % F.step; }  // เศษที่เหลือ → flagship
+    } else {
+      // ไม่มี Sys_1/Sys_2 ในชีต → เติมเท่าๆ
+      var a = true; while (a) { a = false; for (var j = 0; j < chosen.length; j++) { if (remain >= chosen[j].step) { chosen[j].cap += chosen[j].step; remain -= chosen[j].step; a = true; } } }
     }
-    chosen.forEach(function (c) { c.units = c.cap / c.u.c; c.used = c.cap; c.pin = !!c.flag; });
+    chosen.forEach(function (c) { c.units = Math.floor(c.cap / c.u.c); c.used = c.cap; c.pin = !!c.flag; });   // ลอต = floor(ทุน/cost)×0.01, เศษเป็น buffer
     var lots = chosen.reduce(function (a, c) { return a + c.units * c.u.lot; }, 0);
     return { chosen: chosen, used: cap - remain, remain: remain, lots: lots };
   }
