@@ -173,7 +173,7 @@
       var rng = mulberry32(seedBase + k);
       var lo2 = Math.min(lo, hi);
       var tn = (hi < 1) ? 0 : (lo2 + Math.floor(rng() * (hi - lo2 + 1)));
-      var force = small ? null : (flags.length ? flags[Math.floor(rng() * flags.length)].name : null);
+      var force = flags.length ? flags[Math.floor(rng() * flags.length)].name : null;   // ทุกเซ็ต (รวมเซ็ตระบบเดียว) มี flagship
       if (tn < 1) continue;
       var res = buildSet(cap, name, tn, rng, force);
       if (!res.chosen.length) continue;
