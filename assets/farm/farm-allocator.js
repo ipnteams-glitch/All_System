@@ -175,7 +175,16 @@
       'trap { Write-Host ("ERROR: " + $_.Exception.Message) -ForegroundColor Red; Read-Host "Enter to close"; exit 1 }',
       '$Base = "C:\\MT5_Portable_Farm"',
       '$Template = "$Base\\mt5_1"',
-      'if (-not (Test-Path $Template)) { Write-Host "ไม่พบ template: $Template" -ForegroundColor Red; Read-Host "Enter"; exit }',
+      '$TplUrl = "https://github.com/ipnteams-glitch/All_System/releases/download/template-v1/template_mt5.zip"',
+      'if (-not (Test-Path $Template)) {',
+      '  Write-Host "ดาวน์โหลด template MT5 (ครั้งแรก ~133MB)..." -ForegroundColor Cyan',
+      '  if (-not (Test-Path $Base)) { New-Item -ItemType Directory $Base -Force | Out-Null }',
+      '  $zip = "$Base\\template_mt5.zip"',
+      '  try { Invoke-WebRequest -Uri $TplUrl -OutFile $zip -UseBasicParsing } catch { Write-Host "ดาวน์โหลด template ไม่สำเร็จ" -ForegroundColor Red; Read-Host "Enter"; exit }',
+      '  Expand-Archive -Path $zip -DestinationPath $Base -Force',
+      '  Remove-Item $zip -Force',
+      '  Write-Host "ติดตั้ง template เสร็จ" -ForegroundColor Green',
+      '}',
       '$cfg = Get-Content "$PSScriptRoot\\config.json" -Raw -Encoding UTF8 | ConvertFrom-Json',
       '$CounterFile = "$Base\\counter.txt"',
       '$Desktop = [Environment]::GetFolderPath("Desktop")',
@@ -201,10 +210,12 @@
       'ทุนบัญชี: ' + cfg.account_capital + ' cent | ความเสี่ยง: ' + cfg.risk_level, 'EA: ' + cfg.ea, '',
       'ระบบในชุดนี้:'];
     cfg.systems.forEach(function (s) { lines.push('  - ' + s.sys + ' | lot ' + s.lot + ' | ทุน ' + s.capital + ' | ' + s.risk + ' | ' + s.adjust); });
-    lines.push('', 'วิธีใช้บน VPS:', '1. ต้องมี template C:\\MT5_Portable_Farm\\mt5_1 (มี EA ' + cfg.ea + ' อยู่แล้ว)',
-      '2. วางโฟลเดอร์นี้ไว้ที่ C:\\MT5_Portable_Farm แล้วดับเบิลคลิก run_setup.bat',
-      '3. สคริปต์ clone terminal ตามจำนวนระบบ + สร้าง shortcut /portable บน Desktop',
-      '4. เปิดแต่ละ terminal -> login บัญชี -> ลาก EA ลงกราฟ -> ตั้ง Channel = Sys_N, Lot ตาม card.png',
+    lines.push('', 'วิธีใช้บน VPS:',
+      '1. แตก zip วางที่ไหนก็ได้ (เช่น Desktop)',
+      '2. ดับเบิลคลิก run_setup.bat',
+      '   - ครั้งแรก: ดาวน์โหลด template MT5 (~133MB) -> C:\\MT5_Portable_Farm\\mt5_1 อัตโนมัติ',
+      '   - clone terminal ตามจำนวนระบบ + shortcut /portable บน Desktop',
+      '3. เปิดแต่ละ terminal -> login บัญชี -> ลาก EA (' + cfg.ea + ') ลงกราฟ -> ตั้ง Channel = Sys_N, Lot ตาม card.png',
       '', 'card.png = ภาพการ์ดเซ็ตนี้ (อ้างอิง lot/ทุนต่อระบบ)');
     return lines.join('\r\n');
   }
