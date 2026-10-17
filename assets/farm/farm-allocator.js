@@ -163,8 +163,14 @@
     var rl = document.getElementById('fa-riskout'); if (rl) { rl.textContent = name; rl.style.background = (name === 'Normal') ? '#4a8f3a' : (RCOLOR[name] || '#4a8f3a'); }
     if (!SYS.length) { setsEl.innerHTML = '<div class="fa-loading">' + T.loading + '</div>'; return; }
 
-    var maxAfford = Math.floor(cap / MIN_PER_SYS), small = cap < 30000;   // <30k = 1 ระบบ
-    var lo = small ? 1 : 2, hi = Math.min(small ? 1 : MAX_SYS, maxAfford, SYS.length);
+    var maxAfford = Math.floor(cap / MIN_PER_SYS);
+    // จำนวนระบบตามทุน: <30k = 1 ; <100k = 2-3 ; >=100k = 3-5
+    var lo, hi;
+    if (cap < 30000) { lo = 1; hi = 1; }
+    else if (cap < 100000) { lo = 2; hi = 3; }
+    else { lo = 3; hi = 5; }
+    hi = Math.min(hi, maxAfford, SYS.length);
+    lo = Math.min(lo, hi);
     var nSets = cap < 100000 ? 4 : (cap > 120000 ? 6 : 5);   // จำนวนเซ็ตตามทุน
     var flags = SYS.filter(function (s) { return s.name === 'Sys_1' || s.name === 'Sys_2'; });  // flagship = Sys_1/Sys_2
     LAST = { cap: cap, risk: name, sets: [] };
