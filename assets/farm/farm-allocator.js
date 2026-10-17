@@ -80,75 +80,57 @@
     return { lot: 0.01 * f, c: B, lab: (f === 1 ? T.normal : T.lotx + (f % 1 === 0 ? f : f.toFixed(1))) };  // ปลอดภัย: 0.01×f lot, cost B
   }
 
+  function gcd(a, b) { while (b) { var t = b; b = a % b; a = t; } return a; }
+  function lcmv(a, b) { return a / gcd(a, b) * b; }   // step ทุน = LCM(ทุน/0.01, 5000) → ทุนต่อระบบกลม 5000 เสมอ
+
   function buildSet(cap, name, targetN, rng, force) {
     var order = force ? [byName(force)].concat(shuffle(SYS.filter(function (s) { return s.name !== force; }).slice(), rng))
                       : shuffle(SYS.slice(), rng);
+    function meta(s) { var u = unitOf(name, s.risk, s.B); return { s: s, u: u, step: lcmv(u.c, 5000) }; }
     var chosen = [], remain = cap;
     for (var i = 0; i < order.length; i++) {
       if (chosen.length >= targetN) break;
-      var s = order[i];
-      var u = unitOf(name, s.risk, s.B);
-      var need = Math.ceil(MIN_PER_SYS / u.c), needCost = need * u.c;
-      if (remain >= needCost) { chosen.push({ s: s, u: u, units: need, used: needCost, pin: !!s.rec }); remain -= needCost; }
+      var m = meta(order[i]);
+      var minCap = Math.ceil(MIN_PER_SYS / m.step) * m.step;      // ขั้นต่ำ >=10,000 ปัดขึ้น step (กลม 5000)
+      if (remain >= minCap) { chosen.push({ s: m.s, u: m.u, step: m.step, cap: minCap, pin: !!m.s.rec }); remain -= minCap; }
     }
+    if (!chosen.length) return { chosen: [], used: 0, remain: cap, lots: 0 };
+    // fill เท่าๆ ทีละ step (ทุนคงกลม 5000)
     var add = true;
-    while (add) { add = false; for (var j = 0; j < chosen.length; j++) { var c = chosen[j]; if (remain >= c.u.c) { c.units++; c.used += c.u.c; remain -= c.u.c; add = true; } } }
-    // ปัดทุนต่อระบบลงใกล้ multiple 5000 (lot ยัง 0.01) — คงขั้นต่ำ 10,000
-    chosen.forEach(function (c) {
-      var t = Math.floor(c.used / 5000) * 5000;
-      var nu = Math.floor(t / c.u.c);
-      var minU = Math.ceil(MIN_PER_SYS / c.u.c);
-      if (nu < minU) nu = minU;
-      if (nu < c.units) { remain += (c.units - nu) * c.u.c; c.units = nu; c.used = nu * c.u.c; }
-    });
-    // เติมเงินเหลือ: บล็อก 5000 ให้ระบบที่ลงตัว (u.c หาร 5000) ก่อน — ทุนยังกลม
-    var fa = true;
-    while (fa && remain >= 5000) { fa = false;
-      for (var a = 0; a < chosen.length; a++) { var ca = chosen[a];
-        if (5000 % ca.u.c === 0 && remain >= 5000) { ca.units += 5000 / ca.u.c; ca.used += 5000; remain -= 5000; fa = true; } } }
-    // เงินเหลือที่เหลือ (<5000 หรือไม่มีตัวลงตัว) เติมด้วยระบบใดก็ได้ จนใช้หมด (ตัวเลือกรอง เช่น B=3000)
-    var fb = true;
-    while (fb) { fb = false;
-      for (var b = 0; b < chosen.length; b++) { var cb = chosen[b];
-        if (remain >= cb.u.c) { cb.units++; cb.used += cb.u.c; remain -= cb.u.c; fb = true; } } }
-    // บังคับทุน flagship (recommend): 1 ตัว >= 40% + > non-flag ทุกตัว; >=2 ตัว รวม >= 60%
-    if (force) {
-      var fc = null, flagList = [];
-      for (var fi = 0; fi < chosen.length; fi++) { if (chosen[fi].s.name === force) fc = chosen[fi]; if (chosen[fi].s.rec) flagList.push(chosen[fi]); }
-      if (fc && chosen.length > 1) {
-        var pct = flagList.length >= 2 ? 0.6 : FLAG_PCT;
-        var guard = 0;
-        while (guard++ < 1000) {
-          var total = chosen.reduce(function (a, c) { return a + c.used; }, 0);
-          var flagSum = flagList.reduce(function (a, c) { return a + c.used; }, 0);
-          var maxNon = 0, big = null;
-          for (var oi = 0; oi < chosen.length; oi++) { var cc = chosen[oi];
-            if (!cc.s.rec) { if (cc.used > maxNon) maxNon = cc.used; if (!big || cc.used > big.used) big = cc; } }
-          if (flagSum >= pct * total && (flagList.length >= 2 || fc.used > maxNon)) break;
-          if (!big) break;                                 // ไม่มี non-flagship ให้ลด
-          if (big.units <= Math.ceil(MIN_PER_SYS / big.u.c)) break;
-          big.units--; big.used -= big.u.c; remain += big.u.c;
-          if (remain >= 5000 && 5000 % fc.u.c === 0) { fc.units += 5000 / fc.u.c; fc.used += 5000; remain -= 5000; }
-          else if (remain >= fc.u.c) { fc.units++; fc.used += fc.u.c; remain -= fc.u.c; }
+    while (add) { add = false; for (var j = 0; j < chosen.length; j++) { var c = chosen[j]; if (remain >= c.step) { c.cap += c.step; remain -= c.step; add = true; } } }
+    // บังคับ: ทุก flagship > ทุก non-flagship + ใช้เงินหมด (ทุนกลม 5000) — flagship เด่นก่อน
+    if (force && chosen.length > 1) {
+      var guard2 = 0;
+      while (guard2++ < 5000) {
+        var minFlag = Infinity, minFC = null, maxNon = -1, bigNon = null;
+        for (var q = 0; q < chosen.length; q++) { var cc = chosen[q];
+          if (cc.s.rec) { if (cc.cap < minFlag) { minFlag = cc.cap; minFC = cc; } }
+          else { if (cc.cap > maxNon) { maxNon = cc.cap; bigNon = cc; } } }
+        // 1) flagship ต้อง > non-flagship (ดัน flag ก่อน; ไม่งั้นลด non สะสมทุน)
+        if (minFC && bigNon && minFlag <= maxNon) {
+          if (remain >= minFC.step) { minFC.cap += minFC.step; remain -= minFC.step; }
+          else if (bigNon.cap > Math.ceil(MIN_PER_SYS / bigNon.step) * bigNon.step) { bigNon.cap -= bigNon.step; remain += bigNon.step; }
+          else {
+            var smIdx = -1, smCap = Infinity;   // ดัน/ลดไม่ได้ → ไล่ non-flagship เล็กสุดออก เอาทุนดัน flagship
+            for (var si = 0; si < chosen.length; si++) { if (!chosen[si].s.rec && chosen[si].cap < smCap) { smCap = chosen[si].cap; smIdx = si; } }
+            if (smIdx >= 0) { remain += chosen[smIdx].cap; chosen.splice(smIdx, 1); } else break;
+          }
+          continue;
         }
-        while (remain >= fc.u.c) { fc.units++; fc.used += fc.u.c; remain -= fc.u.c; }   // เงินเหลือเข้า flagship หลัก
+        // 2) ใช้เงินหมด โดยไม่ให้ non-flagship แซง flagship
+        if (remain > 0) {
+          var into = null;
+          for (var p = 0; p < chosen.length; p++) { var c2 = chosen[p]; if (c2.s.rec && c2.step <= remain && (!into || c2.step > into.step)) into = c2; }   // flag ก่อน
+          if (!into) { for (var p3 = 0; p3 < chosen.length; p3++) { var c3 = chosen[p3];
+            if (!c3.s.rec && c3.step <= remain && (minFlag === Infinity || c3.cap + Math.floor(remain / c3.step) * c3.step < minFlag) && (!into || c3.step > into.step)) into = c3; } }   // non ที่ไม่แซง flag
+          if (!into) { var bf = null; for (var p4 = 0; p4 < SYS.length; p4++) { var m2 = meta(SYS[p4]); if (m2.step <= remain && (minFlag === Infinity || m2.step < minFlag) && (!bf || m2.step > bf.step)) bf = m2; }
+            if (bf) { into = { s: bf.s, u: bf.u, step: bf.step, cap: 0, pin: !!bf.s.rec }; chosen.push(into); } }
+          if (into) { into.cap += Math.floor(remain / into.step) * into.step; remain = remain % into.step; continue; }
+        }
+        break;
       }
     }
-    // ดูดเงินเหลือ: เพิ่มระบบ (ทั้งฟาร์ม) ที่ทุนขั้นต่ำใกล้เงินเหลือสุด จนไม่มีเงินเหลือ
-    var g2 = 0;
-    while (remain > 0 && g2++ < 200) {
-      var best = null;
-      for (var p = 0; p < SYS.length; p++) {
-        var pu = unitOf(name, SYS[p].risk, SYS[p].B);
-        if (pu.c <= remain && (!best || pu.c > best.u.c)) best = { s: SYS[p], u: pu };
-      }
-      if (!best) break;                                  // เหลือน้อยกว่าทุนขั้นต่ำทุกระบบ
-      var add = Math.floor(remain / best.u.c);
-      var ex = null; for (var e = 0; e < chosen.length; e++) { if (chosen[e].s.name === best.s.name) { ex = chosen[e]; break; } }
-      if (ex) { ex.units += add; ex.used += add * best.u.c; }
-      else { chosen.push({ s: best.s, u: best.u, units: add, used: add * best.u.c, pin: !!best.s.rec }); }
-      remain -= add * best.u.c;
-    }
+    chosen.forEach(function (c) { c.units = c.cap / c.u.c; c.used = c.cap; });
     var lots = chosen.reduce(function (a, c) { return a + c.units * c.u.lot; }, 0);
     return { chosen: chosen, used: cap - remain, remain: remain, lots: lots };
   }
