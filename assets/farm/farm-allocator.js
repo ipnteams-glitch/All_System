@@ -100,6 +100,16 @@
       if (nu < minU) nu = minU;
       if (nu < c.units) { remain += (c.units - nu) * c.u.c; c.units = nu; c.used = nu * c.u.c; }
     });
+    // เติมเงินเหลือ: บล็อก 5000 ให้ระบบที่ลงตัว (u.c หาร 5000) ก่อน — ทุนยังกลม
+    var fa = true;
+    while (fa && remain >= 5000) { fa = false;
+      for (var a = 0; a < chosen.length; a++) { var ca = chosen[a];
+        if (5000 % ca.u.c === 0 && remain >= 5000) { ca.units += 5000 / ca.u.c; ca.used += 5000; remain -= 5000; fa = true; } } }
+    // เงินเหลือที่เหลือ (<5000 หรือไม่มีตัวลงตัว) เติมด้วยระบบใดก็ได้ จนใช้หมด (ตัวเลือกรอง เช่น B=3000)
+    var fb = true;
+    while (fb) { fb = false;
+      for (var b = 0; b < chosen.length; b++) { var cb = chosen[b];
+        if (remain >= cb.u.c) { cb.units++; cb.used += cb.u.c; remain -= cb.u.c; fb = true; } } }
     var lots = chosen.reduce(function (a, c) { return a + c.units * c.u.lot; }, 0);
     return { chosen: chosen, used: cap - remain, remain: remain, lots: lots };
   }
