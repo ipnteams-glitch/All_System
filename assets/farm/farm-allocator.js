@@ -134,6 +134,21 @@
         while (remain >= fc.u.c) { fc.units++; fc.used += fc.u.c; remain -= fc.u.c; }   // เงินเหลือเข้า flagship หลัก
       }
     }
+    // ดูดเงินเหลือ: เพิ่มระบบ (ทั้งฟาร์ม) ที่ทุนขั้นต่ำใกล้เงินเหลือสุด จนไม่มีเงินเหลือ
+    var g2 = 0;
+    while (remain > 0 && g2++ < 200) {
+      var best = null;
+      for (var p = 0; p < SYS.length; p++) {
+        var pu = unitOf(name, SYS[p].risk, SYS[p].B);
+        if (pu.c <= remain && (!best || pu.c > best.u.c)) best = { s: SYS[p], u: pu };
+      }
+      if (!best) break;                                  // เหลือน้อยกว่าทุนขั้นต่ำทุกระบบ
+      var add = Math.floor(remain / best.u.c);
+      var ex = null; for (var e = 0; e < chosen.length; e++) { if (chosen[e].s.name === best.s.name) { ex = chosen[e]; break; } }
+      if (ex) { ex.units += add; ex.used += add * best.u.c; }
+      else { chosen.push({ s: best.s, u: best.u, units: add, used: add * best.u.c, pin: !!best.s.rec }); }
+      remain -= add * best.u.c;
+    }
     var lots = chosen.reduce(function (a, c) { return a + c.units * c.u.lot; }, 0);
     return { chosen: chosen, used: cap - remain, remain: remain, lots: lots };
   }
