@@ -265,15 +265,11 @@
 
     // ── ท่าเอ็กซ์ตรีม: กระโดด + สลับ ตีลังกา/หมุนตัว ──
     if (extreme) {
-      const cyc = 1.3, k = t / cyc + phase, seg = Math.floor(k), p = k - seg, pv = -10 * u;
+      const cyc = 1.3, p = ((t / cyc + phase) % 1), pv = -10 * u;
       ctx.translate(0, -Math.sin(p * Math.PI) * 9 * u);   // กระโดดโค้ง
       ctx.translate(0, pv);
-      if (seg % 2 === 0) {
-        ctx.rotate(p * 2 * Math.PI);                      // ตีลังกาไปข้างหน้า (360°)
-      } else {
-        const sc = Math.cos(p * 2 * Math.PI);             // หมุนตัว (ย่อแกน x)
-        ctx.scale(sc < 0 ? Math.min(sc, -0.08) : Math.max(sc, 0.08), 1);
-      }
+      const sc = Math.cos(p * 2 * Math.PI);               // หมุนรอบแกนตั้งอย่างเดียว (ย่อแกน x)
+      ctx.scale(sc < 0 ? Math.min(sc, -0.08) : Math.max(sc, 0.08), 1);
       ctx.translate(0, -pv);
     }
 
