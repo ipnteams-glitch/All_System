@@ -23,10 +23,12 @@
           low: 'Not enough (min ¢10,000/system)', loading: '⏳ Loading systems...', download: '📥 Download installer', dling: '⏳ Building...' }
   }[LANG];
 
-  var SHEET_ID = '193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ';
+  var SHEET_ID = '193XZLwmEDX7oTGZJEEjHKcFSZy4bDf5NNfPdr75gDYQ';   // ทุน(B) + risk(E)
   var SHEET_URL = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&gid=0';
+  var RT_ID = '1B2XVPTkg4HBtd8XlQBwOSlisakAkyR1HbGIz1-wVxAU';      // recommend (comment = col J)
+  var RT_URL = 'https://docs.google.com/spreadsheets/d/' + RT_ID + '/gviz/tq?tqx=out:json&gid=0';
+  var FLAG_PCT = 0.4;   // flagship (recommend) ต้อง >= 40% ของทุนรวม
 
-  var FLAG = ['Sys_1', 'Sys_2'];
   var MIN_PER_SYS = 10000, NSETS = 5, MAX_SYS = 5;
   var LV = ['', 'Low', 'Normal', 'Medium', 'High'];
   var SL = { Low: 1, Medium: 2, High: 3 };
@@ -81,14 +83,13 @@
   function buildSet(cap, name, targetN, rng, force) {
     var order = force ? [byName(force)].concat(shuffle(SYS.filter(function (s) { return s.name !== force; }).slice(), rng))
                       : shuffle(SYS.slice(), rng);
-    var chosen = [], remain = cap, usedFlag = null;
+    var chosen = [], remain = cap;
     for (var i = 0; i < order.length; i++) {
       if (chosen.length >= targetN) break;
-      var s = order[i], isFlag = FLAG.indexOf(s.name) >= 0;
-      if (isFlag && usedFlag && usedFlag !== s.name) continue;
+      var s = order[i];
       var u = unitOf(name, s.risk, s.B);
       var need = Math.ceil(MIN_PER_SYS / u.c), needCost = need * u.c;
-      if (remain >= needCost) { chosen.push({ s: s, u: u, units: need, used: needCost, pin: isFlag }); remain -= needCost; if (isFlag) usedFlag = s.name; }
+      if (remain >= needCost) { chosen.push({ s: s, u: u, units: need, used: needCost, pin: (s.name === force) }); remain -= needCost; }
     }
     var add = true;
     while (add) { add = false; for (var j = 0; j < chosen.length; j++) { var c = chosen[j]; if (remain >= c.u.c) { c.units++; c.used += c.u.c; remain -= c.u.c; add = true; } } }
@@ -110,6 +111,26 @@
     while (fb) { fb = false;
       for (var b = 0; b < chosen.length; b++) { var cb = chosen[b];
         if (remain >= cb.u.c) { cb.units++; cb.used += cb.u.c; remain -= cb.u.c; fb = true; } } }
+    // บังคับ flagship (recommend) >= 40% ของทุนรวม + มากกว่าทุก non-flagship
+    if (force) {
+      var fc = null; for (var fi = 0; fi < chosen.length; fi++) { if (chosen[fi].s.name === force) { fc = chosen[fi]; break; } }
+      if (fc && chosen.length > 1) {
+        var guard = 0;
+        while (guard++ < 1000) {
+          var total = chosen.reduce(function (a, c) { return a + c.used; }, 0);
+          var maxOther = 0, big = null;
+          for (var oi = 0; oi < chosen.length; oi++) { var cc = chosen[oi];
+            if (cc !== fc) { if (cc.used > maxOther) maxOther = cc.used; if (!big || cc.used > big.used) big = cc; } }
+          if (fc.used >= FLAG_PCT * total && fc.used > maxOther) break;
+          if (!big) break;
+          if (big.units <= Math.ceil(MIN_PER_SYS / big.u.c)) break;    // ลด other ไม่ได้ (ขั้นต่ำ 10k)
+          big.units--; big.used -= big.u.c; remain += big.u.c;
+          if (remain >= 5000 && 5000 % fc.u.c === 0) { fc.units += 5000 / fc.u.c; fc.used += 5000; remain -= 5000; }
+          else if (remain >= fc.u.c) { fc.units++; fc.used += fc.u.c; remain -= fc.u.c; }
+        }
+        while (remain >= fc.u.c) { fc.units++; fc.used += fc.u.c; remain -= fc.u.c; }   // เงินเหลือเข้า flagship
+      }
+    }
     var lots = chosen.reduce(function (a, c) { return a + c.units * c.u.lot; }, 0);
     return { chosen: chosen, used: cap - remain, remain: remain, lots: lots };
   }
@@ -141,6 +162,7 @@
     var maxAfford = Math.floor(cap / MIN_PER_SYS), small = cap < 30000;   // <30k = 1 ระบบ
     var lo = small ? 1 : 2, hi = Math.min(small ? 1 : MAX_SYS, maxAfford, SYS.length);
     var nSets = cap < 100000 ? 4 : (cap > 120000 ? 6 : 5);   // จำนวนเซ็ตตามทุน
+    var flags = SYS.filter(function (s) { return s.rec; });  // ระบบ recommend = flagship
     LAST = { cap: cap, risk: name, sets: [] };
     var seen = {}, built = [], tries = 0, k = 0;
     while (built.length < nSets && tries < 80) {
@@ -148,7 +170,7 @@
       var rng = mulberry32(seedBase + k);
       var lo2 = Math.min(lo, hi);
       var tn = (hi < 1) ? 0 : (lo2 + Math.floor(rng() * (hi - lo2 + 1)));
-      var force = small ? null : ((rng() < 0.5) ? 'Sys_1' : 'Sys_2');
+      var force = small ? null : (flags.length ? flags[Math.floor(rng() * flags.length)].name : null);
       if (tn < 1) continue;
       var res = buildSet(cap, name, tn, rng, force);
       if (!res.chosen.length) continue;
@@ -276,12 +298,29 @@
     });
   }
 
+  function parseRec(json) {
+    var m = {}, rows = json && json.table && json.table.rows;
+    if (!rows) return m;
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i]; if (!(r && r.c)) continue;
+      var nm = r.c[1] && r.c[1].v !== null ? String(r.c[1].v).trim() : '';          // B = name
+      var cm = r.c[9] && r.c[9].v !== null ? String(r.c[9].v).toLowerCase() : '';    // J = comment
+      if (nm && cm.indexOf('recommend') >= 0) m[nm] = true;
+    }
+    return m;
+  }
   function fetchData() {
-    fetch(SHEET_URL + '&t=' + Date.now()).then(function (res) { return res.text(); }).then(function (text) {
+    Promise.all([
+      fetch(SHEET_URL + '&t=' + Date.now()).then(function (r) { return r.text(); }),
+      fetch(RT_URL + '&t=' + Date.now()).then(function (r) { return r.text(); })
+    ]).then(function (texts) {
       try {
-        var json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
-        SYS = parseSheet(json);
-      } catch (e) { SYS = []; }
+        var j0 = JSON.parse(texts[0].substring(texts[0].indexOf('{'), texts[0].lastIndexOf('}') + 1));
+        SYS = parseSheet(j0);
+        var j1 = JSON.parse(texts[1].substring(texts[1].indexOf('{'), texts[1].lastIndexOf('}') + 1));
+        var rec = parseRec(j1);
+        SYS.forEach(function (s) { s.rec = !!rec[s.name]; });
+      } catch (e) { }
       render();
     }).catch(function () { render(); });
   }
