@@ -86,7 +86,7 @@
   function gcd(a, b) { while (b) { var t = b; b = a % b; a = t; } return a; }
   function lcmv(a, b) { return a / gcd(a, b) * b; }   // step ทุน = LCM(ทุน/0.01, 5000) → ทุนต่อระบบกลม 5000 เสมอ
 
-  // กฎ: flagship = Sys_1/Sys_2 (force) ; ทุน flagship >= 40% รวม และ > sys อื่นทุกตัว ; ทุก sys >= 10,000
+  // กฎ: flagship = Sys_1/Sys_2 (force) ; ทุน flagship >= 50% รวม และ > sys อื่นทุกตัว ; ทุก sys >= 10,000
   function buildSet(cap, name, targetN, rng, force) {
     var other = force === 'Sys_1' ? 'Sys_2' : force === 'Sys_2' ? 'Sys_1' : null;   // Sys_1/Sys_2 ไม่อยู่เซ็ตเดียวกัน
     var pool = SYS.filter(function (s) { return s.name !== force && s.name !== other; });
@@ -100,24 +100,40 @@
     }
     if (!chosen.length) return { chosen: [], used: 0, remain: cap, lots: 0 };
     var F = (chosen[0] && chosen[0].flag) ? chosen[0] : null;    // flagship = ตัว force (อยู่หัว order)
-    function dumpToFlag() { if (F && remain >= F.step) { var a = Math.floor(remain / F.step) * F.step; F.cap += a; remain -= a; } }
-    if (F) {
-      dumpToFlag();                                              // ทุนเหลือทั้งหมด → flagship (ให้เด่นสุด)
-      var guard = 0;
-      while (guard++ < 300) {
-        var total = 0, maxNon = 0;
-        for (var q = 0; q < chosen.length; q++) { total += chosen[q].cap; if (!chosen[q].flag && chosen[q].cap > maxNon) maxNon = chosen[q].cap; }
-        if (chosen.length === 1 || (F.cap > maxNon && F.cap >= 0.4 * total)) break;   // ผ่านเงื่อนไข
-        // ไม่ผ่าน → ไล่ non-flagship เล็กสุดออก คืนทุนให้ flagship (ลดจำนวนระบบ)
-        var smIdx = -1, smCap = Infinity;
-        for (var si = 0; si < chosen.length; si++) { if (!chosen[si].flag && chosen[si].cap < smCap) { smCap = chosen[si].cap; smIdx = si; } }
-        if (smIdx < 0) break;
-        remain += chosen[smIdx].cap; chosen.splice(smIdx, 1); dumpToFlag();
+    // น้ำหนักทุน: flagship เด่น (10) ; sys อื่นตามดาว 1-5 (ไม่มีดาว=3) → ดาวน้อย ทุนน้อย
+    function wt(c) { return c.flag ? 10 : Math.max(1, c.s.stars || 3); }
+    // เติมทุนแบบถ่วงน้ำหนัก: ให้ step แก่ระบบที่ (cap+step)/weight ต่ำสุด → ทุน ∝ น้ำหนัก
+    function wfill() {
+      var g = 0;
+      while (g++ < 10000) {
+        var best = -1, bestRatio = Infinity;
+        for (var j = 0; j < chosen.length; j++) { var c = chosen[j]; if (remain >= c.step) { var ratio = (c.cap + c.step) / wt(c); if (ratio < bestRatio) { bestRatio = ratio; best = j; } } }
+        if (best < 0) break;
+        chosen[best].cap += chosen[best].step; remain -= chosen[best].step;
       }
-    } else {
-      // ไม่มี flagship (ไม่มี Sys_1/Sys_2 ในชีต) → fill เท่าๆ
-      var add = true;
-      while (add) { add = false; for (var j = 0; j < chosen.length; j++) { if (remain >= chosen[j].step) { chosen[j].cap += chosen[j].step; remain -= chosen[j].step; add = true; } } }
+    }
+    wfill();                                                    // เติมตามน้ำหนัก (ดาว + flagship)
+    if (F) {
+      // ปรับให้ flagship > ทุก sys อื่น และ >= 40% ของทุนรวม (ย้ายทุนจาก non ใหญ่สุด → flagship ทีละ step)
+      var guard = 0;
+      while (guard++ < 1000) {
+        var total = 0, maxNon = 0, bigIdx = -1;
+        for (var q = 0; q < chosen.length; q++) { total += chosen[q].cap; if (!chosen[q].flag && chosen[q].cap > maxNon) { maxNon = chosen[q].cap; bigIdx = q; } }
+        if (chosen.length === 1 || (F.cap > maxNon && F.cap >= 0.5 * total)) break;   // flagship เด่น >=50% + ใหญ่สุด
+        var moved = false;
+        if (bigIdx >= 0) {
+          var bn = chosen[bigIdx], bnMin = Math.ceil(MIN_PER_SYS / bn.step) * bn.step;
+          if (bn.cap - bn.step >= bnMin) { bn.cap -= bn.step; remain += bn.step; moved = true; }   // ลด non ใหญ่สุด
+        }
+        if (remain >= F.step) { F.cap += F.step; remain -= F.step; moved = true; }                  // ดัน flagship
+        if (!moved) {   // non อยู่ขั้นต่ำหมด ปรับไม่ได้ → ไล่ non เล็กสุดออก แล้วเติมใหม่
+          var smIdx = -1, smCap = Infinity;
+          for (var si = 0; si < chosen.length; si++) { if (!chosen[si].flag && chosen[si].cap < smCap) { smCap = chosen[si].cap; smIdx = si; } }
+          if (smIdx < 0) break;
+          remain += chosen[smIdx].cap; chosen.splice(smIdx, 1); wfill();
+        }
+      }
+      if (remain >= F.step) { F.cap += Math.floor(remain / F.step) * F.step; remain = remain % F.step; }  // เศษที่เหลือ → flagship
     }
     chosen.forEach(function (c) { c.units = c.cap / c.u.c; c.used = c.cap; c.pin = !!c.flag; });
     var lots = chosen.reduce(function (a, c) { return a + c.units * c.u.lot; }, 0);
@@ -297,7 +313,8 @@
       var r = rows[i]; if (!(r && r.c)) continue;
       var nm = r.c[1] && r.c[1].v !== null ? String(r.c[1].v).trim() : '';          // B = name
       var cm = r.c[9] && r.c[9].v !== null ? String(r.c[9].v).toLowerCase() : '';    // J = comment
-      if (nm && cm.indexOf('recommend') >= 0) m[nm] = true;
+      var st = r.c[8] && r.c[8].v !== null ? parseInt(r.c[8].v, 10) : 0;             // I = ดาว 1-5
+      if (nm) m[nm] = { rec: cm.indexOf('recommend') >= 0, stars: (st >= 1 && st <= 5) ? st : 0 };
     }
     return m;
   }
@@ -311,7 +328,7 @@
         SYS = parseSheet(j0);
         var j1 = JSON.parse(texts[1].substring(texts[1].indexOf('{'), texts[1].lastIndexOf('}') + 1));
         var rec = parseRec(j1);
-        SYS.forEach(function (s) { s.rec = !!rec[s.name]; });
+        SYS.forEach(function (s) { var r = rec[s.name]; s.rec = !!(r && r.rec); s.stars = r ? r.stars : 0; });
       } catch (e) { }
       render();
     }).catch(function () { render(); });
