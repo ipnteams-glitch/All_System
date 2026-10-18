@@ -380,7 +380,7 @@
         growth: l.growth, turboAt: TURBO, carColor: l.carColor, variant: l.variant,
         level: (l.stats && l.stats.level) || 1, stars: l.row.stars || 0,
         badge: l.row.badge, recommend: l.row.recommend, extreme: l.rank < 3,
-        trident: l.row.name === 'Sys_2',
+        throne: l.row.name === 'Sys_2',
       });
       drawTag(l);
       ctx.globalAlpha = 1;

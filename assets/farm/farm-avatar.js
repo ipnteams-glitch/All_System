@@ -243,12 +243,13 @@
     const hair = broken ? '#50555d' : hairCols[variant % hairCols.length];
     const accent = golden ? '#ffd23b' : hairCols[(variant + 3) % hairCols.length];
 
-    const dance = !broken && growth > 10;          // >10% โบกมือข้างเดียว ; 0..<=10% ยืนเฉยๆ ; <0 ตุย
-    const extreme = !!o.extreme && !broken;        // 3 อันดับแรก = กระโดดเบาๆ ไม่สูงมาก
+    const sitting = !!o.throne && !broken;         // นั่งเก้าอี้พระราชา (ไม่เต้น/ไม่กระโดด)
+    const dance = !broken && !sitting && growth > 10;   // >10% โบกมือข้างเดียว ; 0..<=10% ยืนเฉยๆ ; <0 ตุย
+    const extreme = !!o.extreme && !broken && !sitting; // 3 อันดับแรก = กระโดดเบาๆ ไม่สูงมาก
     const beat = 9;   // ความเร็วเต้นเท่ากันทุกตัว
     const m = dance ? Math.sin(t * beat + phase) : 0;
     const m2 = dance ? Math.sin(t * beat * 0.5 + phase + 1) : 0;
-    const bob = broken ? 0 : Math.sin(t * 2 + phase) * 0.3 * u;   // โยกเบาทุกตัว ไม่เด้ง (กระโดดเฉพาะ top3)
+    const bob = (broken || sitting) ? 0 : Math.sin(t * 2 + phase) * 0.3 * u;   // โยกเบาทุกตัว ไม่เด้ง (กระโดดเฉพาะ top3)
     const lean = dance ? m2 * 0.05 : 0;
 
     ctx.save();
@@ -262,6 +263,27 @@
 
     ctx.translate(0, bob);
     ctx.rotate(broken ? 0.14 : lean);
+
+    // ── เก้าอี้พระราชา (throne) — วาดหลังตัว ──
+    if (sitting) {
+      const gL = '#9c6f1c', gH = '#ffd23b', red = '#b11622', redD = '#7a0c12';
+      const bg = ctx.createLinearGradient(0, -25 * u, 0, -7 * u);      // พนักพิงสูง
+      bg.addColorStop(0, gH); bg.addColorStop(1, gL);
+      ctx.fillStyle = bg; rr(ctx, -6.6 * u, -25 * u, 13.2 * u, 18.5 * u, 2.2 * u); ctx.fill();
+      ctx.fillStyle = redD; rr(ctx, -4.6 * u, -23 * u, 9.2 * u, 15 * u, 1.6 * u); ctx.fill();   // แผงแดงกลาง
+      ctx.fillStyle = gH;                                              // เสาข้าง + ลูกกลมทอง
+      for (const dx of [-6.6 * u, 6.6 * u]) { ctx.beginPath(); ctx.arc(dx, -24.5 * u, 1.7 * u, 0, 7); ctx.fill(); }
+      ctx.fillStyle = gH; ctx.beginPath();                             // มงกุฎยอดพนัก (3 แฉก)
+      ctx.moveTo(-3.4 * u, -25 * u); ctx.lineTo(-3.4 * u, -28 * u); ctx.lineTo(-1.7 * u, -26.3 * u);
+      ctx.lineTo(0, -29 * u); ctx.lineTo(1.7 * u, -26.3 * u); ctx.lineTo(3.4 * u, -28 * u); ctx.lineTo(3.4 * u, -25 * u);
+      ctx.closePath(); ctx.fill();
+      for (const cx2 of [-3.4 * u, 0, 3.4 * u]) { ctx.fillStyle = red; ctx.beginPath(); ctx.arc(cx2, -28.2 * u, 0.7 * u, 0, 7); ctx.fill(); }
+      ctx.fillStyle = gL; rr(ctx, -6.8 * u, -6.8 * u, 13.6 * u, 6.8 * u, 1 * u); ctx.fill();     // ที่นั่ง
+      ctx.fillStyle = red; rr(ctx, -6.3 * u, -7.4 * u, 12.6 * u, 2.3 * u, 0.7 * u); ctx.fill();  // เบาะแดง
+      ctx.fillStyle = gH;                                              // ที่วางแขน 2 ข้าง
+      rr(ctx, -8.4 * u, -9.4 * u, 2.2 * u, 3.4 * u, 0.6 * u); ctx.fill();
+      rr(ctx, 6.2 * u, -9.4 * u, 2.2 * u, 3.4 * u, 0.6 * u); ctx.fill();
+    }
 
     // ── 3 อันดับแรก: กระโดดเบาๆ ไม่สูงมาก (ไม่หมุน/ไม่ตีลังกา) ──
     if (extreme) {
