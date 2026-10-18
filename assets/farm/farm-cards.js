@@ -255,8 +255,8 @@
     const isRec = (i) => !!(list[i].row.recommend || list[i].row.badge === 'recommend');
     const rec = idx.filter(isRec);                                     // แถวล่างสุด (เด่น)
     const rest = idx.filter((i) => !isRec(i));
-    const strong = rest.filter((i) => list[i].growth >= 10);           // เต้น
-    const stand = rest.filter((i) => list[i].growth < 10 && list[i].growth >= 0); // ยืนเฉยๆ
+    const strong = rest.filter((i) => list[i].growth > 10);            // โบกมือข้างเดียว
+    const stand = rest.filter((i) => list[i].growth <= 10 && list[i].growth >= 0); // ยืนเฉยๆ
     const dead = rest.filter((i) => list[i].growth < 0);               // ตุย → บนสุด
     const groups = [];
     // ล่าง→บน: recommend, แล้ว non-recommend เรียงกำไรลดหลั่นขึ้นไป (strong → stand → ตุย)

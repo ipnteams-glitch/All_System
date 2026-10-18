@@ -243,12 +243,12 @@
     const hair = broken ? '#50555d' : hairCols[variant % hairCols.length];
     const accent = golden ? '#ffd23b' : hairCols[(variant + 3) % hairCols.length];
 
-    const dance = !broken && growth >= 10;         // >=10% เต้น ; 0..<10% ยืนเฉยๆ ; <0 ตุย
-    const extreme = !!o.extreme && dance;          // 3 อันดับแรก = ท่าเอ็กซ์ตรีม หมุน/ตีลังกา
+    const dance = !broken && growth > 10;          // >10% โบกมือข้างเดียว ; 0..<=10% ยืนเฉยๆ ; <0 ตุย
+    const extreme = !!o.extreme && !broken;        // 3 อันดับแรก = กระโดดเบาๆ ไม่สูงมาก
     const beat = 9;   // ความเร็วเต้นเท่ากันทุกตัว
     const m = dance ? Math.sin(t * beat + phase) : 0;
     const m2 = dance ? Math.sin(t * beat * 0.5 + phase + 1) : 0;
-    const bob = dance ? (Math.abs(m) - 0.5) * 2.0 * u : (broken ? 0 : Math.sin(t * 2 + phase) * 0.3 * u);
+    const bob = broken ? 0 : Math.sin(t * 2 + phase) * 0.3 * u;   // โยกเบาทุกตัว ไม่เด้ง (กระโดดเฉพาะ top3)
     const lean = dance ? m2 * 0.05 : 0;
 
     ctx.save();
@@ -263,19 +263,15 @@
     ctx.translate(0, bob);
     ctx.rotate(broken ? 0.14 : lean);
 
-    // ── ท่าเอ็กซ์ตรีม: กระโดด + สลับ ตีลังกา/หมุนตัว ──
+    // ── 3 อันดับแรก: กระโดดเบาๆ ไม่สูงมาก (ไม่หมุน/ไม่ตีลังกา) ──
     if (extreme) {
-      const cyc = 1.3, p = ((t / cyc + phase) % 1), pv = -10 * u;
-      ctx.translate(0, -Math.sin(p * Math.PI) * 9 * u);   // กระโดดโค้ง
-      ctx.translate(0, pv);
-      const sc = Math.cos(p * 2 * Math.PI);               // หมุนรอบแกนตั้งอย่างเดียว (ย่อแกน x)
-      ctx.scale(sc < 0 ? Math.min(sc, -0.08) : Math.max(sc, 0.08), 1);
-      ctx.translate(0, -pv);
+      const cyc = 0.8, p = ((t / cyc + phase) % 1);
+      ctx.translate(0, -Math.abs(Math.sin(p * Math.PI)) * 2.4 * u);   // ฮอปเตี้ยๆ
     }
 
     const shoulderY = -13.5 * u;
-    const fa = dance ? (-1.2 + m * 0.85) : 1.45;   // เต้น=ชูแขนขึ้น / ยืน=แขนลงข้างตัว
-    const la = Math.PI - fa;         // แขนซ้าย (หลัง) มิเรอร์
+    const fa = dance ? (-0.95 + m * 0.6) : 1.45;   // แขนขวา(หน้า) ชูโบกมือข้างเดียว (กำไร>10%) / ยืน=ลงข้างตัว
+    const la = dance ? 1.62 : (Math.PI - fa);      // แขนซ้าย(หลัง) ลงข้างตัว ไม่โบก
     const sway = broken ? 0 : m * 0.5 * u;
 
     // ── ปีกนางฟ้า (Recommend) — เล็ก 2 ชั้น โค้งสวย เส้นบาง + เรืองแสงอ่อน ──
