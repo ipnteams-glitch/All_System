@@ -38,7 +38,7 @@
   var SYS = [];   // โหลดจากชีต
   var seedBase = Math.floor(Math.random() * 1e9);
   var LAST = { cap: 0, risk: 'Normal', sets: [] };   // ผลล่าสุด (สำหรับดาวน์โหลด)
-  var EA_NAME = 'Harvest_Farm_v8.9_Multi.ex5';
+  var EA_NAME = 'Harvest_Farm_v9.0_Multi.ex5';
 
   function fmt(n) { return Math.round(n).toLocaleString('en-US'); }
   function byName(n) { for (var i = 0; i < SYS.length; i++) if (SYS[i].name === n) return SYS[i]; }
