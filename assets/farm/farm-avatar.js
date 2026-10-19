@@ -245,6 +245,7 @@
 
     const sitting = !!o.throne && !broken;         // นั่งเก้าอี้พระราชา (ไม่เต้น/ไม่กระโดด)
     const dance = !broken && !sitting && growth > 10;   // >10% โบกมือข้างเดียว ; 0..<=10% ยืนเฉยๆ ; <0 ตุย
+    const both = !broken && !sitting && growth > 50;    // >50% โบก 2 มือ
     const extreme = !!o.extreme && !broken && !sitting; // 3 อันดับแรก = กระโดดเบาๆ ไม่สูงมาก
     const beat = 9;   // ความเร็วเต้นเท่ากันทุกตัว
     const m = dance ? Math.sin(t * beat + phase) : 0;
@@ -293,7 +294,7 @@
 
     const shoulderY = -13.5 * u;
     const fa = dance ? (-0.95 + m * 0.6) : 1.45;   // แขนขวา(หน้า) ชูโบกมือข้างเดียว (กำไร>10%) / ยืน=ลงข้างตัว
-    const la = dance ? 1.62 : (Math.PI - fa);      // แขนซ้าย(หลัง) ลงข้างตัว ไม่โบก
+    const la = both ? (Math.PI - fa) : (dance ? 1.62 : (Math.PI - fa));   // >50%=โบก 2 มือ ; 10-50%=แขนซ้ายลงข้างตัว
     const sway = broken ? 0 : m * 0.5 * u;
 
     // ── ปีกนางฟ้า (Recommend) — เล็ก 2 ชั้น โค้งสวย เส้นบาง + เรืองแสงอ่อน ──
