@@ -1614,7 +1614,8 @@
                 const row = rows[i];
                 if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
                     const label = row.c[9] && row.c[9].v !== null ? String(row.c[9].v).trim() : '';
-                    if (label === 'Recommend') {
+                    const lc = label.toLowerCase();
+                    if (lc === 'recommend' || lc === 'best') {
                         const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
                         const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
                         const pct = balance > 0 ? (profit7day / balance * 100) : 0;
@@ -1628,8 +1629,9 @@
                 }
             }
             if (labeled.length === 0) return;
-            // Sort by name numerically (Sys_1, Sys_2...)
-            labeled.sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
+            // best ก่อน recommend, แล้วเรียงชื่อ (Sys_1, Sys_2...)
+            const rank = (l) => (String(l).toLowerCase() === 'best' ? 0 : 1);
+            labeled.sort((a, b) => rank(a.label) - rank(b.label) || String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
             const promoList = document.getElementById('promoList');
             if (!promoList) return;
             let html = '';
