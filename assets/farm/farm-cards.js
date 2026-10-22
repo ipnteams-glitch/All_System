@@ -325,8 +325,9 @@
     const tun = d.comment != null ? d.comment : '-';
     const bal = d.balance != null ? d.balance : (l.row.balance != null ? l.row.balance : '-');
     t.innerHTML =
-      '<div style="font-weight:700;color:#fb923c;margin-bottom:6px;text-shadow:0 0 8px rgba(234,88,12,.3)">' + esc(l.row.name)
-      + (l.row.label ? ' <span style="color:#ffd23b;font-size:11px">' + esc(l.row.label) + '</span>' : '') + '</div>'
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px">'
+      + '<span style="font-weight:700;color:#fb923c;text-shadow:0 0 8px rgba(234,88,12,.3)">' + esc(l.row.name) + '</span>'
+      + (l.row.label ? '<span style="color:#ffd23b;font-size:11px">' + esc(l.row.label) + '</span>' : '') + '</div>'
       + row2('Style', style, riskColor(style))
       + row2('ทุน', tun)
       + '<div style="margin-top:7px;padding-top:7px;border-top:1px solid rgba(255,255,255,.08);color:#cdd6df;white-space:normal">' + esc(String(bal)) + '</div>';
