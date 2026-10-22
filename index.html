@@ -1240,6 +1240,7 @@
     }
 
     function renderCards(data) {
+        window.__EA_DETAILS = data;   // expose for dance-stage hover tooltip (farm-cards.js)
         function renderDonut(balanceNum, profit7day, lastWeekProfit) {
             var totalProfit = profit7day + lastWeekProfit;
             var circ = 2 * Math.PI * 26;
@@ -1274,6 +1275,10 @@
         }
 
         if (instructionBox) instructionBox.style.display = 'block';
+
+        // EA cards ถูกถอดออก — ดูรายละเอียดผ่าน hover ตัวละครบนเวทีแทน (__EA_DETAILS ด้านบนยังเซ็ตไว้)
+        if (container) container.innerHTML = '';
+        return;
 
         let html = '';
 

@@ -174,6 +174,7 @@
       host.appendChild(canvas);
       canvas.addEventListener('click', onClick);
       canvas.addEventListener('mousemove', onMove);
+      canvas.addEventListener('mouseleave', hideTip);
       window.addEventListener('resize', () => { if (lastRows) buildScene(lastRows); });
     }
     return true;
@@ -282,9 +283,69 @@
     }
     return null;
   }
+  // hit-test ตัวละคร (ไม่ต้องมี link) — ใช้โชว์ tooltip รายละเอียดตอน hover
+  function hitCharAt(mx, my) {
+    for (let i = lanes.length - 1; i >= 0; i--) {
+      const l = lanes[i], h = l.hit;
+      if (h && mx >= h.x0 && mx <= h.x1 && my >= h.y0 && my <= h.y1) return l;
+    }
+    return null;
+  }
+
+  // ── tooltip รายละเอียด (ยกเว้น donut) ──
+  let tipEl = null;
+  function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  function riskColor(t) {
+    t = String(t || '');
+    if (/UltraLow|Ultra Low|เสี่ยงต่ำมาก/.test(t)) return '#7bed3b';
+    if (/High Risk|เสี่ยงสูง/.test(t)) return '#a83232';
+    if (/Medium Risk|ค่อนข้างสูง|ค่อนข้างต่ำ/.test(t)) return '#b85c00';
+    if (/Low Risk|เสี่ยงต่ำ/.test(t)) return '#1e8c4a';
+    if (/ทดสอบ|Testing/.test(t)) return '#9a7b0a';
+    return '#4a5568';
+  }
+  function ensureTip() {
+    if (tipEl) return tipEl;
+    tipEl = document.createElement('div');
+    tipEl.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;display:none;min-width:180px;max-width:250px;'
+      + 'background:rgba(13,17,23,0.96);border:1px solid rgba(249,115,22,0.5);border-radius:12px;padding:12px 14px;'
+      + 'box-shadow:0 8px 28px rgba(0,0,0,0.55);color:#e6edf3;font:12px/1.5 Kanit,sans-serif;';
+    document.body.appendChild(tipEl);
+    return tipEl;
+  }
+  function row2(label, val, color) {
+    return '<div style="display:flex;justify-content:space-between;gap:10px;margin-top:2px">'
+      + '<span style="color:#8b98a5">' + label + '</span>'
+      + '<span style="' + (color ? 'color:' + color + ';font-weight:600' : '') + '">' + esc(val) + '</span></div>';
+  }
+  function showTip(l, px, py) {
+    const t = ensureTip();
+    const d = ((window.__EA_DETAILS || []).find(x => String(x.name).trim() === String(l.row.name).trim())) || {};
+    const style = d.type != null ? d.type : (l.row.label || '-');
+    const tun = d.comment != null ? d.comment : '-';
+    const bal = d.balance != null ? d.balance : (l.row.balance != null ? l.row.balance : '-');
+    t.innerHTML =
+      '<div style="font-weight:700;color:#fb923c;margin-bottom:6px;text-shadow:0 0 8px rgba(234,88,12,.3)">' + esc(l.row.name)
+      + (l.row.label ? ' <span style="color:#ffd23b;font-size:11px">' + esc(l.row.label) + '</span>' : '') + '</div>'
+      + row2('Style', style, riskColor(style))
+      + row2('ทุน', tun)
+      + '<div style="margin-top:7px;padding-top:7px;border-top:1px solid rgba(255,255,255,.08);color:#cdd6df;white-space:normal">' + esc(String(bal)) + '</div>';
+    t.style.display = 'block';
+    const tw = t.offsetWidth, th = t.offsetHeight;
+    let x = px + 16, y = py + 16;
+    if (x + tw > innerWidth - 8) x = px - tw - 16;
+    if (y + th > innerHeight - 8) y = innerHeight - th - 8;
+    if (y < 8) y = 8;
+    t.style.left = x + 'px'; t.style.top = y + 'px';
+  }
+  function hideTip() { if (tipEl) tipEl.style.display = 'none'; }
+
   function onMove(e) {
     const rect = canvas.getBoundingClientRect();
-    canvas.style.cursor = hitAt(e.clientX - rect.left, e.clientY - rect.top) ? 'pointer' : 'default';
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    canvas.style.cursor = hitAt(mx, my) ? 'pointer' : 'default';
+    const l = hitCharAt(mx, my);
+    if (l) showTip(l, e.clientX, e.clientY); else hideTip();
   }
   function onClick(e) {
     const rect = canvas.getBoundingClientRect();
