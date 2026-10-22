@@ -139,7 +139,8 @@
         stars: cell(8) !== null ? parseInt(cell(8), 10) : 0,
         label: label,
         recommend: label.toLowerCase() === 'recommend',
-        badge: label.toLowerCase() === 'recommend' ? 'recommend' : label.toLowerCase() === 'good' ? 'good' : '',
+        best: label.toLowerCase() === 'best',
+        badge: label.toLowerCase() === 'recommend' ? 'recommend' : label.toLowerCase() === 'best' ? 'best' : label.toLowerCase() === 'good' ? 'good' : '',
         link: cell(10) !== null ? String(cell(10)).trim() : '',
       });
     }
@@ -253,8 +254,8 @@
   function buildStageRows(list) {
     const n = list.length, idx = [];
     for (let i = 0; i < n; i++) idx.push(i);
-    const isRec = (i) => !!(list[i].row.recommend || list[i].row.badge === 'recommend');
-    const rec = idx.filter(isRec);                                     // แถวล่างสุด (เด่น)
+    const isRec = (i) => !!(list[i].row.recommend || list[i].row.best || list[i].row.badge === 'recommend' || list[i].row.badge === 'best');
+    const rec = idx.filter(isRec);                                     // แถวล่างสุด (recommend + best)
     const rest = idx.filter((i) => !isRec(i));
     const strong = rest.filter((i) => list[i].growth > 10);            // โบกมือข้างเดียว
     const stand = rest.filter((i) => list[i].growth <= 10 && list[i].growth >= 0); // ยืนเฉยๆ
@@ -442,7 +443,7 @@
         growth: l.growth, turboAt: TURBO, carColor: l.carColor, variant: l.variant,
         level: (l.stats && l.stats.level) || 1, stars: l.row.stars || 0,
         badge: l.row.badge, recommend: l.row.recommend, extreme: l.rank < 3,
-        throne: l.row.name === 'Sys_2',
+        throne: !!l.row.best,
       });
       drawTag(l);
       ctx.globalAlpha = 1;
