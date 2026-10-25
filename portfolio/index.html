@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Farm Dashboard</title>
+<script src="./lightweight-charts.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --line:#283040;
+    --txt:#e6edf3; --muted:#8b949e; --green:#3fb950; --red:#f85149;
+    --accent:#58a6ff; --gold:#d8a657; --amber:#d29922;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);font-size:14px}
+  header{display:flex;align-items:center;gap:16px;padding:10px 18px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+  header h1{font-size:16px;margin:0;color:var(--gold)}
+  .meta{display:flex;gap:16px;font-size:12px;color:var(--muted);flex-wrap:wrap;margin-left:auto;align-items:center}
+  .meta b{color:var(--txt)}
+  main{padding:18px;max-width:1500px;margin:0 auto}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px}
+  .card .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .card .v{font-size:22px;font-weight:600;margin-top:6px}
+  .pos{color:var(--green)} .neg{color:var(--red)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:18px}
+  .panel h2{font-size:13px;color:var(--muted);margin:0 0 12px;text-transform:uppercase;letter-spacing:.5px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:right;padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{color:var(--muted);font-weight:500}
+  th:first-child,td:first-child{text-align:left}
+  tr:hover td{background:var(--panel2)}
+  .tag{font-size:11px;padding:2px 7px;border-radius:4px;background:var(--panel2);border:1px solid var(--line)}
+  .stale{color:var(--amber);border-color:var(--amber)}
+  .live{color:var(--green);border-color:var(--green)}
+  .ctrl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .ctrl label{font-size:12px;color:var(--muted)}
+  .ctrl input{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:6px 8px;font-size:13px}
+  .ctrl button{background:var(--accent);border:none;color:#06121f;border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer;font-weight:600}
+  .btn{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer}
+  #chart{height:300px}
+  .hide{display:none}
+  .note{color:var(--amber);font-size:12px}
+  @media(max-width:640px){
+    main{padding:12px}
+    header{padding:8px 12px;gap:8px}
+    header h1{font-size:14px}
+    .meta{font-size:11px;gap:8px;width:100%;margin-left:0}
+    .cards{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+    .card{padding:10px}
+    .card .v{font-size:17px}
+    .panel{padding:10px;margin-bottom:12px}
+    .panel h2{font-size:12px}
+    #chart{height:210px}
+    .ctrl{gap:6px}
+    .ctrl label{display:flex;flex-direction:column;flex:1 1 42%;font-size:11px;gap:3px}
+    .ctrl input{width:100%}
+    .ctrl button{width:100%;flex-basis:100%;margin-top:2px}
+    th,td{padding:5px 6px;font-size:12px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>⚡ Farm Dashboard</h1>
+  <div class="meta">
+    <span id="who" class="hide">👤 <b id="email">—</b> <button class="btn" onclick="signOut()">ออก</button></span>
+    <div id="gbtn"></div>
+    <span>อัปเดต <b id="updated">—</b> <span style="opacity:.6">(ทุก 60s)</span></span>
+  </div>
+</header>
+
+<main>
+  <!-- public anonymized overview -->
+  <section id="overviewSec">
+    <div class="panel" style="margin-bottom:12px">
+      <h2>ภาพรวมทั้งหมด (anonymized)</h2>
+      <div class="cards" id="ovCards"></div>
+      <div class="note" id="loginHint">ลงชื่อเข้าด้วย Google เพื่อดูพอร์ตของคุณ</div>
+    </div>
+  </section>
+
+  <!-- private per-user -->
+  <section id="mineSec" class="hide">
+    <div class="panel">
+      <h2>พอร์ตของฉัน (my accounts)</h2>
+      <div style="overflow-x:auto"><table id="tbl"><thead></thead><tbody></tbody></table></div>
+    </div>
+
+    <div class="cards" id="myCards"></div>
+
+    <div class="panel">
+      <h2>ช่วงเวลา (History range)</h2>
+      <div class="ctrl">
+        <label>ตั้งแต่ <input type="date" id="from"></label>
+        <label>ถึง <input type="date" id="to"></label>
+        <button onclick="renderMine()">แสดง</button>
+      </div>
+      <div id="chart"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+// ===== CONFIG: fill after deploy =====
+const CFG = {
+  WEBAPP_URL: "https://script.google.com/macros/s/AKfycbxItPJzoxblYkX6lTbnYZGGsIW42RAcyWR1gNgQQANhG3zAhyf9HqQadi3ja3Mjj4l_/exec",
+  CLIENT_ID:  "528165468683-1m8e24ei2oi7llh9jii0hhp245g0h9me.apps.googleusercontent.com",
+};
+// =====================================
+
+let TOKEN = null, MINE = null, chart = null, series = null;
+const fmt = (n,d=2)=>(n==null?"—":Number(n).toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d}));
+const cls = n=>n>0?"pos":(n<0?"neg":"");
+
+// ---- JSONP (avoids CORS with Apps Script) ----
+let _cbN = 0;
+function jsonp(params){
+  return new Promise((resolve,reject)=>{
+    const cb = "__jp"+(++_cbN);
+    const s = document.createElement("script");
+    const to = setTimeout(()=>{cleanup();reject(new Error("timeout"))},15000);
+    function cleanup(){ delete window[cb]; s.remove(); clearTimeout(to); }
+    window[cb] = d=>{ cleanup(); resolve(d); };
+    const q = Object.entries(params).concat([["callback",cb]])
+      .map(([k,v])=>encodeURIComponent(k)+"="+encodeURIComponent(v)).join("&");
+    s.src = CFG.WEBAPP_URL + "?" + q;
+    s.onerror = ()=>{cleanup();reject(new Error("network"))};
+    document.body.appendChild(s);
+  });
+}
+
+// ---- overview (public, anonymized) ----
+async function loadOverview(){
+  if(CFG.WEBAPP_URL.includes("PASTE_APPS_SCRIPT")){
+    document.getElementById("ovCards").innerHTML =
+      '<div class="note">ยังไม่ได้ตั้งค่า WEBAPP_URL ใน index.html</div>'; return;
+  }
+  try{
+    const o = await jsonp({mode:"overview"});
+    document.getElementById("updated").textContent = new Date().toLocaleTimeString();
+    const cards = [
+      ["ผู้ใช้", o.users??0, ""],
+      ["พอร์ตรวม", o.ports??0, ""],
+      ["Equity รวม", fmt(o.equity), ""],
+      ["Net Profit รวม", fmt(o.net_profit), cls(o.net_profit)],
+      ["เทรดรวม", o.total_trades??0, ""],
+      ["Max Equity DD", fmt(o.max_equity_dd), "neg"],
+    ];
+    document.getElementById("ovCards").innerHTML = cards.map(([k,v,c])=>
+      `<div class="card"><div class="k">${k}</div><div class="v ${c}">${v}</div></div>`).join("");
+  }catch(e){ document.getElementById("updated").textContent="overview error"; }
+}
+
+// ---- Google sign-in ----
+function onCredential(resp){
+  TOKEN = resp.credential;
+  loadMine();
+}
+let _gsiTries = 0;
+function initGsi(){
+  if(CFG.CLIENT_ID.includes("PUT_YOUR")){
+    document.getElementById("gbtn").innerHTML =
+      '<span class="note">ตั้งค่า CLIENT_ID เพื่อเปิด Google Sign-In</span>'; return;
+  }
+  if(!window.google || !google.accounts || !google.accounts.id){
+    if(_gsiTries++ < 40) return setTimeout(initGsi, 250);  // gsi script still loading
+    document.getElementById("gbtn").innerHTML =
+      '<span class="note">โหลด Google Sign-In ไม่สำเร็จ</span>'; return;
+  }
+  google.accounts.id.initialize({client_id:CFG.CLIENT_ID, callback:onCredential});
+  google.accounts.id.renderButton(document.getElementById("gbtn"),
+    {theme:"filled_blue", size:"medium", text:"signin_with"});
+}
+function signOut(){
+  TOKEN=null; MINE=null;
+  try{ google.accounts.id.disableAutoSelect(); }catch(e){}
+  document.getElementById("who").classList.add("hide");
+  document.getElementById("gbtn").classList.remove("hide");
+  document.getElementById("mineSec").classList.add("hide");
+  document.getElementById("overviewSec").classList.remove("hide");
+}
+
+// ---- my data (private) ----
+async function loadMine(){
+  try{
+    MINE = await jsonp({mode:"mine", token:TOKEN});
+  }catch(e){ alert("โหลดข้อมูลไม่สำเร็จ"); return; }
+  if(MINE.error){ alert("unauthorized / token หมดอายุ กรุณาลงชื่อใหม่"); signOut(); return; }
+  document.getElementById("email").textContent = MINE.email;
+  document.getElementById("who").classList.remove("hide");
+  document.getElementById("gbtn").classList.add("hide");
+  document.getElementById("mineSec").classList.remove("hide");
+  document.getElementById("overviewSec").classList.add("hide");
+  // default date range
+  const starts = (MINE.accounts||[]).map(a=>String(a.start_date||"").replace(/\./g,"-")).filter(Boolean).sort();
+  document.getElementById("from").value = starts[0] || "2026-01-01";
+  document.getElementById("to").value   = new Date().toISOString().slice(0,10);
+  renderMine();
+}
+
+function inRange(d,f,t){ return (!f||d>=f)&&(!t||d<=t); }
+
+function renderMine(){
+  if(!MINE) return;
+  const t = MINE.totals||{};
+  document.getElementById("myCards").innerHTML = [
+    ["Equity รวม", fmt(t.equity), ""],
+    ["Net Profit", fmt(t.net_profit), cls(t.net_profit)],
+    ["พอร์ต", t.accounts??0, ""],
+    ["Max Equity DD", fmt(t.max_equity_dd), "neg"],
+  ].map(([k,v,c])=>`<div class="card"><div class="k">${k}</div><div class="v ${c}">${v}</div></div>`).join("");
+
+  // table
+  const cols=[["login","Login"],["label","Label"],["balance","Balance"],
+    ["equity","Equity"],["net_profit","Net"],["max_equity_dd","MaxDD"]];
+  document.querySelector("#tbl thead").innerHTML="<tr>"+cols.map(c=>`<th>${c[1]}</th>`).join("")+"</tr>";
+  const tb=document.querySelector("#tbl tbody"); tb.innerHTML="";
+  for(const a of (MINE.accounts||[])){
+    tb.insertAdjacentHTML("beforeend","<tr>"+cols.map(([k])=>{
+      if(k==="_status") return a.stale?`<td><span class="tag stale">stale ${a.age_sec}s</span></td>`:`<td><span class="tag live">live</span></td>`;
+      let v=a[k];
+      if(["balance","equity","net_profit","closed_max_dd","max_equity_dd","cur_dd","profit_factor"].includes(k)) v=fmt(v);
+      else if(k==="win_rate"||k==="max_equity_dd_pct") v=fmt(v,1)+(k.includes("pct")?"%":"");
+      else if(v==null||v==="") v="—";
+      const c=(k==="net_profit")?cls(a.net_profit):(k.includes("dd")?"neg":"");
+      return `<td class="${c}">${v}</td>`;
+    }).join("")+"</tr>");
+  }
+
+  // combined daily in range
+  const f=document.getElementById("from").value, to=document.getElementById("to").value;
+  const byday={};
+  for(const a of (MINE.accounts||[])) for(const d of (a.daily||[]))
+    if(inRange(d.day,f,to)) byday[d.day]=(byday[d.day]||0)+d.profit;
+  const days=Object.keys(byday).sort();
+  let cum=0; const line=[];
+  for(const d of days){ cum+=byday[d]; line.push({time:d,value:+cum.toFixed(2)}); }
+
+  const el=document.getElementById("chart");
+  if(!chart){
+    chart=LightweightCharts.createChart(el,{autoSize:true,
+      layout:{background:{color:"transparent"},textColor:"#8b949e"},
+      grid:{vertLines:{color:"#283040"},horzLines:{color:"#283040"}},
+      rightPriceScale:{borderColor:"#283040"},timeScale:{borderColor:"#283040"}});
+    series=chart.addAreaSeries({lineColor:"#58a6ff",topColor:"rgba(88,166,255,.4)",bottomColor:"rgba(88,166,255,0)",lineWidth:2});
+  }
+  series.setData(line); chart.timeScale().fitContent();
+}
+
+// ---- boot ----
+window.addEventListener("load", ()=>{
+  initGsi(); loadOverview(); setInterval(loadOverview,60000);
+  // signed handoff from mt5.forexcool.com (#t=<token>): skip Google sign-in
+  const ht = new URLSearchParams(location.hash.slice(1)).get("t");
+  if(ht){ TOKEN = ht; loadMine(); }
+});
+</script>
+</body>
+</html>
