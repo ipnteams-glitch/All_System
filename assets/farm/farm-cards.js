@@ -202,7 +202,7 @@
 
     const list = rows.map((row) => {
       const balance = Number(row.balance) || 0;
-      const colG = Number(row.month) || 0; // คอลัมน์ G (profit7day) = ตัวตัดสินกำไรต่อทุน
+      const colG = Math.max(0, Number(row.month) || 0); // คอลัมน์ G (3 เดือน) = ตัวตัดสินกำไรต่อทุน; ติดลบ = 0
       const growth = balance > 0 ? (colG / balance) * 100 : 0;
       return { row: row, growth: growth, effProfit: colG };
     });

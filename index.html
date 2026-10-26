@@ -919,7 +919,7 @@
     @media (max-width:480px){#vm-farm .vm-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}#vm-farm canvas.vm-canvas{width:130px;height:122px;}}
   </style>
   <div class="vm-toolbar">
-    <div class="vm-heading">⚙️ ประสิทธิภาพ <span class="vm-sub">แสดงผลการรันทดสอบ <span class="vm-range"></span></span></div>
+    <div class="vm-heading">⚙️ ประสิทธิภาพ <span class="vm-sub">แสดงผลการรัน <span class="vm-range">1 เดือนย้อนหลัง</span></span></div>
     <div class="vm-right">
       <span id="vm-demo" class="vm-demo" style="display:none;">เดโม</span>
     </div>
@@ -1012,8 +1012,8 @@
                 <tr>
                     <th>ชื่อ EA</th>
                     <th>กำไรปัจจุบัน</th>
-                    <th>เดือนนี้ (%)</th>
-                    <th>เดือนที่แล้ว (%)</th>
+                    <th>1 เดือน (%)</th>
+                    <th>1 เดือน (%)</th>
                     <th>ทุนเริ่มต้น</th>
                 </tr>
             </thead>
@@ -1485,15 +1485,15 @@
                 let row = rows[i];
                 if (row && row.c && row.c[0] && row.c[0].v !== null && String(row.c[0].v).toLowerCase() !== "acc") {
                     const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
-                    const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
-                    const lastWeekProfit = row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) : 0;
+                    const profit7day = Math.max(0, row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0);   // ติดลบ = 0
+                    const lastWeekProfit = Math.max(0, row.c[7] && row.c[7].v !== null ? parseFloat(row.c[7].v) : 0);  // ติดลบ = 0
                     const stars = row.c[8] && row.c[8].v !== null ? parseInt(row.c[8].v) : 0;
                     const label = row.c[9] && row.c[9].v !== null ? String(row.c[9].v).trim() : '';
                     const link = row.c[10] && row.c[10].v !== null ? String(row.c[10].v).trim() : '';
                     data.push({
                         name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
                         balance: balance,
-                        profit: row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0,
+                        profit: Math.max(0, row.c[4] && row.c[4].v !== null ? parseFloat(row.c[4].v) : 0),   // ติดลบ = 0
                         profit7day: profit7day,
                         lastWeekProfit: lastWeekProfit,
                         stars: stars,
@@ -1602,7 +1602,7 @@
                     const lc = label.toLowerCase();
                     if (lc === 'recommend' || lc === 'best') {
                         const balance = row.c[2] && row.c[2].v !== null ? parseFloat(row.c[2].v) : 0;
-                        const profit7day = row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0;
+                        const profit7day = Math.max(0, row.c[6] && row.c[6].v !== null ? parseFloat(row.c[6].v) : 0);   // ติดลบ = 0
                         const pct = balance > 0 ? (profit7day / balance * 100) : 0;
                         labeled.push({
                             name: row.c[1] && row.c[1].v !== null ? row.c[1].v : "-",
