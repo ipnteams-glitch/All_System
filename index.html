@@ -867,6 +867,7 @@
                 </div>
                 <div class="d-flex gap-2 mt-2">
                     <button onclick="fetchPortfolio()" class="btn btn-sm btn-primary rounded-pill px-4">🔍 โหลดพอร์ต</button>
+                    <button onclick="copyShareLink()" class="btn btn-sm btn-outline-info rounded-pill px-3">🔗 ลิงก์สั้น</button>
                     <span id="portfolioMsg" class="text-white-50 small align-self-center"></span>
                 </div>
             </div>
@@ -1340,8 +1341,44 @@
         setTimeout(() => { el.textContent = ''; }, 5000);
     }
 
+    // เติม @gmail.com อัตโนมัติถ้ากรอกแค่ชื่อ (เช่น dechatornbox -> dechatornbox@gmail.com)
+    function normalizeEmail(v) {
+        v = (v || '').trim();
+        if (v && v.indexOf('@') < 0) v += '@gmail.com';
+        return v;
+    }
+    // คัดลอกลิงก์สั้น: ?p=<ชื่อก่อน @> (เฉพาะ @gmail.com)
+    function copyShareLink() {
+        const email = normalizeEmail(document.getElementById('portfolioEmail').value);
+        if (!email) { showPortfolioMsg('กรอก Gmail ก่อน', true); return; }
+        const m = email.match(/^([^@]+)@gmail\.com$/i);
+        const short = m ? ('?p=' + m[1]) : ('?email=' + encodeURIComponent(email));
+        const link = location.origin + location.pathname + short;
+        if (navigator.clipboard) navigator.clipboard.writeText(link).then(function(){ showPortfolioMsg('คัดลอกลิงก์แล้ว: ' + link, false); }, function(){ prompt('คัดลอกลิงก์นี้:', link); });
+        else prompt('คัดลอกลิงก์นี้:', link);
+    }
+    // เปิดจากลิงก์สั้น: ?p=dechatornbox  หรือ  ?email=... -> เปิด overlay + โหลดอัตโนมัติ
+    (function autoLoadPortfolio() {
+        try {
+            var q = new URLSearchParams(location.search);
+            var raw = q.get('p') || q.get('email');
+            if (!raw) return;
+            var open = function () {
+                var el = document.getElementById('portfolioEmail');
+                if (!el) return;
+                el.value = normalizeEmail(raw);
+                var ov = document.getElementById('portfolioOverlay');
+                if (ov) ov.classList.add('active');
+                fetchPortfolio();
+            };
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', open);
+            else open();
+        } catch (e) { }
+    })();
     async function fetchPortfolio() {
-        const email = document.getElementById('portfolioEmail').value.trim();
+        const el = document.getElementById('portfolioEmail');
+        const email = normalizeEmail(el.value);
+        el.value = email;
         if (!email) { showPortfolioMsg('กรุณากรอก Gmail', true); return; }
         showPortfolioMsg('กำลังโหลด...', false);
         try {
