@@ -132,6 +132,8 @@ const CFG = {
 let TOKEN = null, MINE = null, chart = null, series = null, SHARED = false;
 const fmt = (n,d=2)=>(n==null?"—":Number(n).toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d}));
 const cls = n=>n>0?"pos":(n<0?"neg":"");
+// เติม @gmail.com อัตโนมัติถ้ากรอกแค่ชื่อ (dechatornbox -> dechatornbox@gmail.com)
+const normalizeEmail = v => { v=(v||"").trim(); return (v && v.indexOf("@")<0) ? v+"@gmail.com" : v; };
 
 // ---- JSONP (avoids CORS with Apps Script) ----
 let _cbN = 0;
@@ -232,7 +234,13 @@ async function clearPort(login){
 function renderMine(){
   if(!MINE) return;
   const tok=document.getElementById("ctok"); if(tok) tok.value = MINE.collector_token || "";
-  const shl=document.getElementById("shlink"); if(shl && MINE.share_token) shl.value = location.origin+location.pathname+"?s="+MINE.share_token;
+  const shl=document.getElementById("shlink");
+  if(shl){
+    const m = MINE.email ? String(MINE.email).match(/^([^@]+)@gmail\.com$/i) : null;
+    if(m)                 shl.value = location.origin+location.pathname+"?p="+m[1];                               // ลิงก์สั้น (gmail)
+    else if(MINE.email)   shl.value = location.origin+location.pathname+"?email="+encodeURIComponent(MINE.email); // ลิงก์สั้น (อื่น)
+    else if(MINE.share_token) shl.value = location.origin+location.pathname+"?s="+MINE.share_token;               // สำรอง token
+  }
   const accs = MINE.accounts||[];
   const sumBal = accs.reduce((s,a)=>s+(+a.balance||0),0);
   const sumNet = accs.reduce((s,a)=>s+(+a.net_profit||0),0);
@@ -305,10 +313,32 @@ async function loadShared(stoken){
   renderMine();
 }
 
+// read-only view by email (ลิงก์สั้น ?p=<ชื่อ> / ?email=<เมล>): ดูพอร์ตอย่างเดียว ไม่ต้อง sign-in
+// ต้องมี backend mode:"view" (public by email) ใน Apps Script
+async function loadViewByEmail(email){
+  SHARED = true;
+  try{ MINE = await jsonp({mode:"view", email:email}); }
+  catch(e){ document.getElementById("ovCards").innerHTML='<div class="note">โหลดไม่สำเร็จ</div>'; return; }
+  if(!MINE || MINE.error){ document.getElementById("ovCards").innerHTML='<div class="note">ไม่พบข้อมูล/ลิงก์ไม่ถูกต้อง</div>'; return; }
+  document.getElementById("gbtn").classList.add("hide");
+  document.getElementById("who").classList.add("hide");
+  document.getElementById("dlPanel").classList.add("hide");
+  document.getElementById("overviewSec").classList.add("hide");
+  document.getElementById("mineSec").classList.remove("hide");
+  const starts=(MINE.accounts||[]).map(a=>String(a.start_date||"").replace(/\./g,"-")).filter(Boolean).sort();
+  document.getElementById("from").value = starts[0] || "2026-01-01";
+  document.getElementById("to").value   = new Date().toISOString().slice(0,10);
+  document.getElementById("updated").textContent = new Date().toLocaleTimeString();
+  renderMine();
+}
+
 window.addEventListener("load", ()=>{
   // read-only share link (?s=<token>): show ports, no email, no sign-in
   const sp = new URLSearchParams(location.search).get("s");
   if(sp){ loadShared(sp); return; }
+  // ลิงก์สั้นด้วยเมล: ?p=<ชื่อ> หรือ ?email=<เมล>
+  const pe = new URLSearchParams(location.search).get("p") || new URLSearchParams(location.search).get("email");
+  if(pe){ loadViewByEmail(normalizeEmail(pe)); return; }
   initGsi(); loadOverview(); setInterval(loadOverview,60000);
   // signed handoff from mt5.forexcool.com (#t=<token>): skip Google sign-in
   const ht = new URLSearchParams(location.hash.slice(1)).get("t");
