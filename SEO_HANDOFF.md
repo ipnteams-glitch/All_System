@@ -7,6 +7,17 @@ Last updated: 2026-10-31
 
 ---
 
+## Deploy note for Mo (changed 2026-10-31)
+
+GitHub Pages source was switched from "Deploy from branch" to **GitHub Actions**
+(`build_type: workflow`). The live site is now built by `.github/workflows/deploy-pages.yml`,
+which includes a step that strips internal files (`marketing/`, `scripts/`, the SEO
+handoff/setup docs, stale `index.html` backups) before publishing, so they are no longer
+reachable at the public domain. The legacy `pages-build-deployment` builder no longer runs.
+If you add new internal-only files, add them to that strip step too.
+
+---
+
 ## Done (Layer A — on-page + technical SEO)
 
 Shipped to `main` and live on https://www.forexcool.com/:
