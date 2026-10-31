@@ -32,9 +32,11 @@ Shipped to `main` and live on https://www.forexcool.com/:
 ## Backlog (คุณแสนเก่ง to continue)
 
 ### Immediate
-- [ ] Re-check GSC sitemap status → should turn "Success"; if still failing after 48h, inspect fetch.
-- [ ] GSC → URL Inspection → Request Indexing for `/` and `/index_en.html`.
-- [ ] Bing Webmaster Tools (bing.com/webmasters): import from GSC in one click. Covers Bing + ChatGPT search.
+- [x] GSC sitemap status = Success (read 2026-10-31). Resolved on its own as expected.
+- [x] GSC URL Inspection: `/` and `/index_en.html` both already indexed; Request Indexing submitted for both to push latest meta.
+      Note: `/` shows an HTTPS warning in the inspection panel; `/index_en.html` reports HTTPS valid, so the `/` flag is a transient www cert quirk — re-check if `/` ever drops from the index.
+- [x] Bing Webmaster Tools: signed in with the same Google account, imported both sites from GSC in one click
+      (`www.forexcool.com` + `harvestfarmea.blogspot.com`, 1 sitemap). Bing data processing up to 48h.
 
 ### Layer B — promotion channels
 - [ ] Google Business Profile (if eligible).
