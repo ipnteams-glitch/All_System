@@ -1,0 +1,95 @@
+name: IndexNow ping
+
+# Instantly notify Bing / Yandex (and other IndexNow engines) when published
+# HTML pages change. Runs after a push to main. Google does not use IndexNow;
+# Google discovers changes through the sitemap submitted in Search Console.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.html'
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: 'Space-separated URLs to submit (blank = submit all sitemap URLs)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+env:
+  HOST: www.forexcool.com
+  KEY: 2b3ccda1a9233c4ce3627b2e146aae08c5fdbd949f6f374e34a9faafd831bc71
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - name: Build URL list
+        id: urls
+        run: |
+          set -euo pipefail
+
+          # Map a repo-relative HTML path to its public URL.
+          to_url() {
+            local f="$1"
+            case "$f" in
+              index.html)        echo "https://${HOST}/" ;;
+              */index.html)      echo "https://${HOST}/${f%index.html}" ;;
+              *)                 echo "https://${HOST}/${f}" ;;
+            esac
+          }
+
+          files=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.urls }}" ]; then
+            # Manual run with explicit URLs.
+            printf '%s\n' ${{ github.event.inputs.urls }} > urls.txt
+          else
+            # Changed HTML files in this push.
+            changed=$(git diff --name-only --diff-filter=ACM \
+              "${{ github.event.before }}" "${{ github.sha }}" 2>/dev/null \
+              | grep -E '\.html$' || true)
+            : > urls.txt
+            for f in $changed; do
+              [ -f "$f" ] && to_url "$f" >> urls.txt
+            done
+          fi
+
+          # De-duplicate, drop blanks.
+          sort -u urls.txt | grep -E '^https://' > urls.clean || true
+          mv urls.clean urls.txt
+          count=$(wc -l < urls.txt | tr -d ' ')
+          echo "count=${count}" >> "$GITHUB_OUTPUT"
+          echo "Submitting ${count} URL(s):"
+          cat urls.txt
+
+      - name: Submit to IndexNow
+        if: steps.urls.outputs.count != '0'
+        run: |
+          set -euo pipefail
+          # Build JSON payload: {host, key, keyLocation, urlList:[...]}
+          payload=$(jq -n \
+            --arg host "$HOST" \
+            --arg key "$KEY" \
+            --arg loc "https://${HOST}/${KEY}.txt" \
+            --rawfile urls urls.txt \
+            '{host:$host, key:$key, keyLocation:$loc,
+              urlList:($urls | split("\n") | map(select(length>0)))}')
+          echo "$payload"
+          code=$(curl -sS -o resp.txt -w '%{http_code}' \
+            -X POST 'https://api.indexnow.org/IndexNow' \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            --data "$payload")
+          echo "HTTP ${code}"
+          cat resp.txt || true
+          # IndexNow returns 200 or 202 on success.
+          case "$code" in
+            200|202) echo "IndexNow accepted." ;;
+            *) echo "IndexNow rejected (HTTP ${code})."; exit 1 ;;
+          esac
