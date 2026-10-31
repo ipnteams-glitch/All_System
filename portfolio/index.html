@@ -125,6 +125,8 @@
 // ===== CONFIG: fill after deploy =====
 const CFG = {
   WEBAPP_URL: "https://script.google.com/macros/s/AKfycbxItPJzoxblYkX6lTbnYZGGsIW42RAcyWR1gNgQQANhG3zAhyf9HqQadi3ja3Mjj4l_/exec",
+  // server proxy (no Google cookies -> dodges multi-account /u/N/ Drive block)
+  PROXY_URL:  "https://mt5.forexcool.com/api/farm",
   CLIENT_ID:  "528165468683-1m8e24ei2oi7llh9jii0hhp245g0h9me.apps.googleusercontent.com",
 };
 // =====================================
@@ -133,9 +135,24 @@ let TOKEN = null, MINE = null, chart = null, series = null, SHARED = false;
 const fmt = (n,d=2)=>(n==null?"—":Number(n).toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d}));
 const cls = n=>n>0?"pos":(n<0?"neg":"");
 
-// ---- JSONP (avoids CORS with Apps Script) ----
+// ---- data fetch: server proxy first, JSONP fallback ----
+// Proxy returns plain JSON from the Apps Script without the viewer's Google
+// cookies, so multi-account browsers don't get routed to /macros/u/N/ and
+// blocked. If the proxy is unreachable, fall back to direct JSONP (works for
+// signed-out viewers).
+async function jsonp(params){
+  if(CFG.PROXY_URL && !CFG.PROXY_URL.includes("PASTE")){
+    try{
+      const qs = Object.entries(params).filter(([k])=>k!=="callback")
+        .map(([k,v])=>encodeURIComponent(k)+"="+encodeURIComponent(v)).join("&");
+      const r = await fetch(CFG.PROXY_URL+"?"+qs, {cache:"no-store"});
+      if(r.ok) return await r.json();
+    }catch(e){ /* fall through to JSONP */ }
+  }
+  return jsonpDirect(params);
+}
 let _cbN = 0;
-function jsonp(params){
+function jsonpDirect(params){
   return new Promise((resolve,reject)=>{
     const cb = "__jp"+(++_cbN);
     const s = document.createElement("script");
