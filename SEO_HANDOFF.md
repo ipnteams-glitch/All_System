@@ -57,8 +57,11 @@ Shipped to `main` and live on https://www.forexcool.com/:
       and append the CTA block to the SMC image captions.
 - [ ] YouTube / TikTok short clips (EA run results, backtest how-to) → link to site.
 - [ ] Facebook group / X / Reddit r/Forex — value posts, no spam.
-- [ ] Backlinks: Medium / Blogger articles pointing to forexcool.com.
+- [~] Backlinks: Medium / Blogger articles pointing to forexcool.com.
       Note: `harvestfarmea.blogspot.com` already exists in this Google account — candidate backlink source.
+      Kit ready: `marketing/backlink-playbook.md` (anchor-text plan, UTM targets, cadence, nofollow caveat)
+      + 2 ready-to-post Thai drafts in `marketing/articles/`. Remaining: publish the drafts, add UTM links,
+      share the posted URLs. Keep ≤1–2 links per article and write naturally (avoid PBN footprint).
 
 ### Layer C — automation
 - [x] IndexNow (Bing / Yandex instant indexing): `.github/workflows/indexnow.yml`
