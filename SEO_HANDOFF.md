@@ -50,7 +50,8 @@ Shipped to `main` and live on https://www.forexcool.com/:
       (`www.forexcool.com` + `harvestfarmea.blogspot.com`, 1 sitemap). Bing data processing up to 48h.
 
 ### Layer B — promotion channels
-- [ ] Google Business Profile (if eligible).
+- [~] Google Business Profile (if eligible). Guide: `marketing/google-business-profile.md`
+      (eligibility check first — online-only may not qualify — plus setup steps and alternatives).
 - [~] Telegram channel as main funnel — reuse existing SMC image-posting system as content.
       Funnel kit ready: `marketing/telegram-funnel.md` (pinned intro, daily/promo caption templates,
       UTM links to the trial, content rules). Remaining: create the channel, post the pinned message,
