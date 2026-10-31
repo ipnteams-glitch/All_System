@@ -40,7 +40,10 @@ Shipped to `main` and live on https://www.forexcool.com/:
 
 ### Layer B — promotion channels
 - [ ] Google Business Profile (if eligible).
-- [ ] Telegram channel as main funnel — reuse existing SMC image-posting system as content.
+- [~] Telegram channel as main funnel — reuse existing SMC image-posting system as content.
+      Funnel kit ready: `marketing/telegram-funnel.md` (pinned intro, daily/promo caption templates,
+      UTM links to the trial, content rules). Remaining: create the channel, post the pinned message,
+      and append the CTA block to the SMC image captions.
 - [ ] YouTube / TikTok short clips (EA run results, backtest how-to) → link to site.
 - [ ] Facebook group / X / Reddit r/Forex — value posts, no spam.
 - [ ] Backlinks: Medium / Blogger articles pointing to forexcool.com.
