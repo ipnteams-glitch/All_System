@@ -22,6 +22,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v5
+      - name: Strip internal files from the published site
+        # Keep these out of the public site (they stay in the repo). Does not
+        # touch google*.html / robots.txt / sitemap.xml / the IndexNow key.
+        run: |
+          rm -rf marketing scripts
+          rm -f SEO_HANDOFF.md SEO_SETUP_GCP.md
+          rm -f index.html.backup index.html.bak_pie index.html.mark1 \
+                index.html_01 index.html_1 index_en.html.bak_pie
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
