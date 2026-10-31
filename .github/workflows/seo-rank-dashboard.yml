@@ -1,0 +1,41 @@
+name: SEO rank dashboard
+
+# Weekly pull of Google Search Console Search Analytics into a private
+# report (Actions run summary + downloadable HTML artifact). Requires the
+# GCP_SA_KEY secret; without it the job runs and skips cleanly.
+
+on:
+  schedule:
+    - cron: '0 1 * * 1'   # every Monday 01:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dashboard:
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: https://www.forexcool.com/
+      GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+      OUT_HTML: seo-rank-dashboard.html
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install --quiet requests google-auth
+
+      - name: Build dashboard
+        run: python scripts/seo_rank_dashboard.py
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: seo-rank-dashboard
+          path: seo-rank-dashboard.html
+          if-no-files-found: ignore
+          retention-days: 90

@@ -47,12 +47,20 @@ Shipped to `main` and live on https://www.forexcool.com/:
       Note: `harvestfarmea.blogspot.com` already exists in this Google account — candidate backlink source.
 
 ### Layer C — automation
+- [x] IndexNow (Bing / Yandex instant indexing): `.github/workflows/indexnow.yml`
+      + site-root key file. Fires on every push that changes HTML. No credentials needed.
+      Verified working (HTTP 202) on 2026-10-31.
+- [~] Google Indexing API — `.github/workflows/indexing-api.yml` + `scripts/seo_indexing_api.py`.
+      Built; waiting on the `GCP_SA_KEY` secret (see `SEO_SETUP_GCP.md`). Skips cleanly until then.
+- [~] GSC API weekly keyword rank dashboard — `.github/workflows/seo-rank-dashboard.yml`
+      + `scripts/seo_rank_dashboard.py`. Built; same `GCP_SA_KEY` secret. Output = Actions run
+      summary + private HTML artifact (not published to the site).
 - [ ] n8n / Make.com central hub: new run result → auto-post to Telegram + X + FB.
 - [ ] Scheduled daily SMC content (build on existing `smcgold` skill).
-- [ ] Google Indexing API — auto-ping new URLs.
-- [ ] GSC API — weekly keyword rank dashboard.
 - [ ] Auto-generate SEO articles from real trade results → auto-post to blog.
 - [ ] "Free 14-day trial" signup form → auto-collect email + welcome mail.
+
+See `SEO_SETUP_GCP.md` for the one-time Google Cloud setup that enables the two `[~]` items.
 
 ---
 

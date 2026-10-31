@@ -1,0 +1,80 @@
+name: Google Indexing API ping
+
+# On a push to main that changes HTML, notify the Google Indexing API that
+# those pages were updated. Requires the GCP_SA_KEY secret whose service
+# account is an Owner of the Search Console property; without it the job
+# runs and skips cleanly. See SEO_SETUP_GCP.md.
+#
+# Note: Google officially supports the Indexing API only for JobPosting /
+# BroadcastEvent pages. The GSC sitemap stays the primary discovery path;
+# this is a best-effort nudge.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.html'
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: 'Space-separated URLs (blank = changed HTML in last push)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+env:
+  HOST: www.forexcool.com
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    env:
+      GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - name: Build URL list
+        id: urls
+        run: |
+          set -euo pipefail
+          to_url() {
+            local f="$1"
+            case "$f" in
+              index.html)   echo "https://${HOST}/" ;;
+              */index.html) echo "https://${HOST}/${f%index.html}" ;;
+              *)            echo "https://${HOST}/${f}" ;;
+            esac
+          }
+          : > urls.txt
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.urls }}" ]; then
+            printf '%s\n' ${{ github.event.inputs.urls }} > urls.txt
+          else
+            changed=$(git diff --name-only --diff-filter=ACM \
+              "${{ github.event.before }}" "${{ github.sha }}" 2>/dev/null \
+              | grep -E '\.html$' || true)
+            for f in $changed; do
+              [ -f "$f" ] && to_url "$f" >> urls.txt
+            done
+          fi
+          sort -u urls.txt | grep -E '^https://' > urls.clean || true
+          mv urls.clean urls.txt
+          count=$(wc -l < urls.txt | tr -d ' ')
+          echo "count=${count}" >> "$GITHUB_OUTPUT"
+          echo "URLs (${count}):"; cat urls.txt
+
+      - uses: actions/setup-python@v5
+        if: steps.urls.outputs.count != '0'
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        if: steps.urls.outputs.count != '0'
+        run: pip install --quiet requests google-auth
+
+      - name: Notify Indexing API
+        if: steps.urls.outputs.count != '0'
+        run: python scripts/seo_indexing_api.py $(cat urls.txt)
