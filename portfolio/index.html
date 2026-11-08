@@ -249,7 +249,8 @@ async function clearPort(login){
 function renderMine(){
   if(!MINE) return;
   const tok=document.getElementById("ctok"); if(tok) tok.value = MINE.collector_token || "";
-  const shl=document.getElementById("shlink"); if(shl && MINE.share_token) shl.value = location.origin+location.pathname+"?s="+MINE.share_token;
+  const shl=document.getElementById("shlink");
+  if(shl && MINE.email){ var _m=String(MINE.email).match(/^([^@]+)@gmail.com$/i); shl.value = location.origin+location.pathname+"?s="+(_m?_m[1]:encodeURIComponent(MINE.email)); }
   const accs = MINE.accounts||[];
   const sumBal = accs.reduce((s,a)=>s+(+a.balance||0),0);
   const sumNet = accs.reduce((s,a)=>s+(+a.net_profit||0),0);
@@ -264,8 +265,8 @@ function renderMine(){
   ].map(([k,v,c])=>`<div class="card"><div class="k">${k}</div><div class="v ${c}">${v}</div></div>`).join("");
 
   // table
-  const cols=[["login","Login"],["label","Label"],["net_profit","Net"],["_gain","Gain%"],
-    ["balance","Balance"],["max_equity_dd","MaxDD%"]].concat(SHARED?[]:[["_clear",""]]);
+  const cols=[...(SHARED?[]:[["login","Login"]]),["label","Label"],["net_profit","Net"],["_gain","Gain%"],
+    ["balance","Cost(ทุน)"],["max_equity_dd","MaxDD%"]].concat(SHARED?[]:[["_clear",""]]);
   document.querySelector("#tbl thead").innerHTML="<tr>"+cols.map(c=>`<th>${c[1]}</th>`).join("")+"</tr>";
   const tb=document.querySelector("#tbl tbody"); tb.innerHTML="";
   const rows=[...(MINE.accounts||[])].sort((a,b)=>
@@ -326,7 +327,7 @@ async function loadShared(stoken){
 window.addEventListener("load", ()=>{
   // read-only share link (?s=<token>): show ports, no email, no sign-in
   const sp = new URLSearchParams(location.search).get("s");
-  if(sp){ loadShared(sp); return; }
+  if(sp){ if(sp.indexOf(".")>=0){ loadShared(sp); } else { loadViewByEmail(normalizeEmail(sp)); } return; }
   initGsi(); loadOverview(); setInterval(loadOverview,60000);
   // signed handoff from mt5.forexcool.com (#t=<token>): skip Google sign-in
   const ht = new URLSearchParams(location.hash.slice(1)).get("t");
