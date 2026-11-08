@@ -134,6 +134,7 @@ const CFG = {
 let TOKEN = null, MINE = null, chart = null, series = null, SHARED = false;
 const fmt = (n,d=2)=>(n==null?"—":Number(n).toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d}));
 const cls = n=>n>0?"pos":(n<0?"neg":"");
+const normalizeEmail = v => { v=(v||"").trim(); return (v && v.indexOf("@")<0) ? v+"@gmail.com" : v; };
 
 // ---- data fetch: server proxy first, JSONP fallback ----
 // Proxy returns plain JSON from the Apps Script without the viewer's Google
@@ -318,6 +319,23 @@ async function loadShared(stoken){
   document.getElementById("overviewSec").classList.add("hide");
   document.getElementById("mineSec").classList.remove("hide");
   const starts=(MINE.accounts||[]).map(a=>String(a.start_date||"").replace(/\./g,"-")).filter(Boolean).sort();
+  document.getElementById("from").value = starts[0] || "2026-01-01";
+  document.getElementById("to").value   = new Date().toISOString().slice(0,10);
+  document.getElementById("updated").textContent = new Date().toLocaleTimeString();
+  renderMine();
+}
+
+async function loadViewByEmail(email){
+  SHARED = true;
+  try{ MINE = await jsonp({mode:"view", email:email}); }
+  catch(e){ document.getElementById("ovCards").innerHTML='<div class="note">โหลดไม่สำเร็จ</div>'; return; }
+  if(!MINE || MINE.error){ document.getElementById("ovCards").innerHTML='<div class="note">ไม่พบข้อมูล/ลิงก์ไม่ถูกต้อง</div>'; return; }
+  document.getElementById("gbtn").classList.add("hide");
+  document.getElementById("who").classList.add("hide");
+  document.getElementById("dlPanel").classList.add("hide");
+  document.getElementById("overviewSec").classList.add("hide");
+  document.getElementById("mineSec").classList.remove("hide");
+  const starts=(MINE.accounts||[]).map(a=>String(a.start_date||"").replace(/./g,"-")).filter(Boolean).sort();
   document.getElementById("from").value = starts[0] || "2026-01-01";
   document.getElementById("to").value   = new Date().toISOString().slice(0,10);
   document.getElementById("updated").textContent = new Date().toLocaleTimeString();
