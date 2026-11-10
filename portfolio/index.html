@@ -313,6 +313,15 @@ function renderMine(){
   const shl=document.getElementById("shlink");
   if(shl && MINE.email){ var _m=String(MINE.email).match(/^([^@]+)@gmail.com$/i); shl.value = location.origin+location.pathname+"?s="+(_m?_m[1]:encodeURIComponent(MINE.email)); }
   const accs = MINE.accounts||[];
+  if(SHARED && !accs.length){
+    document.getElementById("myCards").innerHTML =
+      '<div class="note" style="grid-column:1/-1">ไม่พบพอร์ตในลิงก์นี้ — ลิงก์อาจไม่ถูกต้อง/หมดอายุ หรือเจ้าของยังไม่มีข้อมูล</div>';
+    document.querySelector("#tbl thead").innerHTML = "";
+    document.querySelector("#tbl tbody").innerHTML = "";
+    document.getElementById("chart").closest(".panel").classList.add("hide");
+    document.getElementById("tbl").closest(".panel").classList.add("hide");
+    return;
+  }
   const sumBal = accs.reduce((s,a)=>s+(+a.balance||0),0);
   const sumNet = accs.reduce((s,a)=>s+(+a.net_profit||0),0);
   const sumMaxDD = accs.reduce((s,a)=>s+(+a.max_equity_dd||0),0);   // total DD money all systems
