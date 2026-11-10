@@ -101,7 +101,7 @@ def main():
                 seen[nx][ny] = True
                 q.append((nx, ny))
     lock = lock.crop(lock.split()[3].getbbox())
-    lock.save(os.path.join(OUT, "brand-fc.png"), optimize=True)
+    lock.save(os.path.join(OUT, "brand-fc-v2.png"), optimize=True)
 
     badge_sq = Image.open(LOGO).convert("RGBA")
     for size, name in ((64, "favicon-64.png"), (32, "favicon-32.png")):
