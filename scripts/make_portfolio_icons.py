@@ -43,8 +43,8 @@ def cut_white(path, tolerance=30):
     return im.crop(box)
 
 
-def icon_from(art, size, fill, sharpen=True):
-    canvas = Image.new("RGBA", (size, size), BG + (255,))
+def icon_from(art, size, fill, sharpen=True, bg=None):
+    canvas = Image.new("RGBA", (size, size), (bg or BG) + (255,))
     inner = max(1, int(size * fill))
     a = art.resize((inner, inner), Image.LANCZOS).convert("RGBA")
     if sharpen and inner > art.size[0]:
@@ -61,13 +61,19 @@ def crest_art():
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    badge = cut_white(BADGE)
-    print("badge cut:", badge.size)
+    # the app icon is the supplied FOREXCOOL badge itself: square it on its own
+    # navy plate colour, and keep it inside the maskable safe zone
+    plate = Image.open(LOGO).convert("RGB")
+    plate_colour = plate.getpixel((6, 160))
+    side = max(plate.size)
+    squared = Image.new("RGB", (side, side), plate_colour)
+    squared.paste(plate, ((side - plate.size[0]) // 2, (side - plate.size[1]) // 2))
+    print("app icon from the logo", squared.size, "plate", plate_colour)
 
-    icon_from(badge, 512, 0.86).save(os.path.join(OUT, "icon-512.png"), optimize=True)
-    icon_from(badge, 192, 0.86).save(os.path.join(OUT, "icon-192.png"), optimize=True)
-    icon_from(badge, 512, 0.66).save(os.path.join(OUT, "icon-maskable-512.png"), optimize=True)
-    icon_from(badge, 180, 0.86).save(os.path.join(OUT, "apple-touch-icon.png"), optimize=True)
+    icon_from(squared, 512, 1.0, sharpen=False).save(os.path.join(OUT, "icon-512.png"), optimize=True)
+    icon_from(squared, 192, 1.0, sharpen=False).save(os.path.join(OUT, "icon-192.png"), optimize=True)
+    icon_from(squared, 512, 0.78, sharpen=False, bg=plate_colour).save(os.path.join(OUT, "icon-maskable-512.png"), optimize=True)
+    icon_from(squared, 180, 1.0, sharpen=False).save(os.path.join(OUT, "apple-touch-icon.png"), optimize=True)
 
     # header mark: the FOREXCOOL lockup (chart + wordmark) with the navy plate
     # flood-filled to transparent; the square badge itself becomes the tab icon
