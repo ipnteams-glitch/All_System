@@ -1,7 +1,7 @@
 /* Forexcool Farm Portfolio — service worker
    Caches the page shell so the installed app opens instantly and offline.
    API calls (Google Apps Script, mt5.forexcool.com) always go to the network. */
-const CACHE = "farm-portfolio-v1";
+const CACHE = "farm-portfolio-v2";
 const SHELL = [
   "./",
   "./index.html",
