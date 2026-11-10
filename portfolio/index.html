@@ -2,17 +2,20 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
 <title>Farm Portfolio</title>
 <script src="./lightweight-charts.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root{
+    color-scheme:dark;
     --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --line:#283040;
     --txt:#e6edf3; --muted:#8b949e; --green:#3fb950; --red:#f85149;
     --accent:#58a6ff; --gold:#d8a657; --amber:#d29922;
   }
   *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);font-size:14px}
   header{display:flex;align-items:center;gap:16px;padding:10px 18px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
   header h1{font-size:16px;margin:0;color:var(--gold)}
@@ -21,11 +24,11 @@
   main{padding:18px;max-width:1500px;margin:0 auto}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px}
-  .card .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .card .k{font-size:11px;color:var(--muted)}
   .card .v{font-size:22px;font-weight:600;margin-top:6px}
   .pos{color:var(--green)} .neg{color:var(--red)}
   .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:18px}
-  .panel h2{font-size:13px;color:var(--muted);margin:0 0 12px;text-transform:uppercase;letter-spacing:.5px}
+  .panel h2{font-size:13px;color:var(--muted);margin:0 0 12px}
   table{width:100%;border-collapse:collapse;font-size:13px}
   th,td{text-align:right;padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
   th{color:var(--muted);font-weight:500}
@@ -38,26 +41,67 @@
   .ctrl label{font-size:12px;color:var(--muted)}
   .ctrl input{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:6px 8px;font-size:13px}
   .ctrl button{background:var(--accent);border:none;color:#06121f;border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer;font-weight:600}
-  .btn{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer}
+  .btn{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer;touch-action:manipulation}
+  .copyrow{display:flex;gap:8px}
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .ctrl button,.dllink{touch-action:manipulation}
   #chart{height:300px}
   .hide{display:none}
   .note{color:var(--amber);font-size:12px}
+  /* ---- tablet ---- */
+  @media(max-width:1024px){
+    main{padding:16px}
+    #chart{height:280px}
+  }
+
+  /* ---- phone ---- */
   @media(max-width:640px){
-    main{padding:12px}
-    header{padding:8px 12px;gap:8px}
-    header h1{font-size:14px}
+    header{padding:8px calc(12px + env(safe-area-inset-right)) 8px calc(12px + env(safe-area-inset-left));gap:6px}
+    header h1{font-size:15px}
     .meta{font-size:11px;gap:8px;width:100%;margin-left:0}
+    .meta .btn{min-height:34px;padding:6px 10px}
+    main{padding:12px calc(12px + env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left))}
+    #mineSec{display:flex;flex-direction:column}
+    #myCards{order:-1;margin-bottom:12px}
     .cards{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
-    .card{padding:10px}
-    .card .v{font-size:17px}
-    .panel{padding:10px;margin-bottom:12px}
-    .panel h2{font-size:12px}
-    #chart{height:210px}
-    .ctrl{gap:6px}
-    .ctrl label{display:flex;flex-direction:column;flex:1 1 42%;font-size:11px;gap:3px}
-    .ctrl input{width:100%}
-    .ctrl button{width:100%;flex-basis:100%;margin-top:2px}
-    th,td{padding:5px 6px;font-size:12px}
+    .card{padding:10px;border-radius:10px}
+    .card .k{font-size:10px}
+    .card .v{font-size:16px;line-height:1.25;overflow-wrap:anywhere}
+    .panel{padding:10px;margin-bottom:12px;border-radius:10px}
+    .panel h2{font-size:12px;margin-bottom:10px}
+    #chart{height:230px}
+    .ctrl{gap:8px}
+    .ctrl label{display:flex;flex-direction:column;flex:1 1 44%;min-width:0;font-size:11px;gap:3px}
+    .ctrl input{width:100%;min-height:44px;font-size:16px}
+    .ctrl button{width:100%;flex-basis:100%;min-height:44px;font-size:15px;margin-top:2px}
+    .btn{min-height:40px;padding:8px 12px}
+    details.panel summary{padding:4px 0}
+    .copyrow{flex-wrap:wrap}
+    .copyrow input{flex:1 1 100%!important;font-size:12px}
+    .copyrow .btn{width:100%}
+    .dllink{display:block;text-align:center;padding:12px 14px}
+    /* table -> stacked per-port cards */
+    .tbl-wrap{overflow:visible}
+    #tbl,#tbl tbody{display:block;width:100%}
+    #tbl thead{display:none}
+    #tbl tr{display:grid;grid-template-columns:1fr 1fr;gap:2px 14px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:4px 12px 10px;margin-bottom:8px}
+    #tbl tr:hover td{background:none}
+    #tbl td{display:block;border:none;padding:6px 0 0;font-size:14px;text-align:left;white-space:normal;overflow-wrap:anywhere}
+    #tbl td::before{content:attr(data-label);display:block;color:var(--muted);font-size:10px;margin-bottom:1px}
+    #tbl td.celllabel{grid-column:1;grid-row:1;padding-top:10px;font-weight:600;font-size:15px}
+    body.shared #tbl td.celllabel{grid-column:1/-1}
+    #tbl td.celllabel::before{display:none}
+    #tbl td:first-child:not(.celllabel){grid-column:2;grid-row:1;align-self:center;padding-top:10px;text-align:right;font-size:12px;color:var(--muted)}
+    #tbl td:first-child:not(.celllabel)::before{display:inline;font-size:11px;margin-right:4px}
+    #tbl .delcell{grid-column:1/-1;padding:8px 0 0;text-align:right}
+    #tbl .delcell button{width:auto;min-width:120px;height:36px;font-size:0!important;border-radius:8px;background:transparent;border:1px solid var(--line);color:var(--muted)}
+    #tbl .delcell button::after{content:"ลบพอร์ตนี้";font-size:12px}
+    #tbl .delcell button:active{background:rgba(248,81,73,.15);color:var(--red);border-color:rgba(248,81,73,.4)}
+  }
+
+  @media(max-width:380px){
+    .card .v{font-size:15px}
+    .panel h2{font-size:11px}
   }
 </style>
 </head>
@@ -86,16 +130,16 @@
     <details class="panel" id="dlPanel">
       <summary style="cursor:pointer;color:var(--accent);font-size:13px;font-weight:600">⬇️ ตัวเก็บข้อมูล VPS + 🔗 ลิงค์แชร์</summary>
       <div style="margin-top:12px;font-size:12px;color:var(--muted)">
-        <a href="./FarmCollector_VPS.zip" download style="display:inline-block;background:var(--green);color:#06121f;border-radius:6px;padding:7px 14px;font-weight:600;text-decoration:none">⬇️ ดาวน์โหลดชุดติดตั้ง (.zip)</a>
+        <a class="dllink" href="./FarmCollector_VPS.zip" download style="display:inline-block;background:var(--green);color:#06121f;border-radius:6px;padding:7px 14px;font-weight:600;text-decoration:none">⬇️ ดาวน์โหลดชุดติดตั้ง (.zip)</a>
         <p style="margin:10px 0 4px">นำ Key ไปใส่ใน config.local.json</p>
-        <div style="display:flex;gap:8px">
+        <div class="copyrow">
           <input id="ctok" readonly onclick="this.select()" style="flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:6px 8px;font-family:monospace;font-size:11px">
           <button class="btn" onclick="navigator.clipboard.writeText(document.getElementById('ctok').value);this.textContent='คัดลอกแล้ว'">คัดลอก</button>
         </div>
         <p style="margin-top:6px;color:var(--muted)">Key นี้ใช้ได้เฉพาะ Email คุณเท่านั้น</p>
         <hr style="border:none;border-top:1px solid var(--line);margin:12px 0">
         <p style="margin:0 0 4px">🔗 ลิงค์แชร์ผลงาน</p>
-        <div style="display:flex;gap:8px">
+        <div class="copyrow">
           <input id="shlink" readonly onclick="this.select()" style="flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:6px 8px;font-size:11px">
           <button class="btn" onclick="navigator.clipboard.writeText(document.getElementById('shlink').value);this.textContent='คัดลอกแล้ว'">คัดลอก</button>
         </div>
@@ -104,7 +148,7 @@
 
     <div class="panel">
       <h2>พอร์ตของฉัน (my accounts)</h2>
-      <div style="overflow-x:auto"><table id="tbl"><thead></thead><tbody></tbody></table></div>
+      <div class="tbl-wrap"><table id="tbl"><thead></thead><tbody></tbody></table></div>
     </div>
 
     <div class="cards" id="myCards"></div>
@@ -273,17 +317,19 @@ function renderMine(){
   const rows=[...(MINE.accounts||[])].sort((a,b)=>
     String(a.label||"").localeCompare(String(b.label||""),undefined,{numeric:true,sensitivity:"base"}));
   for(const a of rows){
-    tb.insertAdjacentHTML("beforeend","<tr>"+cols.map(([k])=>{
-      if(k==="_status") return a.stale?`<td><span class="tag stale">stale ${a.age_sec}s</span></td>`:`<td><span class="tag live">live</span></td>`;
-      if(k==="_gain"){ const g=(+a.balance)?(+a.net_profit)/(+a.balance)*100:0; return `<td class="${cls(g)}">${fmt(g,2)}%</td>`; }
-      if(k==="_clear"){ return `<td style="text-align:center"><button title="ลบพอร์ตนี้" onclick="clearPort('${a.login}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 7px;border-radius:50%;transition:all .15s" onmouseover="this.style.color='#fff';this.style.background='var(--red)'" onmouseout="this.style.color='var(--muted)';this.style.background='none'">×</button></td>`; }
-      if(k==="max_equity_dd"){ const p=(+a.balance)?(+a.max_equity_dd)/(+a.balance)*100:0; return `<td class="neg">${fmt(p,2)}%</td>`; }
+    tb.insertAdjacentHTML("beforeend","<tr>"+cols.map((col)=>{
+      const k=col[0], lab=col[1];
+      if(k==="_status") return a.stale?`<td data-label="Status"><span class="tag stale">stale ${a.age_sec}s</span></td>`:`<td data-label="Status"><span class="tag live">live</span></td>`;
+      if(k==="_gain"){ const g=(+a.balance)?(+a.net_profit)/(+a.balance)*100:0; return `<td data-label="${lab}" class="${cls(g)}">${fmt(g,2)}%</td>`; }
+      if(k==="_clear"){ return `<td class="delcell" data-label=""><button title="ลบพอร์ตนี้" onclick="clearPort('${a.login}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 7px;border-radius:50%;transition:all .15s" onmouseover="this.style.color='#fff';this.style.background='var(--red)'" onmouseout="this.style.color='var(--muted)';this.style.background='none'">×</button></td>`; }
+      if(k==="max_equity_dd"){ const p=(+a.balance)?(+a.max_equity_dd)/(+a.balance)*100:0; return `<td data-label="${lab}" class="neg">${fmt(p,2)}%</td>`; }
       let v=a[k];
       if(["balance","equity","net_profit","closed_max_dd","max_equity_dd","cur_dd","profit_factor"].includes(k)) v=fmt(v);
       else if(k==="win_rate"||k==="max_equity_dd_pct") v=fmt(v,1)+(k.includes("pct")?"%":"");
       else if(v==null||v==="") v="—";
       const c=(k==="net_profit")?cls(a.net_profit):(k.includes("dd")?"neg":"");
-      return `<td class="${c}">${v}</td>`;
+      const lc=(k==="label")?" celllabel":"";
+      return `<td data-label="${lab}" class="${c}${lc}">${v}</td>`;
     }).join("")+"</tr>");
   }
 
@@ -309,7 +355,7 @@ function renderMine(){
 
 // ---- boot ----
 async function loadShared(stoken){
-  SHARED = true;
+  SHARED = true; document.body.classList.add("shared");
   try{ MINE = await jsonp({mode:"shared", s:stoken}); }
   catch(e){ document.getElementById("ovCards").innerHTML='<div class="note">โหลดไม่สำเร็จ</div>'; return; }
   if(MINE.error){ document.getElementById("ovCards").innerHTML='<div class="note">ลิงค์ไม่ถูกต้อง/หมดอายุ</div>'; return; }
@@ -326,7 +372,7 @@ async function loadShared(stoken){
 }
 
 async function loadViewByEmail(email){
-  SHARED = true;
+  SHARED = true; document.body.classList.add("shared");
   try{ MINE = await jsonp({mode:"view", email:email}); }
   catch(e){ document.getElementById("ovCards").innerHTML='<div class="note">โหลดไม่สำเร็จ</div>'; return; }
   if(!MINE || MINE.error){ document.getElementById("ovCards").innerHTML='<div class="note">ไม่พบข้อมูล/ลิงก์ไม่ถูกต้อง</div>'; return; }
