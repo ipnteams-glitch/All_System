@@ -1,7 +1,7 @@
 /* Forexcool Farm Portfolio — service worker
    Caches the page shell so the installed app opens instantly and offline.
    API calls (Google Apps Script, mt5.forexcool.com) always go to the network. */
-const CACHE = "farm-portfolio-v2";
+const CACHE = "farm-portfolio-v3";
 const SHELL = [
   "./",
   "./index.html",
@@ -11,7 +11,8 @@ const SHELL = [
   "./icons/icon-512.png",
   "./icons/apple-touch-icon.png",
   "./icons/favicon-32.png",
-  "./icons/logo-96.png"
+  "./icons/logo-96.png",
+  "./icons/brand.png"
 ];
 
 self.addEventListener("install", e => {
