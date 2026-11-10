@@ -14,6 +14,7 @@ from PIL import Image, ImageDraw, ImageFilter
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "portfolio", "icons")
 BADGE = os.path.join(ROOT, "scripts", "assets", "premium-badge.png")
+LOGO = os.path.join(ROOT, "scripts", "assets", "forexcool-logo.png")
 CREST = os.path.join(ROOT, "sysall16.jpg")
 BG = (13, 17, 23)
 
@@ -68,23 +69,45 @@ def main():
     icon_from(badge, 512, 0.66).save(os.path.join(OUT, "icon-maskable-512.png"), optimize=True)
     icon_from(badge, 180, 0.86).save(os.path.join(OUT, "apple-touch-icon.png"), optimize=True)
 
-    # tab icon: the emblem at the left of the brand lockup (header logo)
-    brand = os.path.join(OUT, "brand.png")
-    if os.path.exists(brand):
-        lockup = Image.open(brand).convert("RGBA")
-        emblem = lockup.crop((0, 0, 56, lockup.size[1]))
-        box = emblem.split()[3].getbbox()
-        emblem = emblem.crop(box)
-        side = max(emblem.size)
-        square = Image.new("RGBA", (side, side), BG + (255,))
-        square.alpha_composite(emblem, ((side - emblem.size[0]) // 2, (side - emblem.size[1]) // 2))
-        icon_from(square, 64, 0.92, sharpen=False).save(os.path.join(OUT, "favicon-64.png"), optimize=True)
-        icon_from(square, 32, 0.92, sharpen=False).save(os.path.join(OUT, "favicon-32.png"), optimize=True)
-        crest = square
-    else:
-        crest = crest_art()
-        icon_from(crest, 64, 0.92, sharpen=False).save(os.path.join(OUT, "favicon-64.png"), optimize=True)
-        icon_from(crest, 32, 0.92, sharpen=False).save(os.path.join(OUT, "favicon-32.png"), optimize=True)
+    # header mark: the FOREXCOOL lockup (chart + wordmark) with the navy plate
+    # flood-filled to transparent; the square badge itself becomes the tab icon
+    logo = Image.open(LOGO).convert("RGB")
+    lock = logo.crop((32, 80, 304, 212)).convert("RGBA")
+    lw, lh = lock.size
+    lp = lock.load()
+
+    def navy(r, g, b):
+        return b < 130 and r < 80 and g < 105 and b >= g
+
+    seen = [[False] * lh for _ in range(lw)]
+    q = collections.deque()
+    for x in range(lw):
+        for y in (0, lh - 1):
+            seen[x][y] = True
+            q.append((x, y))
+    for y in range(lh):
+        for x in (0, lw - 1):
+            if not seen[x][y]:
+                seen[x][y] = True
+                q.append((x, y))
+    while q:
+        x, y = q.popleft()
+        if not navy(*lp[x, y][:3]):
+            continue
+        r, g, b, _ = lp[x, y]
+        lp[x, y] = (r, g, b, 0)
+        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if 0 <= nx < lw and 0 <= ny < lh and not seen[nx][ny]:
+                seen[nx][ny] = True
+                q.append((nx, ny))
+    lock = lock.crop(lock.split()[3].getbbox())
+    lock.save(os.path.join(OUT, "brand-fc.png"), optimize=True)
+
+    badge_sq = Image.open(LOGO).convert("RGBA")
+    for size, name in ((64, "favicon-64.png"), (32, "favicon-32.png")):
+        badge_sq.resize((size, size), Image.LANCZOS).save(os.path.join(OUT, name), optimize=True)
+
+    crest = crest_art()
     rounded = Image.new("RGBA", (96, 96), (0, 0, 0, 0))
     inner = crest.resize((88, 88), Image.LANCZOS).convert("RGBA")
     mask = Image.new("L", (88, 88), 0)
