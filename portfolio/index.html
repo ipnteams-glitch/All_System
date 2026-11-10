@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0d1117">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Farm Portfolio">
 <title>Farm Portfolio</title>
 <script src="./lightweight-charts.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -18,7 +26,11 @@
   html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);font-size:14px}
   header{display:flex;align-items:center;gap:16px;padding:10px 18px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
-  header h1{font-size:16px;margin:0;color:var(--gold)}
+  header h1{font-size:16px;margin:0;color:var(--gold);display:flex;align-items:center;gap:8px}
+  .hlogo{width:24px;height:24px;border-radius:6px;display:block}
+  .install{background:var(--gold);border:1px solid var(--gold);color:#1a1206;font-weight:700}
+  .iosbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;padding:8px 14px;background:rgba(216,166,87,.12);border-bottom:1px solid rgba(216,166,87,.35);color:var(--gold);font-size:12px;line-height:1.35}
+  .iosbar .btn{margin-left:auto;min-height:0;padding:4px 10px;font-size:12px}
   .meta{display:flex;gap:16px;font-size:12px;color:var(--muted);flex-wrap:wrap;margin-left:auto;align-items:center}
   .meta b{color:var(--txt)}
   main{padding:18px;max-width:1500px;margin:0 auto}
@@ -60,8 +72,10 @@
     header h1{font-size:15px}
     .meta{font-size:11px;gap:8px;width:100%;margin-left:0}
     .meta .btn{min-height:34px;padding:6px 10px}
+    .iosbar{font-size:11.5px;padding:8px 12px;text-align:center}
+    .iosbar .btn{margin-left:0}
     main{padding:12px calc(12px + env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left))}
-    #mineSec{display:flex;flex-direction:column}
+    #mineSec:not(.hide){display:flex;flex-direction:column}
     #myCards{order:-1;margin-bottom:12px}
     .cards{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
     .card{padding:10px;border-radius:10px}
@@ -107,13 +121,15 @@
 </head>
 <body>
 <header>
-  <h1>⚡ Farm Portfolio</h1>
+  <h1><img class="hlogo" src="./icons/logo-96.png" alt=""> Farm Portfolio</h1>
   <div class="meta">
     <span id="who" class="hide">👤 <b id="email">—</b> <button class="btn" onclick="signOut()">ออก</button></span>
     <div id="gbtn"></div>
+    <button id="installBtn" class="btn install hide" onclick="installApp()">⬇ ติดตั้งแอป</button>
     <span>อัปเดต <b id="updated">—</b> <span style="opacity:.6">(ทุก 60s)</span></span>
   </div>
 </header>
+<div id="iosInstall" class="iosbar hide">ติดตั้งเป็นแอป: แตะ <b>⤴ แชร์</b> แล้วเลือก <b>“เพิ่มไปยังหน้าจอโฮม”</b> <button class="btn" onclick="dismissIos()">ปิด</button></div>
 
 <main>
   <!-- public anonymized overview -->
@@ -388,9 +404,39 @@ async function loadViewByEmail(email){
   renderMine();
 }
 
+// ===== install as an app (PWA) =====
+let _instEvt = null;
+const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const SHARE_KEY = "fp_share";
+function rememberShare(s){ try{ localStorage.setItem(SHARE_KEY, s); }catch(e){} }
+function savedShare(){ try{ return localStorage.getItem(SHARE_KEY); }catch(e){ return null; } }
+function installApp(){
+  if(_instEvt){ _instEvt.prompt(); _instEvt.userChoice.then(()=>{ _instEvt = null; document.getElementById("installBtn").classList.add("hide"); }); }
+  else document.getElementById("iosInstall").classList.remove("hide");
+}
+function dismissIos(){ document.getElementById("iosInstall").classList.add("hide"); try{ localStorage.setItem("fp_ios_hint","1"); }catch(e){} }
+function showIosBar(){ try{ if(localStorage.getItem("fp_ios_hint")) return; }catch(e){} document.getElementById("iosInstall").classList.remove("hide"); }
+window.addEventListener("beforeinstallprompt", e=>{
+  e.preventDefault(); _instEvt = e;
+  document.getElementById("installBtn").classList.remove("hide");
+});
+window.addEventListener("appinstalled", ()=>{ document.getElementById("installBtn").classList.add("hide"); });
+if("serviceWorker" in navigator){
+  window.addEventListener("load", ()=> navigator.serviceWorker.register("./sw.js", {scope:"./"}).catch(()=>{}));
+}
+
 window.addEventListener("load", ()=>{
+  if(isStandalone()) document.getElementById("installBtn").classList.add("hide");
   // read-only share link (?s=<token>): show ports, no email, no sign-in
   const sp = new URLSearchParams(location.search).get("s");
+  if(sp) rememberShare(sp);
+  // installed app opened without a link -> reopen the last shared portfolio
+  if(!sp && isStandalone()){
+    const sv = savedShare();
+    if(sv){ location.replace(location.pathname + "?s=" + encodeURIComponent(sv)); return; }
+  }
+  if(isIOS() && !isStandalone() && sp) showIosBar();
   if(sp){ if(sp.indexOf(".")>=0){ loadShared(sp); } else { loadViewByEmail(normalizeEmail(sp)); } return; }
   initGsi(); loadOverview(); setInterval(loadOverview,60000);
   // signed handoff from mt5.forexcool.com (#t=<token>): skip Google sign-in
